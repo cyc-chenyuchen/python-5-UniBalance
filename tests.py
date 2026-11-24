@@ -1,10 +1,13 @@
+import json
 import os
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 os.environ.setdefault("FLASK_SECRET_KEY", "test-only-secret")
 os.environ["DEMO_MODE"] = "1"
 
+from ai_service import recommend_plans
 from app import app
 from simulation import apply_effects, calculate_total_score, make_comment, run_round_choice
 
@@ -72,6 +75,126 @@ class SimulationScoreTests(unittest.TestCase):
         self.assertEqual(score, 91)
         self.assertIn("整體", make_comment(score))
         self.assertTrue(score >= 80)
+
+
+class GeminiStructuredOutputTests(unittest.TestCase):
+    def test_plan_request_enforces_json_object_response(self):
+        response_data = {
+            "supported": True,
+            "scenario_title": "校園服務改善",
+            "recommendations": [
+                {
+                    "title": "方案甲",
+                    "strategy": "分時處理",
+                    "description": "依需求安排資源。",
+                    "reason": "可以兼顧使用需求。",
+                    "effects": {
+                        "budget_remaining": -2,
+                        "problem_improvement": 2,
+                        "satisfaction": 1,
+                        "fairness": 1,
+                    },
+                },
+                {
+                    "title": "方案乙",
+                    "strategy": "集中處理",
+                    "description": "集中資源改善問題。",
+                    "reason": "可以快速處理主要問題。",
+                    "effects": {
+                        "budget_remaining": -3,
+                        "problem_improvement": 3,
+                        "satisfaction": 0,
+                        "fairness": -1,
+                    },
+                },
+            ],
+            "rounds": [
+                {
+                    "event": "發現部分學生尚未了解安排。",
+                    "actions": [
+                        {
+                            "text": "增加說明",
+                            "effects": {
+                                "budget_remaining": -1,
+                                "problem_improvement": 1,
+                                "satisfaction": 1,
+                                "fairness": 0,
+                            },
+                        },
+                        {
+                            "text": "先觀察需求",
+                            "effects": {
+                                "budget_remaining": 0,
+                                "problem_improvement": 0,
+                                "satisfaction": 0,
+                                "fairness": 1,
+                            },
+                        },
+                    ],
+                },
+                {
+                    "event": "試行後需要決定是否擴大範圍。",
+                    "actions": [
+                        {
+                            "text": "擴大試行",
+                            "effects": {
+                                "budget_remaining": -1,
+                                "problem_improvement": 2,
+                                "satisfaction": 1,
+                                "fairness": 0,
+                            },
+                        },
+                        {
+                            "text": "維持小規模",
+                            "effects": {
+                                "budget_remaining": 0,
+                                "problem_improvement": 1,
+                                "satisfaction": 0,
+                                "fairness": 1,
+                            },
+                        },
+                    ],
+                },
+            ],
+        }
+        mock_response = unittest.mock.Mock()
+        mock_response.json.return_value = {
+            "candidates": [{
+                "content": {
+                    "parts": [{"text": json.dumps(response_data, ensure_ascii=False)}]
+                }
+            }]
+        }
+        game_config = {
+            "metric_labels": {
+                "budget_remaining": "剩餘預算",
+                "problem_improvement": "問題改善",
+                "satisfaction": "學生滿意度",
+                "fairness": "公平性",
+            },
+            "initial_metrics": {
+                "budget_remaining": 75,
+                "problem_improvement": 75,
+                "satisfaction": 75,
+                "fairness": 75,
+            },
+        }
+
+        with patch.dict(os.environ, {
+            "DEMO_MODE": "0",
+            "GEMINI_API_KEY": "test-key",
+            "GEMINI_MODEL": "test-model",
+        }):
+            with patch("ai_service.send_request", return_value=mock_response) as send:
+                result = recommend_plans("改善校園服務", [], game_config)
+
+        request_data = send.call_args[0][2]
+        self.assertEqual(
+            request_data["generationConfig"]["responseSchema"]["type"],
+            "OBJECT",
+        )
+        self.assertTrue(result["supported"])
+        self.assertEqual(len(result["recommendations"]), 2)
 
 
 class OfflineDemoTests(unittest.TestCase):

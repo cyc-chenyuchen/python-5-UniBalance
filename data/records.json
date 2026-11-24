@@ -66,5 +66,73 @@
     "comment": "整體模擬表現中等，方案有一定效果，也暴露出資源、滿意度或公平性的權衡。",
     "review": "本次採用「集中資源方案」。在「第一次試行後，部分學生反映使用方式不夠清楚。」中，玩家選擇了「增加說明並安排協助」；完成模擬後，剩餘預算為 47，總分為 77 分。",
     "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
+  },
+  {
+    "record_id": "8ff55bfd8bf2064bc69c6035525316e0",
+    "created_at": "2026-11-24T05:58:48.581485+00:00",
+    "scenario_id": "campus_custom",
+    "scenario_title": "校園服務改善示範",
+    "proposal": ".",
+    "plan_id": "plan_1",
+    "plan_title": "分時段改善方案",
+    "plan_strategy": "分時段輪流使用",
+    "plan_description": "依需求時段調整資源，先改善最需要的校園服務。",
+    "plan_reason": "能兼顧使用便利與公平分配。",
+    "plan_effects": {
+      "budget_remaining": -10,
+      "problem_improvement": 10,
+      "satisfaction": 5,
+      "fairness": 5
+    },
+    "initial_metrics": {
+      "budget_remaining": 75,
+      "problem_improvement": 75,
+      "satisfaction": 75,
+      "fairness": 75
+    },
+    "final_metrics": {
+      "budget_remaining": 52,
+      "problem_improvement": 98,
+      "satisfaction": 89,
+      "fairness": 85
+    },
+    "metric_labels": {
+      "budget_remaining": "剩餘預算",
+      "problem_improvement": "問題改善",
+      "satisfaction": "學生滿意度",
+      "fairness": "公平性"
+    },
+    "actions": [
+      {
+        "round": 1,
+        "event": "第一次試行後，部分學生反映使用方式不夠清楚。",
+        "action_index": 0,
+        "action_id": "r1_a1",
+        "action_text": "增加說明並安排協助",
+        "action_effects": {
+          "budget_remaining": -5,
+          "problem_improvement": 5,
+          "satisfaction": 5,
+          "fairness": 2
+        }
+      },
+      {
+        "round": 2,
+        "event": "第二回合需要決定是否擴大試行範圍。",
+        "action_index": 0,
+        "action_id": "r2_a1",
+        "action_text": "擴大範圍並增加名額",
+        "action_effects": {
+          "budget_remaining": -8,
+          "problem_improvement": 8,
+          "satisfaction": 4,
+          "fairness": 3
+        }
+      }
+    ],
+    "total_score": 81,
+    "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
+    "review": "本次採用「分時段改善方案」。在「第一次試行後，部分學生反映使用方式不夠清楚。」中，玩家選擇了「增加說明並安排協助」；完成模擬後，剩餘預算為 52，總分為 81 分。",
+    "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
   }
 ]

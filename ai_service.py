@@ -20,6 +20,87 @@ METRIC_RANGES = {
     },
 }
 
+INTERVIEW_RESPONSE_SCHEMA = {
+    "type": "OBJECT",
+    "properties": {
+        "question": {"type": "STRING"},
+        "options": {
+            "type": "ARRAY",
+            "items": {"type": "STRING"},
+        },
+    },
+    "required": ["question", "options"],
+}
+
+_EFFECTS_SCHEMA = {
+    "type": "OBJECT",
+    "properties": {
+        "budget_remaining": {"type": "INTEGER"},
+        "problem_improvement": {"type": "INTEGER"},
+        "satisfaction": {"type": "INTEGER"},
+        "fairness": {"type": "INTEGER"},
+    },
+    "required": [
+        "budget_remaining",
+        "problem_improvement",
+        "satisfaction",
+        "fairness",
+    ],
+}
+
+PLAN_RESPONSE_SCHEMA = {
+    "type": "OBJECT",
+    "properties": {
+        "supported": {"type": "BOOLEAN"},
+        "scenario_title": {"type": "STRING"},
+        "recommendations": {
+            "type": "ARRAY",
+            "items": {
+                "type": "OBJECT",
+                "properties": {
+                    "title": {"type": "STRING"},
+                    "strategy": {"type": "STRING"},
+                    "description": {"type": "STRING"},
+                    "reason": {"type": "STRING"},
+                    "effects": _EFFECTS_SCHEMA,
+                },
+                "required": ["title", "strategy", "description", "reason", "effects"],
+            },
+        },
+        "rounds": {
+            "type": "ARRAY",
+            "items": {
+                "type": "OBJECT",
+                "properties": {
+                    "event": {"type": "STRING"},
+                    "actions": {
+                        "type": "ARRAY",
+                        "items": {
+                            "type": "OBJECT",
+                            "properties": {
+                                "text": {"type": "STRING"},
+                                "effects": _EFFECTS_SCHEMA,
+                            },
+                            "required": ["text", "effects"],
+                        },
+                    },
+                },
+                "required": ["event", "actions"],
+            },
+        },
+    },
+    "required": ["supported", "scenario_title", "recommendations", "rounds"],
+}
+
+REVIEW_RESPONSE_SCHEMA = {
+    "type": "OBJECT",
+    "properties": {
+        "focus_metric": {"type": "STRING"},
+        "action_index": {"type": "INTEGER"},
+    },
+    "required": ["focus_metric", "action_index"],
+}
+
 
 def send_request(url, headers, request_data):
     for attempt in range(3):
@@ -40,7 +121,7 @@ def send_request(url, headers, request_data):
     raise RuntimeError("Gemini 請求失敗。")
 
 
-def _request_gemini(system_prompt, user_prompt):
+def _request_gemini(system_prompt, user_prompt, response_schema):
     api_key = os.environ.get("GEMINI_API_KEY")
     model = os.environ.get("GEMINI_MODEL")
     if not api_key:
@@ -56,7 +137,10 @@ def _request_gemini(system_prompt, user_prompt):
     request_data = {
         "systemInstruction": {"parts": [{"text": system_prompt}]},
         "contents": [{"parts": [{"text": user_prompt}]}],
-        "generationConfig": {"responseMimeType": "application/json"},
+        "generationConfig": {
+            "responseMimeType": "application/json",
+            "responseSchema": response_schema,
+        },
     }
     response = send_request(url, headers, request_data)
     try:
@@ -122,13 +206,18 @@ def ask_interview_question(proposal, answers):
 
     system_prompt = (
         "你是校園改革訪談助理。只針對校園生活、成員、設施、服務或制度問題提問。"
-        "每次只產生一道題目，選項 2 到 4 個。輸出只有一個 JSON 物件。"
+        "每次只產生一道題目，選項 2 到 4 個。"
+        "回覆必須是單一 JSON 物件，格式為 "
+        '{"question":"問題文字","options":["選項一","選項二"]}。'
+        "不可回傳 JSON 陣列、Markdown 或額外說明。"
     )
     user_prompt = json.dumps(
         {"proposal": proposal, "previous_answers": answers},
         ensure_ascii=False,
     )
-    data = _request_gemini(system_prompt, user_prompt)
+    data = _request_gemini(
+        system_prompt, user_prompt, INTERVIEW_RESPONSE_SCHEMA
+    )
     question = _validate_text(data.get("question"), 100, "訪談問題格式錯誤。")
     options = data.get("options")
     if not isinstance(options, list) or not 2 <= len(options) <= 4:
@@ -148,7 +237,10 @@ def recommend_plans(proposal, answers, game_config):
     system_prompt = (
         "你是校園改革模擬設計助理。只有明確非校園問題才回 supported=false。"
         "必須產生恰好兩個方案與恰好兩個回合，每回合恰好兩個行動。"
-        "所有效果為遊戲假設。只輸出 JSON，不得解釋。"
+        "所有效果為遊戲假設。回覆必須是單一 JSON 物件，最外層不可為陣列。"
+        "支援時物件欄位為 supported=true、scenario_title、recommendations、rounds；"
+        "不支援時仍回傳物件，並使用 supported=false、scenario_title=\"\"、"
+        "recommendations=[]、rounds=[]。只輸出 JSON，不得使用 Markdown 或解釋。"
     )
     user_prompt = json.dumps(
         {
@@ -170,7 +262,9 @@ def recommend_plans(proposal, answers, game_config):
         },
         ensure_ascii=False,
     )
-    data = _request_gemini(system_prompt, user_prompt)
+    data = _request_gemini(
+        system_prompt, user_prompt, PLAN_RESPONSE_SCHEMA
+    )
     return _validate_recommendation(data)
 
 
@@ -366,7 +460,9 @@ def choose_review_focus(record):
             for index, action in enumerate(record["actions"])
         ],
     }, ensure_ascii=False)
-    data = _request_gemini(system_prompt, user_prompt)
+    data = _request_gemini(
+        system_prompt, user_prompt, REVIEW_RESPONSE_SCHEMA
+    )
     focus = data.get("focus_metric")
     action_index = data.get("action_index")
     if focus not in record["final_metrics"]:
