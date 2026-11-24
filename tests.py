@@ -249,14 +249,14 @@ class GeminiRequestTests(unittest.TestCase):
             "ai_service.requests.post",
             side_effect=requests.exceptions.ReadTimeout,
         ) as post:
-            with self.assertRaisesRegex(TimeoutError, "回應上限 12 秒"):
+            with self.assertRaisesRegex(TimeoutError, "回應上限 30 秒"):
                 send_request("https://example.test/generate", {}, {})
 
         post.assert_called_once_with(
             "https://example.test/generate",
             headers={},
             json={},
-            timeout=(3, 12),
+            timeout=(5, 30),
         )
 
 

@@ -113,13 +113,13 @@ def send_request(url, headers, request_data):
             url,
             headers=headers,
             json=request_data,
-            timeout=(3, 12),
+            timeout=(5, 30),
         )
         response.raise_for_status()
         return response
     except requests.exceptions.Timeout as error:
         raise TimeoutError(
-            "Gemini 請求逾時（連線上限 3 秒、回應上限 12 秒），請重試。"
+            "Gemini 請求逾時（連線上限 5 秒、回應上限 30 秒），請重試。"
         ) from error
     except requests.exceptions.RequestException as error:
         error_response = getattr(error, "response", None)
