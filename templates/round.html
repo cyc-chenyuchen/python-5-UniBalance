@@ -1,32 +1,77 @@
 {% extends "base.html" %}
 {% block page_class %}simulation-page{% endblock %}
 {% block content %}
-<section class="card form-card">
-  <div class="visual-heading form-visual-heading">
-    <div class="visual-copy">
-      <p class="step">情境模擬 · 回合 {{ round_number }} / {{ round_count }}</p>
-      <div class="progress-track" role="progressbar" aria-label="模擬進度" aria-valuemin="1" aria-valuemax="{{ round_count }}" aria-valuenow="{{ round_number }}" style="--progress: {{ round_number * 100 / round_count }}%"><span></span></div>
-      <h1 class="question-title">{{ round_data.event }}</h1>
+<section class="simulation-screen page-stage">
+  <header class="simulation-hud card">
+    <div class="hud-copy">
+      <p class="step">校園策略模擬</p>
+      <h1>任務進度</h1>
+      <p class="active-plan">目前策略：<strong>{{ selected_plan.title }}</strong> · {{ selected_plan.strategy }}</p>
     </div>
-    <img class="page-illustration" src="{{ url_for('static', filename='simulation-illustration.svg') }}" alt="" aria-hidden="true">
-  </div>
-  <h3>目前校園指標</h3>
-  <div class="metrics">
+    <div class="round-counter">
+      <span>ROUND</span>
+      <strong>回合 {{ round_number }} / {{ round_count }}</strong>
+    </div>
+    <div class="hud-progress progress-track" role="progressbar" aria-label="模擬進度" aria-valuemin="1" aria-valuemax="{{ round_count }}" aria-valuenow="{{ round_number }}" style="--progress: {{ round_number * 100 / round_count }}%"><span></span></div>
+  </header>
+
+  <section class="metrics-board card">
+    <div class="board-heading">
+      <div><p class="step">資源儀表</p><h2>目前校園指標</h2></div>
+      <span>決策將影響以下模擬數值</span>
+    </div>
+    <div class="metrics game-metrics">
     {% for name, value in metrics.items() %}
-      <div><strong>{{ metric_labels[name] }}</strong><span>{{ value }}</span></div>
+      {% set change = metric_changes.get(name, 0) %}
+      <div class="metric-card">
+        <strong>{{ metric_labels[name] }}</strong>
+        <span class="metric-value" data-count-up="{{ value }}" data-count-start="{{ value - change }}">{{ value }}</span>
+        {% if change %}
+          <small class="metric-change {% if change > 0 %}is-positive{% else %}is-negative{% endif %}">{{ "%+d"|format(change) }} 本回合</small>
+        {% else %}
+          <small class="metric-change is-neutral">初始策略效果</small>
+        {% endif %}
+      </div>
     {% endfor %}
-  </div>
-  <form action="/simulation/choose" method="post">
-    <h3>你會如何應對？</h3>
-    <div class="option-list">
+    </div>
+  </section>
+
+  <div class="simulation-layout">
+    <section class="card event-panel page-stage">
+      <div class="event-heading"><span class="eyebrow">本回合情境</span><span>回合 {{ round_number }}</span></div>
+      <h2>{{ round_data.event }}</h2>
+      <p>根據目前策略與指標，選擇最合適的行動。</p>
+      <form action="/simulation/choose" method="post" data-game-submit class="action-form">
+        <div class="option-list action-options">
     {% for action in round_data.actions %}
       <label class="option">
         <input type="radio" name="action_id" value="{{ action.action_id }}" required>
         <strong>{{ action.text }}</strong>
       </label>
     {% endfor %}
-    </div>
-    <button type="submit">確認行動 <span aria-hidden="true">→</span></button>
-  </form>
+        </div>
+        <div class="form-actions">
+          <span class="selection-hint">選擇一項行動後提交決策</span>
+          <button type="submit">鎖定本回合決策 <span aria-hidden="true">→</span></button>
+        </div>
+      </form>
+    </section>
+
+    <aside class="card decision-panel">
+      <div class="board-heading"><div><p class="step">決策紀錄</p><h2>改革時間軸</h2></div><span>{{ decision_history|length }} / {{ round_count }} 已完成</span></div>
+      <ol class="decision-timeline">
+        {% for decision in decision_history %}
+          <li class="is-complete">
+            <span class="timeline-marker">✓</span>
+            <div><small>回合 {{ decision.round }}</small><strong>{{ decision.action_text }}</strong></div>
+          </li>
+        {% endfor %}
+        <li class="is-current" aria-current="step">
+          <span class="timeline-marker">{{ round_number }}</span>
+          <div><small>目前回合</small><strong>{{ round_data.event }}</strong></div>
+        </li>
+      </ol>
+    </aside>
+  </div>
 </section>
 {% endblock %}

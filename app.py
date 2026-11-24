@@ -226,6 +226,7 @@ def plans():
         "plans.html",
         scenario_title=game["scenario_title"],
         recommendations=game["plans"]["recommendations"],
+        answer_count=len(game["answers"]),
     )
 
 
@@ -247,6 +248,7 @@ def simulation_start():
     game["metrics"] = apply_effects(game["metrics"], plan["effects"])
     game["round_index"] = 0
     game["round_choices"] = []
+    game["last_metric_changes"] = {}
     return redirect("/simulation")
 
 
@@ -265,7 +267,10 @@ def simulation():
         round_number=round_index + 1,
         round_count=len(rounds),
         metrics=game["metrics"],
+        metric_changes=game.get("last_metric_changes", {}),
         metric_labels=game["menu"]["metric_labels"],
+        selected_plan=game["selected_plan"],
+        decision_history=game["round_choices"],
     )
 
 
@@ -285,7 +290,12 @@ def simulation_choose():
     if not action:
         return render_template("error.html", title="行動格式錯誤", message="請選擇一個有效行動。"), 400
 
-    game["metrics"] = apply_effects(game["metrics"], action["effects"])
+    previous_metrics = game["metrics"]
+    game["metrics"] = apply_effects(previous_metrics, action["effects"])
+    game["last_metric_changes"] = {
+        name: game["metrics"][name] - previous_metrics[name]
+        for name in game["metrics"]
+    }
     action_index = round_data["actions"].index(action)
     game["round_choices"].append({
         "round": round_index + 1,

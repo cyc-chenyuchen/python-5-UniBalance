@@ -7,24 +7,36 @@
       <span class="eyebrow">方案探索</span>
       <h1>{{ scenario_title }}</h1>
       <p>比較不同改革方向的特色與影響，選擇一個方案進入模擬。</p>
+      <div class="phase-complete"><span aria-hidden="true">✓</span>需求訪談完成 · 已整理 {{ answer_count }} 個回應</div>
     </div>
     <img class="page-illustration" src="{{ url_for('static', filename='plans-illustration.svg') }}" alt="" aria-hidden="true">
   </div>
   <div class="grid">
     {% for plan in recommendations %}
       <article class="card plan-card">
-        <span class="strategy-tag">{{ plan.strategy }}</span>
+        <div class="plan-card-top">
+          <span class="plan-index">策略方案 {{ "%02d"|format(loop.index) }}</span>
+          <span class="strategy-tag">{{ plan.strategy }}</span>
+        </div>
         <h2>{{ plan.title }}</h2>
-        <p>{{ plan.description }}</p>
-        <p><strong>方案考量：</strong>{{ plan.reason }}</p>
-        <div class="effects" aria-label="方案效果">
+        <p class="plan-description">{{ plan.description }}</p>
+        <div class="recommendation-note"><strong>推薦理由</strong><p>{{ plan.reason }}</p></div>
+        <div class="effect-list" aria-label="四項指標效果">
           {% for name, value in plan.effects.items() %}
-            <span class="effect-chip">{{ {"budget_remaining": "剩餘預算", "problem_improvement": "問題改善", "satisfaction": "滿意度", "fairness": "公平性"}.get(name, name) }} {{ "%+d"|format(value) }}</span>
+            {% set effect_width = [value|abs * 5, 100]|min %}
+            <div class="effect-row">
+              <span class="effect-label">{{ {"budget_remaining": "剩餘預算", "problem_improvement": "問題改善", "satisfaction": "滿意度", "fairness": "公平性"}.get(name, name) }}</span>
+              <span class="effect-track" aria-hidden="true">
+                <span class="effect-axis"></span>
+                <span class="effect-fill {% if value >= 0 %}is-positive{% else %}is-negative{% endif %}" style="--effect-width: {{ effect_width }}%"></span>
+              </span>
+              <strong class="effect-value {% if value >= 0 %}is-positive{% else %}is-negative{% endif %}">{{ "%+d"|format(value) }}</strong>
+            </div>
           {% endfor %}
         </div>
-        <form action="/simulation/start" method="post">
+        <form action="/simulation/start" method="post" data-game-submit>
           <input type="hidden" name="plan_id" value="{{ plan.plan_id }}">
-          <button type="submit">選擇此方案 <span aria-hidden="true">→</span></button>
+          <button type="submit">採用此策略 <span aria-hidden="true">→</span></button>
         </form>
       </article>
     {% endfor %}

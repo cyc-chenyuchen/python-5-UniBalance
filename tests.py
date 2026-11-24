@@ -295,6 +295,7 @@ class OfflineDemoTests(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("回合 1 / 3".encode("utf-8"), response.data)
+        self.assertIn("目前策略".encode("utf-8"), response.data)
 
         response = self.client.post(
             "/simulation/choose",
@@ -303,6 +304,8 @@ class OfflineDemoTests(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertIn("回合 2 / 3".encode("utf-8"), response.data)
+        self.assertIn("1 / 3 已完成".encode("utf-8"), response.data)
+        self.assertRegex(response.get_data(as_text=True), r"[+-]\d+ 本回合")
         response = self.client.post(
             "/simulation/choose",
             data={"action_id": "r2_a1"},

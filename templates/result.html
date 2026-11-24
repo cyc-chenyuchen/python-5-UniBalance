@@ -4,13 +4,13 @@
 <section class="card">
   <div class="visual-heading result-visual-heading">
     <div class="visual-copy">
-      <p class="step">模擬結果</p>
+      <p class="step">改革成果報告 · 模擬結果</p>
       <h1>{{ record.scenario_title }}</h1>
     </div>
     <img class="page-illustration" src="{{ url_for('static', filename='results-illustration.svg') }}" alt="" aria-hidden="true">
   </div>
   <div class="score-panel">
-    <div class="score-value">{{ record.total_score }}<small>總分</small></div>
+    <div class="score-value"><span data-count-up="{{ record.total_score }}" data-count-start="0">{{ record.total_score }}</span><small>總分</small></div>
     <p>{{ record.comment }}</p>
   </div>
 
@@ -30,12 +30,19 @@
   </section>
 
   <section class="result-section">
-    <h2>模擬過程</h2>
+    <h2>決策時間軸 <span class="result-count">{{ record.actions|length }} 個回合</span></h2>
     <ol class="action-list">
       {% for action in record.actions %}
         <li>
-          <strong>{{ action.event }}</strong>
+          <div class="decision-entry-heading"><strong>回合 {{ action.round }} · {{ action.event }}</strong></div>
           <span>{{ action.action_text }}</span>
+          {% if action.get("action_effects") %}
+            <div class="decision-effects">
+              {% for name, value in action.action_effects.items() %}
+                <span class="{% if value > 0 %}is-positive{% elif value < 0 %}is-negative{% else %}is-neutral{% endif %}">{{ {"budget_remaining": "預算", "problem_improvement": "改善", "satisfaction": "滿意度", "fairness": "公平性"}.get(name, name) }} {{ "%+d"|format(value) }}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
         </li>
       {% endfor %}
     </ol>
@@ -46,5 +53,9 @@
     <p>{{ record.review }}</p>
     <p class="notice">{{ record.review_note }}</p>
   </section>
+  <div class="result-actions">
+    <a class="button button-secondary" href="/records">查看歷史任務</a>
+    <a class="button" href="/">開始新任務</a>
+  </div>
 </section>
 {% endblock %}

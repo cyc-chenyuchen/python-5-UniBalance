@@ -4,21 +4,22 @@
 <section>
   <div class="page-heading visual-heading">
     <div class="visual-copy">
-      <span class="eyebrow">問題探索紀錄</span>
-      <h1>歷史結果</h1>
-      <p>回顧曾經探索過的校園改革方案與模擬成果。</p>
+      <span class="eyebrow">改革任務檔案</span>
+      <h1>歷史任務</h1>
+      <p>回顧曾探索的校園議題、採用策略與模擬成果。</p>
     </div>
     <img class="page-illustration" src="{{ url_for('static', filename='records-illustration.svg') }}" alt="" aria-hidden="true">
   </div>
   {% if records %}
+    <div class="archive-summary"><span>任務紀錄</span><strong>{{ records|length }} 筆</strong></div>
     <div class="grid">
       {% for record in records|reverse %}
         <article class="card record-card">
+          <div class="record-card-top"><span class="record-type">校園改革任務</span><span class="record-score">{{ record.total_score or "未記錄" }}<small>總分</small></span></div>
           <h2>{{ record.scenario_title or "舊版紀錄" }}</h2>
-          <p>方案：{{ record.plan_title or "未記錄" }}</p>
-          <p class="record-score">分數：{{ record.total_score or "未記錄" }}</p>
+          <div class="record-plan"><span>採用策略</span><strong>{{ record.plan_title or "未記錄" }}</strong></div>
           {% if record.record_id %}
-            <a class="button" href="/records/{{ record.record_id }}">查看結果卡</a>
+            <a class="button" href="/records/{{ record.record_id }}">開啟成果報告 <span aria-hidden="true">→</span></a>
           {% endif %}
         </article>
       {% endfor %}
@@ -27,7 +28,7 @@
     <div class="empty-state">
       <h2>還沒有模擬紀錄</h2>
       <p>從一個校園觀察開始，探索可能的改變方向。</p>
-      <a class="button" href="/">描述想解決的問題</a>
+      <a class="button" href="/">開始新任務</a>
     </div>
   {% endif %}
 </section>
