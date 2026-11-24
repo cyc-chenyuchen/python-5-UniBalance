@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 {% block page_class %}simulation-page{% endblock %}
 {% block content %}
-<section class="simulation-screen page-stage">
+{% macro map_state(value) -%}
+  {%- if value < 50 -%}attention{%- elif value < 75 -%}steady{%- else -%}strong{%- endif -%}
+{%- endmacro %}
+{% macro map_status(value) -%}
+  {%- if value < 50 -%}需要關注{%- elif value < 75 -%}穩定推進{%- else -%}進展良好{%- endif -%}
+{%- endmacro %}
+<section class="simulation-screen page-stage" data-round-number="{{ round_number }}" data-round-count="{{ round_count }}">
   <header class="simulation-hud card">
     <div class="hud-copy">
       <p class="step">校園策略模擬</p>
@@ -9,69 +15,85 @@
       <p class="active-plan">目前策略：<strong>{{ selected_plan.title }}</strong> · {{ selected_plan.strategy }}</p>
     </div>
     <div class="round-counter">
-      <span>ROUND</span>
+        <span>目前回合</span>
       <strong>回合 {{ round_number }} / {{ round_count }}</strong>
     </div>
     <div class="hud-progress progress-track" role="progressbar" aria-label="模擬進度" aria-valuemin="1" aria-valuemax="{{ round_count }}" aria-valuenow="{{ round_number }}" style="--progress: {{ round_number * 100 / round_count }}%"><span></span></div>
   </header>
 
-  <section class="metrics-board card">
-    <div class="board-heading">
-      <div><p class="step">資源儀表</p><h2>目前校園指標</h2></div>
-      <span>決策將影響以下模擬數值</span>
-    </div>
-    <div class="metrics game-metrics">
-    {% for name, value in metrics.items() %}
-      {% set change = metric_changes.get(name, 0) %}
-      <div class="metric-card">
-        <strong>{{ metric_labels[name] }}</strong>
-        <span class="metric-value" data-count-up="{{ value }}" data-count-start="{{ value - change }}">{{ value }}</span>
-        {% if change %}
-          <small class="metric-change {% if change > 0 %}is-positive{% else %}is-negative{% endif %}">{{ "%+d"|format(change) }} 本回合</small>
-        {% else %}
-          <small class="metric-change is-neutral">初始策略效果</small>
-        {% endif %}
-      </div>
-    {% endfor %}
-    </div>
-  </section>
-
   <div class="simulation-layout">
-    <section class="card event-panel page-stage">
-      <div class="event-heading"><span class="eyebrow">本回合情境</span><span>回合 {{ round_number }}</span></div>
-      <h2>{{ round_data.event }}</h2>
-      <p>根據目前策略與指標，選擇最合適的行動。</p>
-      <form action="/simulation/choose" method="post" data-game-submit class="action-form">
-        <div class="option-list action-options">
-    {% for action in round_data.actions %}
-      <label class="option">
-        <input type="radio" name="action_id" value="{{ action.action_id }}" required>
-        <strong>{{ action.text }}</strong>
-      </label>
-    {% endfor %}
+    <section class="campus-map-panel card" aria-labelledby="campus-map-heading">
+        <div class="map-panel-heading">
+          <div><p class="step">校園即時狀態</p><h2 id="campus-map-heading">改革影響地圖</h2></div>
+          <span class="map-live-indicator"><i aria-hidden="true"></i> 指標連動</span>
         </div>
-        <div class="form-actions">
-          <span class="selection-hint">選擇一項行動後提交決策</span>
-          <button type="submit">鎖定本回合決策 <span aria-hidden="true">→</span></button>
-        </div>
-      </form>
-    </section>
+        <div class="map-canvas">
+          <svg id="campus-map" class="campus-map" viewBox="0 0 720 420" role="img" aria-labelledby="campus-map-title campus-map-description">
+            <title id="campus-map-title">校園改革策略地圖</title>
+            <desc id="campus-map-description">鳥瞰校園平面配置，行政樓、圖書館、學生中心及共融步道分別連動四項管理指標。</desc>
+            <rect class="map-ground" x="0" y="0" width="720" height="420" rx="22"/>
+            <path class="map-lawn" d="M22 215c46-37 90-31 125-4 33 25 52 21 86-3 40-28 79-19 100 8 25 34 61 38 94 13 39-30 87-32 119-5 30 26 63 24 152-1v164H22V215Z"/>
+            <path class="map-road" d="M36 211c83 8 103 2 151-21 56-27 90-22 136 3 48 26 85 34 140 11 45-19 109-21 222-4"/>
+            <path class="map-road" d="M365 33c-7 54-3 93 13 133 18 45 14 84-10 118-24 34-32 70-20 102"/>
+            <path class="map-path-line" d="M47 211c82 8 103 2 147-18m220 10c51-20 111-20 235-6M365 34c-6 55-2 91 13 130m-10 120c-22 34-29 66-19 97"/>
+            <g class="map-trees" aria-hidden="true">
+              <circle cx="61" cy="315" r="13"/><circle cx="91" cy="344" r="10"/><circle cx="645" cy="155" r="12"/>
+              <circle cx="611" cy="365" r="14"/><circle cx="274" cy="335" r="10"/><circle cx="494" cy="54" r="11"/>
+              <circle cx="176" cy="45" r="9"/><circle cx="555" cy="320" r="9"/>
+            </g>
 
-    <aside class="card decision-panel">
-      <div class="board-heading"><div><p class="step">決策紀錄</p><h2>改革時間軸</h2></div><span>{{ decision_history|length }} / {{ round_count }} 已完成</span></div>
-      <ol class="decision-timeline">
-        {% for decision in decision_history %}
-          <li class="is-complete">
-            <span class="timeline-marker">✓</span>
-            <div><small>回合 {{ decision.round }}</small><strong>{{ decision.action_text }}</strong></div>
-          </li>
-        {% endfor %}
-        <li class="is-current" aria-current="step">
-          <span class="timeline-marker">{{ round_number }}</span>
-          <div><small>目前回合</small><strong>{{ round_data.event }}</strong></div>
-        </li>
-      </ol>
-    </aside>
+            <g class="map-zone" data-map-metric="problem_improvement" data-map-state="{{ map_state(metrics['problem_improvement']) }}">
+              <rect class="map-building" x="48" y="65" width="188" height="106" rx="13"/>
+              <path class="map-building-detail" d="M61 94h162M61 126h162M98 73v91m48-91v91m48-91v91"/>
+              <text class="map-building-label" x="142" y="157" text-anchor="middle">圖書館</text>
+              <rect class="map-value-plate" x="159" y="48" width="67" height="30" rx="12"/>
+              <text class="map-value" data-map-value x="192" y="68" text-anchor="middle">{{ metrics['problem_improvement'] }}</text>
+              <text class="map-status" data-map-status x="194" y="91" text-anchor="middle">{{ map_status(metrics['problem_improvement']) }}</text>
+            </g>
+
+            <g class="map-zone" data-map-metric="budget_remaining" data-map-state="{{ map_state(metrics['budget_remaining']) }}">
+              <rect class="map-building" x="480" y="67" width="187" height="102" rx="13"/>
+              <path class="map-building-detail" d="M494 96h159M494 128h159m-120-52v76m48-76v76m48-76v76"/>
+              <text class="map-building-label" x="573" y="155" text-anchor="middle">行政樓</text>
+              <rect class="map-value-plate" x="480" y="48" width="67" height="30" rx="12"/>
+              <text class="map-value" data-map-value x="513" y="68" text-anchor="middle">{{ metrics['budget_remaining'] }}</text>
+              <text class="map-status" data-map-status x="513" y="91" text-anchor="middle">{{ map_status(metrics['budget_remaining']) }}</text>
+            </g>
+
+            <g class="map-zone" data-map-metric="fairness" data-map-state="{{ map_state(metrics['fairness']) }}">
+              <rect class="map-walkway-zone" x="250" y="238" width="214" height="94" rx="36"/>
+              <path class="map-walkway-detail" d="M270 286h174m-152-23 21 46m38-46 21 46m38-46 21 46"/>
+              <text class="map-building-label" x="357" y="318" text-anchor="middle">共融步道</text>
+              <rect class="map-value-plate" x="248" y="225" width="67" height="30" rx="12"/>
+              <text class="map-value" data-map-value x="281" y="245" text-anchor="middle">{{ metrics['fairness'] }}</text>
+              <text class="map-status" data-map-status x="281" y="268" text-anchor="middle">{{ map_status(metrics['fairness']) }}</text>
+            </g>
+
+            <g class="map-zone" data-map-metric="satisfaction" data-map-state="{{ map_state(metrics['satisfaction']) }}">
+              <rect class="map-building" x="487" y="239" width="181" height="105" rx="13"/>
+              <path class="map-building-detail" d="M501 268h153m-153 32h153m-112-51v69m48-69v69"/>
+              <text class="map-building-label" x="578" y="327" text-anchor="middle">學生中心</text>
+              <rect class="map-value-plate" x="596" y="220" width="67" height="30" rx="12"/>
+              <text class="map-value" data-map-value x="629" y="240" text-anchor="middle">{{ metrics['satisfaction'] }}</text>
+              <text class="map-status" data-map-status x="629" y="263" text-anchor="middle">{{ map_status(metrics['satisfaction']) }}</text>
+            </g>
+
+            <g class="map-compass" aria-hidden="true">
+              <circle cx="660" cy="385" r="18"/><path d="m660 370 5 15-5 15-5-15 5-15Z"/>
+              <text x="660" y="414" text-anchor="middle">N</text>
+            </g>
+          </svg>
+        </div>
+        <div class="map-legend" aria-label="地圖狀態說明">
+          <span><i class="legend-attention"></i>需要關注</span>
+          <span><i class="legend-steady"></i>穩定推進</span>
+          <span><i class="legend-strong"></i>進展良好</span>
+        </div>
+        <p class="map-caption">每個地圖區域會依據實際模擬指標更新；數值為策略模擬結果。</p>
+    </section>
+    <div class="management-column">
+        {% include "_round_panels.html" %}
+    </div>
   </div>
 </section>
 {% endblock %}

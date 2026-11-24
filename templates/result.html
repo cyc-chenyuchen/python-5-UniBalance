@@ -18,7 +18,7 @@
     <h2>最終指標</h2>
     <div class="metrics">
       {% for name, value in record.final_metrics.items() %}
-        <div><strong>{{ record.metric_labels[name] }}</strong><span>{{ value }}</span></div>
+        <div data-metric="{{ name }}" data-value="{{ value }}"><strong>{{ record.metric_labels[name] }}</strong><span>{{ value }}</span></div>
       {% endfor %}
     </div>
   </section>

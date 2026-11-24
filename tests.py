@@ -296,6 +296,8 @@ class OfflineDemoTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("回合 1 / 3".encode("utf-8"), response.data)
         self.assertIn("目前策略".encode("utf-8"), response.data)
+        self.assertIn('id="campus-map"'.encode("utf-8"), response.data)
+        self.assertIn('data-map-metric="fairness"'.encode("utf-8"), response.data)
 
         response = self.client.post(
             "/simulation/choose",
@@ -310,8 +312,11 @@ class OfflineDemoTests(unittest.TestCase):
             "/simulation/choose",
             data={"action_id": "r2_a1"},
             follow_redirects=True,
+            headers={"X-Game-Update": "1"},
         )
-        self.assertIn("回合 3 / 3".encode("utf-8"), response.data)
+        self.assertIn('data-game-update'.encode("utf-8"), response.data)
+        self.assertIn('data-round-number="3"'.encode("utf-8"), response.data)
+        self.assertNotIn('id="campus-map"'.encode("utf-8"), response.data)
         response = self.client.post(
             "/simulation/choose",
             data={"action_id": "r3_a1"},

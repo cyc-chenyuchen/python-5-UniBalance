@@ -46,6 +46,21 @@ def _get_game():
     return GAMES.get(flow_id)
 
 
+def _round_context(game):
+    round_index = game["round_index"]
+    rounds = game["plans"]["rounds"]
+    return {
+        "round_data": rounds[round_index],
+        "round_number": round_index + 1,
+        "round_count": len(rounds),
+        "metrics": game["metrics"],
+        "metric_changes": game.get("last_metric_changes", {}),
+        "metric_labels": game["menu"]["metric_labels"],
+        "selected_plan": game["selected_plan"],
+        "decision_history": game["round_choices"],
+    }
+
+
 def _fallback_review_focus(record):
     metrics = record["final_metrics"]
     lowest = min(metrics, key=lambda name: (metrics[name], name))
@@ -257,21 +272,9 @@ def simulation():
     game = _get_game()
     if not game or not game.get("selected_plan"):
         return redirect("/")
-    round_index = game["round_index"]
-    rounds = game["plans"]["rounds"]
-    if round_index >= len(rounds):
+    if game["round_index"] >= len(game["plans"]["rounds"]):
         return redirect("/result")
-    return render_template(
-        "round.html",
-        round_data=rounds[round_index],
-        round_number=round_index + 1,
-        round_count=len(rounds),
-        metrics=game["metrics"],
-        metric_changes=game.get("last_metric_changes", {}),
-        metric_labels=game["menu"]["metric_labels"],
-        selected_plan=game["selected_plan"],
-        decision_history=game["round_choices"],
-    )
+    return render_template("round.html", **_round_context(game))
 
 
 @app.route("/simulation/choose", methods=["POST"])
@@ -308,6 +311,8 @@ def simulation_choose():
     game["round_index"] += 1
 
     if game["round_index"] < len(game["plans"]["rounds"]):
+        if request.headers.get("X-Game-Update") == "1":
+            return render_template("_round_update.html", **_round_context(game))
         return redirect("/simulation")
 
     plan = game["selected_plan"]

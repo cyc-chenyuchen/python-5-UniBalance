@@ -1,0 +1,68 @@
+<section class="metrics-board card" id="resource-panel">
+  <div class="board-heading">
+    <div><p class="step">資源管理</p><h2>校園四項指標</h2></div>
+    <span>本回合影響</span>
+  </div>
+  <div class="metrics game-metrics">
+    {% for name, value in metrics.items() %}
+      {% set change = metric_changes.get(name, 0) %}
+      <div class="metric-card" data-metric="{{ name }}" data-value="{{ value }}">
+        <strong>{{ metric_labels[name] }}</strong>
+        <span class="metric-value" data-count-up="{{ value }}" data-count-start="{{ value - change }}">{{ value }}</span>
+        {% if change %}
+          <small class="metric-change {% if change > 0 %}is-positive{% else %}is-negative{% endif %}">{{ "%+d"|format(change) }} 本回合</small>
+        {% else %}
+          <small class="metric-change is-neutral">目前基準</small>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="card event-panel" aria-live="polite">
+  <div class="event-heading"><span class="eyebrow">本回合事件</span><span>回合 {{ round_number }}</span></div>
+  <h2 tabindex="-1">{{ round_data.event }}</h2>
+  <p>選擇一項政策行動，觀察它對校園各區域與資源指標的影響。</p>
+  <p class="round-processing" role="status" hidden></p>
+  <form action="/simulation/choose" method="post" data-game-submit data-simulation-form class="action-form">
+    <div class="option-list action-options">
+      {% for action in round_data.actions %}
+        <label class="option action-option">
+          <input type="radio" name="action_id" value="{{ action.action_id }}" required>
+          <span class="action-number">{{ "%02d"|format(loop.index) }}</span>
+          <span class="action-copy">
+            <small>政策行動 {{ loop.index }}</small>
+            <strong>{{ action.text }}</strong>
+            <span class="action-effects" aria-label="此行動的模擬效果">
+              {% for name, value in action.effects.items() %}
+                <span class="{% if value > 0 %}is-positive{% elif value < 0 %}is-negative{% else %}is-neutral{% endif %}">{{ metric_labels[name] }} {{ "%+d"|format(value) }}</span>
+              {% endfor %}
+            </span>
+          </span>
+          <span class="action-check" aria-hidden="true">✓</span>
+        </label>
+      {% endfor %}
+    </div>
+    <p class="game-feedback" role="alert" hidden></p>
+    <div class="form-actions">
+      <span class="selection-hint">選擇一項行動後提交決策</span>
+      <button type="submit">執行本回合政策 <span aria-hidden="true">→</span></button>
+    </div>
+  </form>
+</section>
+
+<aside class="card decision-panel">
+  <div class="board-heading"><div><p class="step">策略執行紀錄</p><h2>決策時間軸</h2></div><span>{{ decision_history|length }} / {{ round_count }} 已完成</span></div>
+  <ol class="decision-timeline">
+    {% for decision in decision_history %}
+      <li class="is-complete">
+        <span class="timeline-marker">✓</span>
+        <div><small>回合 {{ decision.round }}</small><strong>{{ decision.action_text }}</strong></div>
+      </li>
+    {% endfor %}
+    <li class="is-current" aria-current="step">
+      <span class="timeline-marker">{{ round_number }}</span>
+      <div><small>目前事件</small><strong>{{ round_data.event }}</strong></div>
+    </li>
+  </ol>
+</aside>
