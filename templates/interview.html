@@ -4,8 +4,8 @@
 <section class="card form-card">
   <div class="visual-heading form-visual-heading">
     <div class="visual-copy">
-      <p class="step">問題探索訪談 · {{ question_number }} / 2</p>
-      <div class="progress-track" role="progressbar" aria-label="訪談進度" aria-valuemin="1" aria-valuemax="2" aria-valuenow="{{ question_number }}" style="--progress: {{ question_number * 50 }}%"><span></span></div>
+      <p class="step">問題探索訪談 · {{ question_number }} / {{ question_count }}</p>
+      <div class="progress-track" role="progressbar" aria-label="訪談進度" aria-valuemin="1" aria-valuemax="{{ question_count }}" aria-valuenow="{{ question_number }}" style="--progress: {{ question_number * 100 / question_count }}%"><span></span></div>
       <h1 class="question-title">{{ question.question }}</h1>
     </div>
     <img class="page-illustration" src="{{ url_for('static', filename='interview-illustration.svg') }}" alt="" aria-hidden="true">
@@ -19,7 +19,7 @@
       </label>
     {% endfor %}
     </div>
-    <button type="submit">{% if question_number == 2 %}查看改革方案{% else %}下一題{% endif %} <span aria-hidden="true">→</span></button>
+    <button type="submit">{% if question_number == question_count %}查看改革方案{% else %}下一題{% endif %} <span aria-hidden="true">→</span></button>
   </form>
 </section>
 {% endblock %}

@@ -3,6 +3,7 @@ import os
 import secrets
 
 from ai_service import (
+    INTERVIEW_QUESTION_COUNT,
     ask_interview_question,
     choose_review_focus,
     recommend_plans,
@@ -129,6 +130,7 @@ def interview():
         proposal=game["proposal"],
         question=game["current_question"],
         question_number=len(game["answers"]) + 1,
+        question_count=INTERVIEW_QUESTION_COUNT,
     )
 
 
@@ -149,7 +151,7 @@ def interview_answer():
         ), 400
 
     game["answers"].append(answer)
-    if len(game["answers"]) < 2:
+    if len(game["answers"]) < INTERVIEW_QUESTION_COUNT:
         try:
             game["current_question"] = ask_interview_question(
                 game["proposal"], game["answers"]
@@ -261,6 +263,7 @@ def simulation():
         "round.html",
         round_data=rounds[round_index],
         round_number=round_index + 1,
+        round_count=len(rounds),
         metrics=game["metrics"],
         metric_labels=game["menu"]["metric_labels"],
     )
@@ -294,7 +297,7 @@ def simulation_choose():
     })
     game["round_index"] += 1
 
-    if game["round_index"] < 2:
+    if game["round_index"] < len(game["plans"]["rounds"]):
         return redirect("/simulation")
 
     plan = game["selected_plan"]

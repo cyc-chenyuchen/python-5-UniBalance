@@ -20,6 +20,9 @@ METRIC_RANGES = {
     },
 }
 
+INTERVIEW_QUESTION_COUNT = 3
+SIMULATION_ROUND_COUNT = 3
+
 INTERVIEW_RESPONSE_SCHEMA = {
     "type": "OBJECT",
     "properties": {
@@ -205,20 +208,31 @@ def ask_interview_question(proposal, answers):
                 "question": "你最希望先改善校園的哪個部分？",
                 "options": ["改善使用流程", "增加可用資源"],
             }
+        if len(answers) == 1:
+            return {
+                "question": "你希望改革時優先考慮哪項需求？",
+                "options": ["公平性", "便利性", "預算控制"],
+            }
         return {
-            "question": "你希望改革時優先考慮哪項需求？",
-            "options": ["公平性", "便利性", "預算控制"],
+            "question": "你認為要如何確認這項改善真的有效？",
+            "options": ["持續收集使用者意見", "觀察服務使用狀況", "訂定定期檢視指標"],
         }
 
     system_prompt = (
         "你是校園改革訪談助理。只針對校園生活、成員、設施、服務或制度問題提問。"
-        "每次只產生一道題目，選項 2 到 4 個。"
+        f"訪談共 {INTERVIEW_QUESTION_COUNT} 題，每次只產生一道題目，選項 2 到 4 個。"
+        "依據提案與先前回答逐步深入，不重複詢問已涵蓋的內容。"
         "回覆必須是單一 JSON 物件，格式為 "
         '{"question":"問題文字","options":["選項一","選項二"]}。'
         "不可回傳 JSON 陣列、Markdown 或額外說明。"
     )
     user_prompt = json.dumps(
-        {"proposal": proposal, "previous_answers": answers},
+        {
+            "proposal": proposal,
+            "previous_answers": answers,
+            "question_number": len(answers) + 1,
+            "question_count": INTERVIEW_QUESTION_COUNT,
+        },
         ensure_ascii=False,
     )
     data = _request_gemini(
@@ -242,7 +256,7 @@ def recommend_plans(proposal, answers, game_config):
 
     system_prompt = (
         "你是校園改革模擬設計助理。只有明確非校園問題才回 supported=false。"
-        "必須產生恰好兩個方案與恰好兩個回合，每回合恰好兩個行動。"
+        f"必須產生恰好兩個方案與恰好 {SIMULATION_ROUND_COUNT} 個回合，每回合恰好兩個行動。"
         "所有效果為遊戲假設，且必須遵守輸入中的 effect_ranges："
         "方案效果與行動效果使用不同範圍；所有效果必須是整數，不可超界。"
         "回覆必須是單一 JSON 物件，最外層不可為陣列。"
@@ -254,6 +268,7 @@ def recommend_plans(proposal, answers, game_config):
         {
             "proposal": proposal,
             "answers": answers,
+            "simulation_round_count": SIMULATION_ROUND_COUNT,
             "game_config": {
                 "metric_labels": game_config["metric_labels"],
                 "initial_metrics": game_config["initial_metrics"],
@@ -295,8 +310,10 @@ def _validate_recommendation(data):
     rounds = data.get("rounds")
     if not isinstance(recommendations, list) or len(recommendations) != 2:
         raise ValueError("方案數量格式錯誤：必須恰好為兩個方案。")
-    if not isinstance(rounds, list) or len(rounds) != 2:
-        raise ValueError("模擬回合格式錯誤：必須恰好為兩個回合。")
+    if not isinstance(rounds, list) or len(rounds) != SIMULATION_ROUND_COUNT:
+        raise ValueError(
+            f"模擬回合格式錯誤：必須恰好為 {SIMULATION_ROUND_COUNT} 個回合。"
+        )
 
     strategies = set()
     validated_plans = []
@@ -441,6 +458,32 @@ def _demo_recommendation():
                             "problem_improvement": 4,
                             "satisfaction": 2,
                             "fairness": 4,
+                        },
+                    },
+                ],
+            },
+            {
+                "round_id": "round_3",
+                "event": "試行後蒐集到更多使用情況，需要決定如何持續調整。",
+                "actions": [
+                    {
+                        "action_id": "r3_a1",
+                        "text": "依據意見微調服務安排",
+                        "effects": {
+                            "budget_remaining": -2,
+                            "problem_improvement": 4,
+                            "satisfaction": 3,
+                            "fairness": 3,
+                        },
+                    },
+                    {
+                        "action_id": "r3_a2",
+                        "text": "維持現況並定期檢視",
+                        "effects": {
+                            "budget_remaining": 0,
+                            "problem_improvement": 2,
+                            "satisfaction": 1,
+                            "fairness": 2,
                         },
                     },
                 ],

@@ -155,6 +155,29 @@ class GeminiStructuredOutputTests(unittest.TestCase):
                         },
                     ],
                 },
+                {
+                    "event": "蒐集到更多使用情況，需要決定如何持續調整。",
+                    "actions": [
+                        {
+                            "text": "依據意見微調安排",
+                            "effects": {
+                                "budget_remaining": -1,
+                                "problem_improvement": 1,
+                                "satisfaction": 1,
+                                "fairness": 1,
+                            },
+                        },
+                        {
+                            "text": "維持現況並定期檢視",
+                            "effects": {
+                                "budget_remaining": 0,
+                                "problem_improvement": 1,
+                                "satisfaction": 0,
+                                "fairness": 1,
+                            },
+                        },
+                    ],
+                },
             ],
         }
         mock_response = unittest.mock.Mock()
@@ -206,6 +229,7 @@ class GeminiStructuredOutputTests(unittest.TestCase):
         self.assertIn('"effect_ranges"', request_data["contents"][0]["parts"][0]["text"])
         self.assertTrue(result["supported"])
         self.assertEqual(len(result["recommendations"]), 2)
+        self.assertEqual(len(result["rounds"]), 3)
 
     def test_out_of_range_effect_error_names_field_and_bounds(self):
         effects = {
@@ -238,6 +262,7 @@ class OfflineDemoTests(unittest.TestCase):
         )
         self.assertIn("離線示範模式".encode("utf-8"), response.data)
         self.assertEqual(response.status_code, 200)
+        self.assertIn("1 / 3".encode("utf-8"), response.data)
 
         response = self.client.post(
             "/interview/answer",
@@ -245,9 +270,20 @@ class OfflineDemoTests(unittest.TestCase):
             follow_redirects=True,
         )
         self.assertEqual(response.status_code, 200)
+        self.assertIn("2 / 3".encode("utf-8"), response.data)
         response = self.client.post(
             "/interview/answer",
             data={"answer": "\u516c\u5e73\u6027"},
+            follow_redirects=True,
+        )
+        self.assertIn("3 / 3".encode("utf-8"), response.data)
+        self.assertIn(
+            "你認為要如何確認這項改善真的有效？".encode("utf-8"),
+            response.data,
+        )
+        response = self.client.post(
+            "/interview/answer",
+            data={"answer": "持續收集使用者意見"},
             follow_redirects=True,
         )
         self.assertIn("校園服務改善示範".encode("utf-8"), response.data)
@@ -258,6 +294,7 @@ class OfflineDemoTests(unittest.TestCase):
             follow_redirects=True,
         )
         self.assertEqual(response.status_code, 200)
+        self.assertIn("回合 1 / 3".encode("utf-8"), response.data)
 
         response = self.client.post(
             "/simulation/choose",
@@ -265,9 +302,16 @@ class OfflineDemoTests(unittest.TestCase):
             follow_redirects=True,
         )
         self.assertEqual(response.status_code, 200)
+        self.assertIn("回合 2 / 3".encode("utf-8"), response.data)
         response = self.client.post(
             "/simulation/choose",
             data={"action_id": "r2_a1"},
+            follow_redirects=True,
+        )
+        self.assertIn("回合 3 / 3".encode("utf-8"), response.data)
+        response = self.client.post(
+            "/simulation/choose",
+            data={"action_id": "r3_a1"},
             follow_redirects=True,
         )
         self.assertIn("模擬結果".encode("utf-8"), response.data)
