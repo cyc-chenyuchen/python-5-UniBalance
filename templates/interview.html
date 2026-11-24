@@ -17,7 +17,7 @@
     <img class="page-illustration" src="{{ url_for('static', filename='interview-illustration.svg') }}" alt="" aria-hidden="true">
   </div>
   <p class="section-hint">選擇最符合你想法的回應，繼續整理這項需求。</p>
-  <form action="/interview/answer" method="post" data-game-submit>
+  <form action="/interview/answer" method="post" data-game-submit data-pending-message="{% if question_number == question_count %}正在整理需求並產生方案，請稍候。{% else %}正在準備下一題，請稍候。{% endif %}">
     <div class="option-list">
     {% for option in question.options %}
       <label class="option">
@@ -30,6 +30,7 @@
       <span class="selection-hint">請選擇一項回應</span>
       <button type="submit">{% if question_number == question_count %}完成訪談並查看方案{% else %}確認並繼續{% endif %} <span aria-hidden="true">→</span></button>
     </div>
+    <p class="submit-status" data-submit-status role="status" hidden></p>
   </form>
 </section>
 {% endblock %}

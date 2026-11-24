@@ -11,8 +11,9 @@
     <img class="page-illustration" src="{{ url_for('static', filename='error-illustration.svg') }}" alt="" aria-hidden="true">
   </div>
   {% if retry %}
-    <form action="/interview/retry" method="post">
+    <form action="/interview/retry" method="post" data-game-submit data-pending-message="正在重新連線並重試，請稍候。">
       <button type="submit">重試 <span aria-hidden="true">→</span></button>
+      <p class="submit-status" data-submit-status role="status" hidden></p>
     </form>
   {% endif %}
   <a class="button" href="/">返回首頁</a>

@@ -174,7 +174,12 @@
     }
     if (feedback) feedback.hidden = true;
     if (processing) {
-      processing.textContent = "正在套用政策並更新校園狀態…";
+      const screen = form.closest(".simulation-screen");
+      const isFinalRound = screen
+        && Number(screen.dataset.roundNumber) === Number(screen.dataset.roundCount);
+      processing.textContent = isFinalRound
+        ? "正在整理最終成果，請稍候…"
+        : "正在更新本回合指標，請稍候…";
       processing.hidden = false;
     }
 
@@ -238,14 +243,23 @@
       return;
     }
 
-    if (reducedMotion) return;
     event.preventDefault();
     form.dataset.submitting = "true";
     form.classList.add("is-submitting");
+    form.setAttribute("aria-busy", "true");
     const submit = form.querySelector('button[type="submit"]');
     if (submit) {
       submit.disabled = true;
       submit.setAttribute("aria-busy", "true");
+    }
+    const status = form.querySelector("[data-submit-status]");
+    if (status) {
+      status.textContent = form.dataset.pendingMessage || "正在處理，請稍候…";
+      status.hidden = false;
+    }
+    if (reducedMotion) {
+      form.submit();
+      return;
     }
     window.setTimeout(() => form.submit(), 180);
   });

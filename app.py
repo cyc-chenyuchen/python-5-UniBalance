@@ -124,14 +124,25 @@ def interview_start():
 
     try:
         game = _new_game(proposal)
-        game["failure"] = None
+    except ValueError as error:
+        return render_template(
+            "error.html", title="無法開始任務", message=str(error)
+        ), 400
+
+    game["failure"] = "interview"
+    try:
         question = ask_interview_question(proposal, [])
         game["current_question"] = question
+        game["failure"] = None
         return redirect("/interview")
     except ValueError as error:
-        return render_template("error.html", title="訪談格式錯誤", message=str(error)), 400
+        return render_template(
+            "error.html",
+            title="訪談格式錯誤",
+            message=str(error),
+            retry=True,
+        ), 400
     except Exception as error:
-        session.pop("flow_id", None)
         return render_template("error.html", title="無法取得訪談", message=str(error), retry=True), 503
 
 

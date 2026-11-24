@@ -1,6 +1,5 @@
 import json
 import os
-import time
 
 import requests
 
@@ -109,22 +108,27 @@ REVIEW_RESPONSE_SCHEMA = {
 
 
 def send_request(url, headers, request_data):
-    for attempt in range(3):
-        try:
-            response = requests.post(url, headers=headers, json=request_data, timeout=(2, 6))
-            if response.status_code == 503 and attempt < 2:
-                time.sleep(2 if attempt == 0 else 4)
-                continue
-            response.raise_for_status()
-            return response
-        except requests.exceptions.Timeout:
-            if attempt < 2:
-                time.sleep(2 if attempt == 0 else 4)
-                continue
-            raise TimeoutError("Gemini 請求逾時（已嘗試 3 次）。")
-        except requests.exceptions.RequestException as error:
-            raise RuntimeError(f"Gemini 連線失敗：{error}") from error
-    raise RuntimeError("Gemini 請求失敗。")
+    try:
+        response = requests.post(
+            url,
+            headers=headers,
+            json=request_data,
+            timeout=(3, 12),
+        )
+        response.raise_for_status()
+        return response
+    except requests.exceptions.Timeout as error:
+        raise TimeoutError(
+            "Gemini 請求逾時（連線上限 3 秒、回應上限 12 秒），請重試。"
+        ) from error
+    except requests.exceptions.RequestException as error:
+        error_response = getattr(error, "response", None)
+        status_code = getattr(error_response, "status_code", None)
+        if status_code is not None:
+            raise RuntimeError(
+                f"Gemini 服務回應錯誤（HTTP {status_code}），請重試。"
+            ) from error
+        raise RuntimeError("Gemini 連線失敗，請重試。") from error
 
 
 def _request_gemini(system_prompt, user_prompt, response_schema):

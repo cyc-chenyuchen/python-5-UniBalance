@@ -1,5 +1,6 @@
 import json
 import os
+import requests
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -7,7 +8,7 @@ from unittest.mock import patch
 os.environ.setdefault("FLASK_SECRET_KEY", "test-only-secret")
 os.environ["DEMO_MODE"] = "1"
 
-from ai_service import METRIC_RANGES, PLAN_RESPONSE_SCHEMA, _validate_effects, recommend_plans
+from ai_service import METRIC_RANGES, PLAN_RESPONSE_SCHEMA, _validate_effects, recommend_plans, send_request
 from app import app
 from simulation import apply_effects, calculate_total_score, make_comment, run_round_choice
 
@@ -242,6 +243,23 @@ class GeminiStructuredOutputTests(unittest.TestCase):
             _validate_effects(effects, METRIC_RANGES["plan"], "方案效果格式錯誤：")
 
 
+class GeminiRequestTests(unittest.TestCase):
+    def test_timeout_is_bounded_and_not_retried_automatically(self):
+        with patch(
+            "ai_service.requests.post",
+            side_effect=requests.exceptions.ReadTimeout,
+        ) as post:
+            with self.assertRaisesRegex(TimeoutError, "回應上限 12 秒"):
+                send_request("https://example.test/generate", {}, {})
+
+        post.assert_called_once_with(
+            "https://example.test/generate",
+            headers={},
+            json={},
+            timeout=(3, 12),
+        )
+
+
 class OfflineDemoTests(unittest.TestCase):
     def setUp(self):
         self.records_file = Path(__file__).resolve().parent / "data" / "records.json"
@@ -332,6 +350,25 @@ class OfflineDemoTests(unittest.TestCase):
 
         with self.client.session_transaction() as session:
             self.assertLess(len(self.client.get_cookie("session").value.encode("utf-8")), 4096)
+
+    def test_interview_start_timeout_keeps_retryable_session(self):
+        question = {"question": "先改善哪個面向？", "options": ["改善流程", "增加資源"]}
+        with patch(
+            "app.ask_interview_question",
+            side_effect=[TimeoutError("Gemini timeout"), question],
+        ) as ask_question:
+            response = self.client.post(
+                "/interview/start",
+                data={"proposal": "改善校園服務"},
+            )
+            self.assertEqual(response.status_code, 503)
+            self.assertIn("重試".encode("utf-8"), response.data)
+
+            response = self.client.post("/interview/retry", follow_redirects=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("問題 1 / 3".encode("utf-8"), response.data)
+        self.assertEqual(ask_question.call_count, 2)
 
 
 if __name__ == "__main__":

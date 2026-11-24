@@ -643,6 +643,15 @@ button:hover, .button:hover {
 .section-hint, .selection-hint { color: var(--color-muted); font-size: 13px; }
 .section-hint { margin: 0 0 13px; }
 .form-actions { justify-content: space-between; }
+.submit-status:not([hidden]) {
+  margin: 12px 0 0;
+  padding: 9px 12px;
+  border-left: 3px solid var(--color-primary);
+  border-radius: 0 10px 10px 0;
+  background: var(--color-olive-soft);
+  color: var(--color-primary-dark);
+  font-size: 12px;
+}
 .option {
   position: relative;
   transition: transform .2s ease, border-color .2s ease, background .2s ease, box-shadow .2s ease;
