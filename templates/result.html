@@ -3,31 +3,42 @@
 <section class="card">
   <p class="step">模擬結果</p>
   <h1>{{ record.scenario_title }}</h1>
-  <h2>{{ record.total_score }} 分</h2>
-  <p>{{ record.comment }}</p>
-  <h3>選擇的方案</h3>
-  <p><strong>{{ record.plan_title }}</strong>－{{ record.plan_strategy }}</p>
-  <p>{{ record.plan_description }}</p>
-
-  <h3>最終指標</h3>
-  <div class="metrics">
-    {% for name, value in record.final_metrics.items() %}
-      <div><strong>{{ record.metric_labels[name] }}</strong><span>{{ value }}</span></div>
-    {% endfor %}
+  <div class="score-panel">
+    <div class="score-value">{{ record.total_score }}<small>總分</small></div>
+    <p>{{ record.comment }}</p>
   </div>
 
-  <h3>回合行動</h3>
-  <ol>
-    {% for action in record.actions %}
-      <li>
-        <strong>{{ action.event }}</strong><br>
-        {{ action.action_text }}
-      </li>
-    {% endfor %}
-  </ol>
+  <section class="result-section">
+    <h2>最終指標</h2>
+    <div class="metrics">
+      {% for name, value in record.final_metrics.items() %}
+        <div><strong>{{ record.metric_labels[name] }}</strong><span>{{ value }}</span></div>
+      {% endfor %}
+    </div>
+  </section>
 
-  <h3>本機回顧</h3>
-  <p>{{ record.review }}</p>
-  <p class="notice">{{ record.review_note }}</p>
+  <section class="result-section">
+    <h2>選擇的方案</h2>
+    <p><strong>{{ record.plan_title }}</strong>－{{ record.plan_strategy }}</p>
+    <p>{{ record.plan_description }}</p>
+  </section>
+
+  <section class="result-section">
+    <h2>模擬過程</h2>
+    <ol class="action-list">
+      {% for action in record.actions %}
+        <li>
+          <strong>{{ action.event }}</strong>
+          <span>{{ action.action_text }}</span>
+        </li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  <section class="result-section">
+    <h2>本機回顧</h2>
+    <p>{{ record.review }}</p>
+    <p class="notice">{{ record.review_note }}</p>
+  </section>
 </section>
 {% endblock %}

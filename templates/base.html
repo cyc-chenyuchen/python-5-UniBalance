@@ -7,15 +7,20 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <header>
-    <a class="brand" href="/">校園改革模擬平台</a>
-    <nav>
+  <header class="site-header">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">U</span>
+      <span>校園改革模擬平台</span>
+    </a>
+    <nav class="site-nav" aria-label="主要導覽">
+      <a href="/">開始提案</a>
       <a href="/records">歷史結果</a>
     </nav>
     {% if demo_mode %}<div class="demo-badge">離線示範模式</div>{% endif %}
   </header>
-  <main>
+  <main class="site-main">
     {% block content %}{% endblock %}
   </main>
+  <footer class="site-footer">讓每個校園觀察，都成為更好改變的起點。</footer>
 </body>
 </html>

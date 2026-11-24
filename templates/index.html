@@ -1,12 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="card">
-  <h1>把校園觀察整理成改革提案</h1>
-  <p class="notice">請勿輸入姓名、電話、學號或其他個人資料。</p>
+<section class="hero">
+  <span class="eyebrow">從想法開始，讓校園更好</span>
+  <h1>把校園觀察，化為<br>真正可行的改變</h1>
+  <p>提出你在校園中發現的問題，透過簡短訪談與情境模擬，探索兼顧需求與資源的改革方案。</p>
+</section>
+<section class="card form-card">
+  <h2>分享你的校園提案</h2>
+  <p>描述一件你希望改善的校園生活、設施或服務問題。</p>
+  <div class="notice privacy-note">為保障隱私，請勿輸入姓名、電話、學號或其他個人資料。</div>
   <form action="/interview/start" method="post">
-    <label for="proposal">你的校園提案（1～300 字）</label>
-    <textarea id="proposal" name="proposal" maxlength="300" required></textarea>
-    <button type="submit">開始訪談</button>
+    <label for="proposal">你的校園提案 <span class="step">1～300 字</span></label>
+    <textarea id="proposal" name="proposal" maxlength="300" required placeholder="例如：圖書館尖峰時段座位不足，希望有更公平的使用方式。"></textarea>
+    <button type="submit">開始訪談 <span aria-hidden="true">→</span></button>
   </form>
 </section>
 {% endblock %}

@@ -1,16 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="card">
-  <p class="step">訪談 {{ question_number }} / 2</p>
-  <h1>{{ question.question }}</h1>
+<section class="card form-card">
+  <p class="step">提案訪談 · {{ question_number }} / 2</p>
+  <div class="progress-track" role="progressbar" aria-label="訪談進度" aria-valuemin="1" aria-valuemax="2" aria-valuenow="{{ question_number }}" style="--progress: {{ question_number * 50 }}%"><span></span></div>
+  <h1 class="question-title">{{ question.question }}</h1>
   <form action="/interview/answer" method="post">
+    <div class="option-list">
     {% for option in question.options %}
       <label class="option">
         <input type="radio" name="answer" value="{{ option }}" required>
         {{ option }}
       </label>
     {% endfor %}
-    <button type="submit">下一題</button>
+    </div>
+    <button type="submit">{% if question_number == 2 %}查看改革方案{% else %}下一題{% endif %} <span aria-hidden="true">→</span></button>
   </form>
 </section>
 {% endblock %}

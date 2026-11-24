@@ -1,21 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="card">
-  <p class="step">模擬回合 {{ round_number }} / 2</p>
-  <h1>{{ round_data.event }}</h1>
+<section class="card form-card">
+  <p class="step">情境模擬 · 回合 {{ round_number }} / 2</p>
+  <div class="progress-track" role="progressbar" aria-label="模擬進度" aria-valuemin="1" aria-valuemax="2" aria-valuenow="{{ round_number }}" style="--progress: {{ round_number * 50 }}%"><span></span></div>
+  <h1 class="question-title">{{ round_data.event }}</h1>
+  <h3>目前校園指標</h3>
   <div class="metrics">
     {% for name, value in metrics.items() %}
       <div><strong>{{ metric_labels[name] }}</strong><span>{{ value }}</span></div>
     {% endfor %}
   </div>
   <form action="/simulation/choose" method="post">
+    <h3>你會如何應對？</h3>
+    <div class="option-list">
     {% for action in round_data.actions %}
       <label class="option">
         <input type="radio" name="action_id" value="{{ action.action_id }}" required>
         <strong>{{ action.text }}</strong>
       </label>
     {% endfor %}
-    <button type="submit">確認行動</button>
+    </div>
+    <button type="submit">確認行動 <span aria-hidden="true">→</span></button>
   </form>
 </section>
 {% endblock %}
