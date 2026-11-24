@@ -155,14 +155,11 @@
     const resultNodes = Array.from(resultDocument.body.childNodes)
       .filter((node) => node.nodeName.toLowerCase() !== "script")
       .map((node) => document.importNode(node, true));
-    const delay = reducedMotion ? 0 : 520;
-    window.setTimeout(() => {
-      document.title = resultDocument.title;
-      document.body.className = resultDocument.body.className;
-      document.body.replaceChildren(...resultNodes);
-      window.history.pushState({ campusResult: true }, "", resultUrl);
-      initializeCounters();
-    }, delay);
+    document.title = resultDocument.title;
+    document.body.className = resultDocument.body.className;
+    document.body.replaceChildren(...resultNodes);
+    window.history.replaceState({ campusResult: true }, "", resultUrl);
+    initializeCounters();
   }
 
   async function submitRound(form) {

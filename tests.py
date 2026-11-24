@@ -298,6 +298,10 @@ class OfflineDemoTests(unittest.TestCase):
         self.assertIn("目前策略".encode("utf-8"), response.data)
         self.assertIn('id="campus-map"'.encode("utf-8"), response.data)
         self.assertIn('data-map-metric="fairness"'.encode("utf-8"), response.data)
+        for label in ("剩餘預算", "問題改善", "學生滿意度", "公平性"):
+            self.assertIn(label.encode("utf-8"), response.data)
+        for location in ("圖書館</text>", "行政樓</text>", "學生中心</text>", "共融步道</text>"):
+            self.assertNotIn(location.encode("utf-8"), response.data)
 
         response = self.client.post(
             "/simulation/choose",
@@ -321,8 +325,10 @@ class OfflineDemoTests(unittest.TestCase):
             "/simulation/choose",
             data={"action_id": "r3_a1"},
             follow_redirects=True,
+            headers={"X-Game-Update": "1"},
         )
         self.assertIn("模擬結果".encode("utf-8"), response.data)
+        self.assertEqual(response.request.path, "/result")
 
         with self.client.session_transaction() as session:
             self.assertLess(len(self.client.get_cookie("session").value.encode("utf-8")), 4096)
