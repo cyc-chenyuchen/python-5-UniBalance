@@ -3,7 +3,7 @@ import os
 import requests
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 os.environ.setdefault("FLASK_SECRET_KEY", "test-only-secret")
 os.environ["DEMO_MODE"] = "1"
@@ -259,6 +259,37 @@ class GeminiRequestTests(unittest.TestCase):
             timeout=(5, 30),
         )
 
+    def test_service_unavailable_retries_once_then_succeeds(self):
+        unavailable = Mock(status_code=503)
+        success = Mock(status_code=200)
+        with (
+            patch(
+                "ai_service.requests.post",
+                side_effect=[unavailable, success],
+            ) as post,
+            patch("ai_service.time.sleep") as sleep,
+        ):
+            response = send_request("https://example.test/generate", {}, {})
+
+        self.assertIs(response, success)
+        self.assertEqual(post.call_count, 2)
+        sleep.assert_called_once_with(2)
+
+    def test_repeated_service_unavailable_reports_retry_failure(self):
+        unavailable = Mock(status_code=503)
+        with (
+            patch(
+                "ai_service.requests.post",
+                side_effect=[unavailable, unavailable],
+            ) as post,
+            patch("ai_service.time.sleep") as sleep,
+        ):
+            with self.assertRaisesRegex(RuntimeError, "已自動重試一次仍失敗"):
+                send_request("https://example.test/generate", {}, {})
+
+        self.assertEqual(post.call_count, 2)
+        sleep.assert_called_once_with(2)
+
 
 class OfflineDemoTests(unittest.TestCase):
     def setUp(self):
@@ -369,6 +400,56 @@ class OfflineDemoTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("問題 1 / 3".encode("utf-8"), response.data)
         self.assertEqual(ask_question.call_count, 2)
+
+    def test_plan_generation_503_can_retry_without_losing_answers(self):
+        response = self.client.post(
+            "/interview/start",
+            data={"proposal": "改善校園服務"},
+            follow_redirects=True,
+        )
+        self.assertIn("問題 1 / 3".encode("utf-8"), response.data)
+        for answer in ("改善使用流程", "公平性"):
+            response = self.client.post(
+                "/interview/answer",
+                data={"answer": answer},
+                follow_redirects=True,
+            )
+        self.assertIn("問題 3 / 3".encode("utf-8"), response.data)
+
+        plan_data = {
+            "supported": True,
+            "scenario_title": "校園資源改善",
+            "recommendations": [{
+                "plan_id": "plan_1",
+                "title": "循序改善方案",
+                "strategy": "分階段調整",
+                "description": "先整理需求，再分階段調整服務。",
+                "reason": "可逐步驗證改善方向。",
+                "effects": {
+                    "budget_remaining": -2,
+                    "problem_improvement": 2,
+                    "satisfaction": 1,
+                    "fairness": 1,
+                },
+            }],
+            "rounds": [],
+        }
+        with patch(
+            "app.recommend_plans",
+            side_effect=[RuntimeError("Gemini HTTP 503"), plan_data],
+        ) as recommend:
+            response = self.client.post(
+                "/interview/answer",
+                data={"answer": "持續收集使用者意見"},
+            )
+            self.assertEqual(response.status_code, 503)
+
+            response = self.client.post("/interview/retry", follow_redirects=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("方案探索".encode("utf-8"), response.data)
+        self.assertIn("循序改善方案".encode("utf-8"), response.data)
+        self.assertEqual(recommend.call_count, 2)
 
 
 if __name__ == "__main__":

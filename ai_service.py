@@ -1,5 +1,6 @@
 import json
 import os
+import time
 
 import requests
 
@@ -108,27 +109,42 @@ REVIEW_RESPONSE_SCHEMA = {
 
 
 def send_request(url, headers, request_data):
-    try:
-        response = requests.post(
-            url,
-            headers=headers,
-            json=request_data,
-            timeout=(5, 30),
-        )
-        response.raise_for_status()
-        return response
-    except requests.exceptions.Timeout as error:
-        raise TimeoutError(
-            "Gemini 請求逾時（連線上限 5 秒、回應上限 30 秒），請重試。"
-        ) from error
-    except requests.exceptions.RequestException as error:
-        error_response = getattr(error, "response", None)
-        status_code = getattr(error_response, "status_code", None)
-        if status_code is not None:
-            raise RuntimeError(
-                f"Gemini 服務回應錯誤（HTTP {status_code}），請重試。"
+    for attempt in range(2):
+        try:
+            response = requests.post(
+                url,
+                headers=headers,
+                json=request_data,
+                timeout=(5, 30),
+            )
+        except requests.exceptions.Timeout as error:
+            raise TimeoutError(
+                "Gemini 請求逾時（連線上限 5 秒、回應上限 30 秒），請重試。"
             ) from error
-        raise RuntimeError("Gemini 連線失敗，請重試。") from error
+        except requests.exceptions.RequestException as error:
+            raise RuntimeError("Gemini 連線失敗，請重試。") from error
+
+        if response.status_code == 503:
+            if attempt == 0:
+                time.sleep(2)
+                continue
+            raise RuntimeError(
+                "Gemini 服務暫時無法使用（HTTP 503），已自動重試一次仍失敗，請稍後再試。"
+            )
+
+        try:
+            response.raise_for_status()
+            return response
+        except requests.exceptions.RequestException as error:
+            error_response = getattr(error, "response", None)
+            status_code = getattr(error_response, "status_code", None)
+            if status_code is not None:
+                raise RuntimeError(
+                    f"Gemini 服務回應錯誤（HTTP {status_code}），請重試。"
+                ) from error
+            raise RuntimeError("Gemini 連線失敗，請重試。") from error
+
+    raise RuntimeError("Gemini 請求失敗，請稍後再試。")
 
 
 def _request_gemini(system_prompt, user_prompt, response_schema):
