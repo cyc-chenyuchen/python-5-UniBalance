@@ -134,5 +134,73 @@
     "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
     "review": "本次採用「分時段改善方案」。在「第一次試行後，部分學生反映使用方式不夠清楚。」中，玩家選擇了「增加說明並安排協助」；完成模擬後，剩餘預算為 52，總分為 81 分。",
     "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
+  },
+  {
+    "record_id": "6e2c463acaa025db13073fe803dd105c",
+    "created_at": "2026-11-24T06:10:28.795824+00:00",
+    "scenario_id": "campus_custom",
+    "scenario_title": "宿舍前道路鋪面改善計畫",
+    "proposal": "宿舍前道路磁磚不平整，常常積水且腳踏車行駛顛簸。",
+    "plan_id": "plan_2",
+    "plan_title": "局部修補與排水優化方案",
+    "plan_strategy": "分段維護施工",
+    "plan_description": "針對積水最嚴重及磁磚碎裂處進行局部修補，並加裝側溝排水孔。",
+    "plan_reason": "以較低預算達到一定改善效果，降低施工期間對學生的影響。",
+    "plan_effects": {
+      "budget_remaining": -8,
+      "problem_improvement": 12,
+      "satisfaction": 4,
+      "fairness": 2
+    },
+    "initial_metrics": {
+      "budget_remaining": 75,
+      "problem_improvement": 75,
+      "satisfaction": 75,
+      "fairness": 75
+    },
+    "final_metrics": {
+      "budget_remaining": 60,
+      "problem_improvement": 100,
+      "satisfaction": 87,
+      "fairness": 84
+    },
+    "metric_labels": {
+      "budget_remaining": "剩餘預算",
+      "problem_improvement": "問題改善",
+      "satisfaction": "學生滿意度",
+      "fairness": "公平性"
+    },
+    "actions": [
+      {
+        "round": 1,
+        "event": "施工期間部分路段封閉，引發學生通行不便與抱怨。",
+        "action_index": 0,
+        "action_id": "r1_a1",
+        "action_text": "設置臨時便道並加派導引人員",
+        "action_effects": {
+          "budget_remaining": -5,
+          "problem_improvement": 6,
+          "satisfaction": 3,
+          "fairness": 4
+        }
+      },
+      {
+        "round": 2,
+        "event": "完工後迎來首場梅雨季，檢驗排水與防滑成效。",
+        "action_index": 0,
+        "action_id": "r2_a1",
+        "action_text": "進行降雨排水測試與滿意度調查",
+        "action_effects": {
+          "budget_remaining": -2,
+          "problem_improvement": 8,
+          "satisfaction": 5,
+          "fairness": 3
+        }
+      }
+    ],
+    "total_score": 83,
+    "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
+    "review": "本次採用「局部修補與排水優化方案」。在「完工後迎來首場梅雨季，檢驗排水與防滑成效。」中，玩家選擇了「進行降雨排水測試與滿意度調查」；完成模擬後，問題改善為 100，總分為 83 分。",
+    "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
   }
 ]

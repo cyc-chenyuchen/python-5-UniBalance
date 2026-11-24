@@ -7,7 +7,7 @@ from unittest.mock import patch
 os.environ.setdefault("FLASK_SECRET_KEY", "test-only-secret")
 os.environ["DEMO_MODE"] = "1"
 
-from ai_service import recommend_plans
+from ai_service import METRIC_RANGES, PLAN_RESPONSE_SCHEMA, _validate_effects, recommend_plans
 from app import app
 from simulation import apply_effects, calculate_total_score, make_comment, run_round_choice
 
@@ -193,8 +193,29 @@ class GeminiStructuredOutputTests(unittest.TestCase):
             request_data["generationConfig"]["responseSchema"]["type"],
             "OBJECT",
         )
+        plan_effect_schema = PLAN_RESPONSE_SCHEMA["properties"]["recommendations"]["items"]["properties"]["effects"]
+        action_effect_schema = PLAN_RESPONSE_SCHEMA["properties"]["rounds"]["items"]["properties"]["actions"]["items"]["properties"]["effects"]
+        self.assertIn(
+            "-20 到 0",
+            plan_effect_schema["properties"]["budget_remaining"]["description"],
+        )
+        self.assertIn(
+            "-10 到 0",
+            action_effect_schema["properties"]["budget_remaining"]["description"],
+        )
+        self.assertIn('"effect_ranges"', request_data["contents"][0]["parts"][0]["text"])
         self.assertTrue(result["supported"])
         self.assertEqual(len(result["recommendations"]), 2)
+
+    def test_out_of_range_effect_error_names_field_and_bounds(self):
+        effects = {
+            "budget_remaining": 1,
+            "problem_improvement": 0,
+            "satisfaction": 0,
+            "fairness": 0,
+        }
+        with self.assertRaisesRegex(ValueError, "budget_remaining=1.*-20～0"):
+            _validate_effects(effects, METRIC_RANGES["plan"], "方案效果格式錯誤：")
 
 
 class OfflineDemoTests(unittest.TestCase):

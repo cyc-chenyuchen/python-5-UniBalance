@@ -32,21 +32,24 @@ INTERVIEW_RESPONSE_SCHEMA = {
     "required": ["question", "options"],
 }
 
-_EFFECTS_SCHEMA = {
-    "type": "OBJECT",
-    "properties": {
-        "budget_remaining": {"type": "INTEGER"},
-        "problem_improvement": {"type": "INTEGER"},
-        "satisfaction": {"type": "INTEGER"},
-        "fairness": {"type": "INTEGER"},
-    },
-    "required": [
-        "budget_remaining",
-        "problem_improvement",
-        "satisfaction",
-        "fairness",
-    ],
-}
+def _effects_schema(ranges):
+    return {
+        "type": "OBJECT",
+        "properties": {
+            name: {
+                "type": "INTEGER",
+                "description": (
+                    f"遊戲效果整數，必須介於 {minimum} 到 {maximum}，包含邊界。"
+                ),
+            }
+            for name, (minimum, maximum) in ranges.items()
+        },
+        "required": list(ranges),
+    }
+
+
+_PLAN_EFFECTS_SCHEMA = _effects_schema(METRIC_RANGES["plan"])
+_ACTION_EFFECTS_SCHEMA = _effects_schema(METRIC_RANGES["action"])
 
 PLAN_RESPONSE_SCHEMA = {
     "type": "OBJECT",
@@ -62,7 +65,7 @@ PLAN_RESPONSE_SCHEMA = {
                     "strategy": {"type": "STRING"},
                     "description": {"type": "STRING"},
                     "reason": {"type": "STRING"},
-                    "effects": _EFFECTS_SCHEMA,
+                    "effects": _PLAN_EFFECTS_SCHEMA,
                 },
                 "required": ["title", "strategy", "description", "reason", "effects"],
             },
@@ -79,7 +82,7 @@ PLAN_RESPONSE_SCHEMA = {
                             "type": "OBJECT",
                             "properties": {
                                 "text": {"type": "STRING"},
-                                "effects": _EFFECTS_SCHEMA,
+                                "effects": _ACTION_EFFECTS_SCHEMA,
                             },
                             "required": ["text", "effects"],
                         },
@@ -182,13 +185,16 @@ def _validate_text(value, limit, message):
 
 def _validate_effects(effects, ranges, message):
     if not isinstance(effects, dict) or set(effects) != set(ranges):
-        raise ValueError(message)
+        expected = "、".join(ranges)
+        raise ValueError(f"{message}效果欄位必須恰好包含：{expected}。")
     for name, (minimum, maximum) in ranges.items():
         value = effects[name]
         if isinstance(value, bool) or not isinstance(value, int):
-            raise ValueError(message)
+            raise ValueError(f"{message}{name} 必須是整數（不可為布林值）。")
         if value < minimum or value > maximum:
-            raise ValueError(message)
+            raise ValueError(
+                f"{message}{name}={value} 超出允許範圍 {minimum}～{maximum}。"
+            )
     return dict(effects)
 
 
@@ -237,7 +243,9 @@ def recommend_plans(proposal, answers, game_config):
     system_prompt = (
         "你是校園改革模擬設計助理。只有明確非校園問題才回 supported=false。"
         "必須產生恰好兩個方案與恰好兩個回合，每回合恰好兩個行動。"
-        "所有效果為遊戲假設。回覆必須是單一 JSON 物件，最外層不可為陣列。"
+        "所有效果為遊戲假設，且必須遵守輸入中的 effect_ranges："
+        "方案效果與行動效果使用不同範圍；所有效果必須是整數，不可超界。"
+        "回覆必須是單一 JSON 物件，最外層不可為陣列。"
         "支援時物件欄位為 supported=true、scenario_title、recommendations、rounds；"
         "不支援時仍回傳物件，並使用 supported=false、scenario_title=\"\"、"
         "recommendations=[]、rounds=[]。只輸出 JSON，不得使用 Markdown 或解釋。"
@@ -259,6 +267,7 @@ def recommend_plans(proposal, answers, game_config):
                 "round_event": 100,
                 "action_text": 70,
             },
+            "effect_ranges": METRIC_RANGES,
         },
         ensure_ascii=False,
     )
@@ -303,7 +312,7 @@ def _validate_recommendation(data):
         description = _validate_text(plan.get("description"), 90, "方案描述格式錯誤。")
         reason = _validate_text(plan.get("reason"), 90, "方案理由格式錯誤。")
         effects = _validate_effects(
-            plan.get("effects"), METRIC_RANGES["plan"], "方案效果值格式錯誤或超出範圍。"
+            plan.get("effects"), METRIC_RANGES["plan"], "方案效果格式錯誤："
         )
         validated_plans.append({
             "plan_id": f"plan_{index + 1}",
@@ -330,7 +339,7 @@ def _validate_recommendation(data):
             effects = _validate_effects(
                 action.get("effects"),
                 METRIC_RANGES["action"],
-                "行動效果值格式錯誤或超出範圍。",
+                "行動效果格式錯誤：",
             )
             validated_actions.append({
                 "action_id": f"r{round_index + 1}_a{action_index + 1}",
