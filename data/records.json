@@ -270,5 +270,141 @@
     "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
     "review": "本次採用「增設智慧戶外晒衣場」。在「第一階段：場地規劃與預算審查會議」中，玩家選擇了「召開公聽會聽取學生代表對新晒衣場位置的意見」；完成模擬後，學生滿意度為 89，總分為 83 分。",
     "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
+  },
+  {
+    "record_id": "60ddd39ce560f869b5a8e483a9e80626",
+    "created_at": "2026-11-24T08:00:57.676087+00:00",
+    "scenario_id": "campus_custom",
+    "scenario_title": "宿舍前道路磁磚整修工程",
+    "proposal": "宿舍前道路磁磚不平整，常常積水且腳踏車行駛顛簸。",
+    "plan_id": "plan_1",
+    "plan_title": "方案一局部修繕",
+    "plan_strategy": "精準修補",
+    "plan_description": "局部修繕破損磁磚並改善排水孔設計，降低經費消耗並快速解決積水問題。",
+    "plan_reason": "針對嚴重積水處優先處理，施工期短且影響範圍小。",
+    "plan_effects": {
+      "budget_remaining": -10,
+      "problem_improvement": 12,
+      "satisfaction": 5,
+      "fairness": 3
+    },
+    "initial_metrics": {
+      "budget_remaining": 75,
+      "problem_improvement": 75,
+      "satisfaction": 75,
+      "fairness": 75
+    },
+    "final_metrics": {
+      "budget_remaining": 58,
+      "problem_improvement": 94,
+      "satisfaction": 88,
+      "fairness": 85
+    },
+    "metric_labels": {
+      "budget_remaining": "剩餘預算",
+      "problem_improvement": "問題改善",
+      "satisfaction": "學生滿意度",
+      "fairness": "公平性"
+    },
+    "actions": [
+      {
+        "round": 1,
+        "event": "第一回合：施工前期進行交通管制，引發部分學生不滿。",
+        "action_index": 0,
+        "action_id": "r1_a1",
+        "action_text": "增設明顯的改道標示與夜間照明",
+        "action_effects": {
+          "budget_remaining": -3,
+          "problem_improvement": 2,
+          "satisfaction": 3,
+          "fairness": 2
+        }
+      },
+      {
+        "round": 2,
+        "event": "第二回合：部分排水孔周邊磁磚出現微幅沉陷需要複檢。",
+        "action_index": 1,
+        "action_id": "r2_a2",
+        "action_text": "成立學生監督小組進行驗收覆查",
+        "action_effects": {
+          "budget_remaining": -4,
+          "problem_improvement": 5,
+          "satisfaction": 5,
+          "fairness": 5
+        }
+      }
+    ],
+    "total_score": 81,
+    "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
+    "review": "本次採用「方案一局部修繕」。在「第一回合：施工前期進行交通管制，引發部分學生不滿。」中，玩家選擇了「增設明顯的改道標示與夜間照明」；完成模擬後，問題改善為 94，總分為 81 分。",
+    "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
+  },
+  {
+    "record_id": "2e95e354c2b22c8f1646342fe1f99fea",
+    "created_at": "2026-11-24T08:02:41.763689+00:00",
+    "scenario_id": "campus_custom",
+    "scenario_title": "宿舍前道路磁磚改善模擬",
+    "proposal": "宿舍前道路磁磚不平整，常常積水且腳踏車行駛顛簸。",
+    "plan_id": "plan_2",
+    "plan_title": "局部補平與溝槽清理",
+    "plan_strategy": "低成本快速修補",
+    "plan_description": "針對嚴重凹陷處進行局部水泥灌漿修補，並人工疏通現有排水孔。",
+    "plan_reason": "花費較少且施工期短，能以較低預算迅速緩解部分積水與顛簸。",
+    "plan_effects": {
+      "budget_remaining": -5,
+      "problem_improvement": 10,
+      "satisfaction": 4,
+      "fairness": 2
+    },
+    "initial_metrics": {
+      "budget_remaining": 75,
+      "problem_improvement": 75,
+      "satisfaction": 75,
+      "fairness": 75
+    },
+    "final_metrics": {
+      "budget_remaining": 65,
+      "problem_improvement": 94,
+      "satisfaction": 85,
+      "fairness": 81
+    },
+    "metric_labels": {
+      "budget_remaining": "剩餘預算",
+      "problem_improvement": "問題改善",
+      "satisfaction": "學生滿意度",
+      "fairness": "公平性"
+    },
+    "actions": [
+      {
+        "round": 1,
+        "event": "第一階段：工程期交通管制與噪音引發學生不滿",
+        "action_index": 0,
+        "action_id": "r1_a1",
+        "action_text": "調整施工時段避開上課尖峰並張貼告示",
+        "action_effects": {
+          "budget_remaining": -2,
+          "problem_improvement": 3,
+          "satisfaction": 2,
+          "fairness": 1
+        }
+      },
+      {
+        "round": 2,
+        "event": "第二階段：驗收前突發暴雨檢驗排水成效",
+        "action_index": 0,
+        "action_id": "r2_a1",
+        "action_text": "進行現場人工疏導並增設臨時抽水機",
+        "action_effects": {
+          "budget_remaining": -3,
+          "problem_improvement": 6,
+          "satisfaction": 4,
+          "fairness": 3
+        }
+      }
+    ],
+    "total_score": 81,
+    "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
+    "review": "本次採用「局部補平與溝槽清理」。在「第二階段：驗收前突發暴雨檢驗排水成效」中，玩家選擇了「進行現場人工疏導並增設臨時抽水機」；完成模擬後，問題改善為 94，總分為 81 分。",
+    "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
   }
 ]
