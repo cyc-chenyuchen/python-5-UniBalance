@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <section class="card form-card">
-  <p class="step">提案訪談 · {{ question_number }} / 2</p>
+  <p class="step">問題探索訪談 · {{ question_number }} / 2</p>
   <div class="progress-track" role="progressbar" aria-label="訪談進度" aria-valuemin="1" aria-valuemax="2" aria-valuenow="{{ question_number }}" style="--progress: {{ question_number * 50 }}%"><span></span></div>
   <h1 class="question-title">{{ question.question }}</h1>
   <form action="/interview/answer" method="post">

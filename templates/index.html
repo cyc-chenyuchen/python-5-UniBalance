@@ -3,16 +3,16 @@
 <section class="hero">
   <span class="eyebrow">從想法開始，讓校園更好</span>
   <h1>把校園觀察，化為<br>真正可行的改變</h1>
-  <p>提出你在校園中發現的問題，透過簡短訪談與情境模擬，探索兼顧需求與資源的改革方案。</p>
+  <p>描述你想解決的校園問題，透過 AI 訪談產生改革方案，再用情境模擬探索執行時的取捨。</p>
 </section>
 <section class="card form-card">
-  <h2>分享你的校園提案</h2>
-  <p>描述一件你希望改善的校園生活、設施或服務問題。</p>
+  <h2>你想解決什麼校園問題？</h2>
+  <p>描述你希望改善的校園生活、設施、服務或制度問題；AI 會根據內容協助產生改革方案。</p>
   <div class="notice privacy-note">為保障隱私，請勿輸入姓名、電話、學號或其他個人資料。</div>
   <form action="/interview/start" method="post">
-    <label for="proposal">你的校園提案 <span class="step">1～300 字</span></label>
-    <textarea id="proposal" name="proposal" maxlength="300" required placeholder="例如：圖書館尖峰時段座位不足，希望有更公平的使用方式。"></textarea>
-    <button type="submit">開始訪談 <span aria-hidden="true">→</span></button>
+    <label for="proposal">你想解決的問題 <span class="step">1～300 字</span></label>
+    <textarea id="proposal" name="proposal" maxlength="300" required placeholder="例如：圖書館尖峰時段座位不足，許多學生找不到座位。"></textarea>
+    <button type="submit">開始探索 <span aria-hidden="true">→</span></button>
   </form>
 </section>
 {% endblock %}

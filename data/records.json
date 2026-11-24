@@ -406,5 +406,73 @@
     "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
     "review": "本次採用「局部補平與溝槽清理」。在「第二階段：驗收前突發暴雨檢驗排水成效」中，玩家選擇了「進行現場人工疏導並增設臨時抽水機」；完成模擬後，問題改善為 94，總分為 81 分。",
     "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
+  },
+  {
+    "record_id": "0c9eb9670c96baf88901995fc286a111",
+    "created_at": "2026-11-24T08:08:29.778579+00:00",
+    "scenario_id": "campus_custom",
+    "scenario_title": "宿舍前道路整修與排水改善模擬",
+    "proposal": "宿舍前道路磁磚不平整，常常積水且腳踏車行駛顛簸。",
+    "plan_id": "plan_1",
+    "plan_title": "全面重鋪與排水升級",
+    "plan_strategy": "徹底改造道路結構",
+    "plan_description": "將宿舍前破損磁磚全面換為防滑耐磨鋪面並重建暗溝排水系統。",
+    "plan_reason": "根本解決積水與顛簸問題，提升行車安全與環境美觀。",
+    "plan_effects": {
+      "budget_remaining": -15,
+      "problem_improvement": 18,
+      "satisfaction": 8,
+      "fairness": 5
+    },
+    "initial_metrics": {
+      "budget_remaining": 75,
+      "problem_improvement": 75,
+      "satisfaction": 75,
+      "fairness": 75
+    },
+    "final_metrics": {
+      "budget_remaining": 52,
+      "problem_improvement": 100,
+      "satisfaction": 91,
+      "fairness": 84
+    },
+    "metric_labels": {
+      "budget_remaining": "剩餘預算",
+      "problem_improvement": "問題改善",
+      "satisfaction": "學生滿意度",
+      "fairness": "公平性"
+    },
+    "actions": [
+      {
+        "round": 1,
+        "event": "第一階段：工程規劃與管線勘查，需決定施工範圍與時間。",
+        "action_index": 0,
+        "action_id": "r1_a1",
+        "action_text": "避開考試週於週末進行連續施工",
+        "action_effects": {
+          "budget_remaining": -5,
+          "problem_improvement": 5,
+          "satisfaction": 3,
+          "fairness": 1
+        }
+      },
+      {
+        "round": 2,
+        "event": "第二階段：鋪面驗收與防滑測試，面臨學生雨天通行回饋。",
+        "action_index": 0,
+        "action_id": "r2_a1",
+        "action_text": "增加防滑係數檢測並全面清理",
+        "action_effects": {
+          "budget_remaining": -3,
+          "problem_improvement": 6,
+          "satisfaction": 5,
+          "fairness": 3
+        }
+      }
+    ],
+    "total_score": 82,
+    "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
+    "review": "本次採用「全面重鋪與排水升級」。在「第一階段：工程規劃與管線勘查，需決定施工範圍與時間。」中，玩家選擇了「避開考試週於週末進行連續施工」；完成模擬後，問題改善為 100，總分為 82 分。",
+    "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
   }
 ]
