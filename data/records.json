@@ -1,0 +1,70 @@
+[
+  {
+    "record_id": "89d9fe3581c78edca3c9e3c7c8812ae7",
+    "created_at": "2026-11-24T05:36:52.980122+00:00",
+    "scenario_id": "campus_custom",
+    "scenario_title": "校園服務改善示範",
+    "proposal": "把宿舍前道路磁磚重鋪",
+    "plan_id": "plan_2",
+    "plan_title": "集中資源方案",
+    "plan_strategy": "集中資源快速處理",
+    "plan_description": "集中預算處理單一重點問題，以求明顯改善。",
+    "plan_reason": "能在短期帶來較快的問題改善。",
+    "plan_effects": {
+      "budget_remaining": -15,
+      "problem_improvement": 15,
+      "satisfaction": 0,
+      "fairness": -5
+    },
+    "initial_metrics": {
+      "budget_remaining": 75,
+      "problem_improvement": 75,
+      "satisfaction": 75,
+      "fairness": 75
+    },
+    "final_metrics": {
+      "budget_remaining": 47,
+      "problem_improvement": 100,
+      "satisfaction": 84,
+      "fairness": 75
+    },
+    "metric_labels": {
+      "budget_remaining": "剩餘預算",
+      "problem_improvement": "問題改善",
+      "satisfaction": "學生滿意度",
+      "fairness": "公平性"
+    },
+    "actions": [
+      {
+        "round": 1,
+        "event": "第一次試行後，部分學生反映使用方式不夠清楚。",
+        "action_index": 0,
+        "action_id": "r1_a1",
+        "action_text": "增加說明並安排協助",
+        "action_effects": {
+          "budget_remaining": -5,
+          "problem_improvement": 5,
+          "satisfaction": 5,
+          "fairness": 2
+        }
+      },
+      {
+        "round": 2,
+        "event": "第二回合需要決定是否擴大試行範圍。",
+        "action_index": 0,
+        "action_id": "r2_a1",
+        "action_text": "擴大範圍並增加名額",
+        "action_effects": {
+          "budget_remaining": -8,
+          "problem_improvement": 8,
+          "satisfaction": 4,
+          "fairness": 3
+        }
+      }
+    ],
+    "total_score": 77,
+    "comment": "整體模擬表現中等，方案有一定效果，也暴露出資源、滿意度或公平性的權衡。",
+    "review": "本次採用「集中資源方案」。在「第一次試行後，部分學生反映使用方式不夠清楚。」中，玩家選擇了「增加說明並安排協助」；完成模擬後，剩餘預算為 47，總分為 77 分。",
+    "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
+  }
+]

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h1>把校園觀察整理成改革提案</h1>
+  <p class="notice">請勿輸入姓名、電話、學號或其他個人資料。</p>
+  <form action="/interview/start" method="post">
+    <label for="proposal">你的校園提案（1～300 字）</label>
+    <textarea id="proposal" name="proposal" maxlength="300" required></textarea>
+    <button type="submit">開始訪談</button>
+  </form>
+</section>
+{% endblock %}

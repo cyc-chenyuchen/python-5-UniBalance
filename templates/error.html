@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card error">
+  <h1>{{ title }}</h1>
+  <p>{{ message }}</p>
+  {% if retry %}
+    <form action="/interview/retry" method="post">
+      <button type="submit">重試</button>
+    </form>
+  {% endif %}
+  <a class="button" href="/">返回首頁</a>
+</section>
+{% endblock %}

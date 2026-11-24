@@ -1,0 +1,14 @@
+{
+  "metric_labels": {
+    "budget_remaining": "剩餘預算",
+    "problem_improvement": "問題改善",
+    "satisfaction": "學生滿意度",
+    "fairness": "公平性"
+  },
+  "initial_metrics": {
+    "budget_remaining": 75,
+    "problem_improvement": 75,
+    "satisfaction": 75,
+    "fairness": 75
+  }
+}

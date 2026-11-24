@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <p class="step">模擬回合 {{ round_number }} / 2</p>
+  <h1>{{ round_data.event }}</h1>
+  <div class="metrics">
+    {% for name, value in metrics.items() %}
+      <div><strong>{{ metric_labels[name] }}</strong><span>{{ value }}</span></div>
+    {% endfor %}
+  </div>
+  <form action="/simulation/choose" method="post">
+    {% for action in round_data.actions %}
+      <label class="option">
+        <input type="radio" name="action_id" value="{{ action.action_id }}" required>
+        <strong>{{ action.text }}</strong>
+      </label>
+    {% endfor %}
+    <button type="submit">確認行動</button>
+  </form>
+</section>
+{% endblock %}

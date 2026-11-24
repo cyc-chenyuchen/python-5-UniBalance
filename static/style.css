@@ -1,0 +1,18 @@
+:root { font-family: "Microsoft JhengHei", sans-serif; color: #1f2937; background: #f4f7fb; }
+body { margin: 0; }
+header { display: flex; align-items: center; gap: 20px; padding: 14px 24px; background: #fff; border-bottom: 1px solid #dbe2ea; }
+header nav { margin-left: auto; }
+header a { color: #1d4ed8; text-decoration: none; }
+.brand { font-weight: 700; }
+.demo-badge { padding: 6px 10px; border-radius: 999px; background: #fff3cd; color: #7a5700; }
+main { width: min(900px, calc(100% - 32px)); margin: 32px auto; }
+.card { background: #fff; border: 1px solid #dbe2ea; border-radius: 12px; padding: 24px; box-shadow: 0 3px 12px rgba(31,41,55,.06); }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.notice { padding: 10px 12px; border-radius: 8px; background: #fff3cd; }
+.step { color: #64748b; }
+textarea { box-sizing: border-box; width: 100%; min-height: 150px; margin: 8px 0 16px; padding: 12px; }
+button, .button { display: inline-block; border: 0; border-radius: 8px; padding: 10px 16px; background: #2563eb; color: #fff; cursor: pointer; text-decoration: none; }
+.option { display: block; margin: 10px 0; padding: 12px; border: 1px solid #dbe2ea; border-radius: 8px; }
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin: 16px 0; }
+.metrics div { display: flex; justify-content: space-between; padding: 10px; background: #eff6ff; border-radius: 8px; }
+.effects { color: #475569; font-size: 14px; }

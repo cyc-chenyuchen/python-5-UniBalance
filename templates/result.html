@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <p class="step">模擬結果</p>
+  <h1>{{ record.scenario_title }}</h1>
+  <h2>{{ record.total_score }} 分</h2>
+  <p>{{ record.comment }}</p>
+  <h3>選擇的方案</h3>
+  <p><strong>{{ record.plan_title }}</strong>－{{ record.plan_strategy }}</p>
+  <p>{{ record.plan_description }}</p>
+
+  <h3>最終指標</h3>
+  <div class="metrics">
+    {% for name, value in record.final_metrics.items() %}
+      <div><strong>{{ record.metric_labels[name] }}</strong><span>{{ value }}</span></div>
+    {% endfor %}
+  </div>
+
+  <h3>回合行動</h3>
+  <ol>
+    {% for action in record.actions %}
+      <li>
+        <strong>{{ action.event }}</strong><br>
+        {{ action.action_text }}
+      </li>
+    {% endfor %}
+  </ol>
+
+  <h3>本機回顧</h3>
+  <p>{{ record.review }}</p>
+  <p class="notice">{{ record.review_note }}</p>
+</section>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<section>
+  <h1>歷史結果</h1>
+  {% if records %}
+    <div class="grid">
+      {% for record in records|reverse %}
+        <article class="card">
+          <h2>{{ record.scenario_title or "舊版紀錄" }}</h2>
+          <p>方案：{{ record.plan_title or "未記錄" }}</p>
+          <p>分數：{{ record.total_score or "未記錄" }}</p>
+          {% if record.record_id %}
+            <a class="button" href="/records/{{ record.record_id }}">查看結果卡</a>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>目前沒有保存的模擬結果。</p>
+  {% endif %}
+</section>
+{% endblock %}

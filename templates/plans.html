@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<section>
+  <h1>{{ scenario_title }}</h1>
+  <div class="grid">
+    {% for plan in recommendations %}
+      <article class="card">
+        <h2>{{ plan.title }}</h2>
+        <p><strong>策略：</strong>{{ plan.strategy }}</p>
+        <p>{{ plan.description }}</p>
+        <p><strong>理由：</strong>{{ plan.reason }}</p>
+        <p class="effects">效果：{% for name, value in plan.effects.items() %}{{ name }} {{ "%+d"|format(value) }}；{% endfor %}</p>
+        <form action="/simulation/start" method="post">
+          <input type="hidden" name="plan_id" value="{{ plan.plan_id }}">
+          <button type="submit">選擇此方案</button>
+        </form>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

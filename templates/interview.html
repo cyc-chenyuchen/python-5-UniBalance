@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <p class="step">訪談 {{ question_number }} / 2</p>
+  <h1>{{ question.question }}</h1>
+  <form action="/interview/answer" method="post">
+    {% for option in question.options %}
+      <label class="option">
+        <input type="radio" name="answer" value="{{ option }}" required>
+        {{ option }}
+      </label>
+    {% endfor %}
+    <button type="submit">下一題</button>
+  </form>
+</section>
+{% endblock %}
