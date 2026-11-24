@@ -202,5 +202,73 @@
     "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
     "review": "本次採用「局部修補與排水優化方案」。在「完工後迎來首場梅雨季，檢驗排水與防滑成效。」中，玩家選擇了「進行降雨排水測試與滿意度調查」；完成模擬後，問題改善為 100，總分為 83 分。",
     "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
+  },
+  {
+    "record_id": "d0c0a4e86bfa6e473ddd5a68c1198535",
+    "created_at": "2026-11-24T07:47:46.131701+00:00",
+    "scenario_id": "campus_custom",
+    "scenario_title": "大學宿舍晒衣場空間擴建與管理改革",
+    "proposal": "宿舍晒衣場不夠",
+    "plan_id": "plan_1",
+    "plan_title": "增設智慧戶外晒衣場",
+    "plan_strategy": "空間擴建",
+    "plan_description": "在男一舍與女二舍之間的空地增設大型戶外晒衣棚，配備電動升降桿與遮雨棚。",
+    "plan_reason": "有效增加物理晾衣空間，滿足學生長期以來衣物無處晾曬的需求。",
+    "plan_effects": {
+      "budget_remaining": -15,
+      "problem_improvement": 18,
+      "satisfaction": 8,
+      "fairness": 5
+    },
+    "initial_metrics": {
+      "budget_remaining": 75,
+      "problem_improvement": 75,
+      "satisfaction": 75,
+      "fairness": 75
+    },
+    "final_metrics": {
+      "budget_remaining": 57,
+      "problem_improvement": 100,
+      "satisfaction": 89,
+      "fairness": 87
+    },
+    "metric_labels": {
+      "budget_remaining": "剩餘預算",
+      "problem_improvement": "問題改善",
+      "satisfaction": "學生滿意度",
+      "fairness": "公平性"
+    },
+    "actions": [
+      {
+        "round": 1,
+        "event": "第一階段：場地規劃與預算審查會議",
+        "action_index": 0,
+        "action_id": "r1_a1",
+        "action_text": "召開公聽會聽取學生代表對新晒衣場位置的意見",
+        "action_effects": {
+          "budget_remaining": -2,
+          "problem_improvement": 3,
+          "satisfaction": 4,
+          "fairness": 3
+        }
+      },
+      {
+        "round": 2,
+        "event": "第二階段：施工驗收與後續管理辦法的制定",
+        "action_index": 0,
+        "action_id": "r2_a1",
+        "action_text": "制定晒衣場使用公約與輪流清理值日生制度",
+        "action_effects": {
+          "budget_remaining": -1,
+          "problem_improvement": 5,
+          "satisfaction": 2,
+          "fairness": 4
+        }
+      }
+    ],
+    "total_score": 83,
+    "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
+    "review": "本次採用「增設智慧戶外晒衣場」。在「第一階段：場地規劃與預算審查會議」中，玩家選擇了「召開公聽會聽取學生代表對新晒衣場位置的意見」；完成模擬後，學生滿意度為 89，總分為 83 分。",
+    "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
   }
 ]
