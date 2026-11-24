@@ -840,5 +840,86 @@
     "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
     "review": "本次採用「宿舍道路全面翻修方案」。在「施工期間部分路段需臨時封閉，引發學生通行不便。」中，玩家選擇了「設置臨時替代道路並加派引導人員」；完成模擬後，剩餘預算為 46，總分為 83 分。",
     "review_note": "回顧採用本機整理的提示；AI 回顧失敗或欄位無效。"
+  },
+  {
+    "record_id": "166f1aad348ad18e5a51540ca0b9a002",
+    "created_at": "2026-11-24T14:00:07.902672+00:00",
+    "scenario_id": "campus_custom",
+    "scenario_title": "宿舍冰箱太少改善計畫",
+    "proposal": "宿舍冰箱太少",
+    "plan_id": "plan_1",
+    "plan_title": "增設公共冰箱方案",
+    "plan_strategy": "擴充硬體設備",
+    "plan_description": "於各樓層交誼廳增設大容量公共冰箱，滿足學生冰存需求。",
+    "plan_reason": "直接解決冰箱數量不足的根本問題，提升學生滿意度。",
+    "plan_effects": {
+      "budget_remaining": -15,
+      "problem_improvement": 18,
+      "satisfaction": 8,
+      "fairness": 5
+    },
+    "initial_metrics": {
+      "budget_remaining": 75,
+      "problem_improvement": 75,
+      "satisfaction": 75,
+      "fairness": 75
+    },
+    "final_metrics": {
+      "budget_remaining": 46,
+      "problem_improvement": 100,
+      "satisfaction": 94,
+      "fairness": 89
+    },
+    "metric_labels": {
+      "budget_remaining": "剩餘預算",
+      "problem_improvement": "問題改善",
+      "satisfaction": "學生滿意度",
+      "fairness": "公平性"
+    },
+    "actions": [
+      {
+        "round": 1,
+        "event": "第一回合：評估各樓層交誼廳空間與電力負載狀況",
+        "action_index": 1,
+        "action_id": "r1_a2",
+        "action_text": "召開學生公聽會蒐集意見",
+        "action_effects": {
+          "budget_remaining": -2,
+          "problem_improvement": 4,
+          "satisfaction": 3,
+          "fairness": 2
+        }
+      },
+      {
+        "round": 2,
+        "event": "第二回合：採購並安裝冰箱於指定交誼廳",
+        "action_index": 0,
+        "action_id": "r2_a1",
+        "action_text": "統一採購節能環保冰箱",
+        "action_effects": {
+          "budget_remaining": -10,
+          "problem_improvement": 8,
+          "satisfaction": 4,
+          "fairness": 2
+        }
+      },
+      {
+        "round": 3,
+        "event": "第三回合：建立管理制度與自治幹部排班",
+        "action_index": 1,
+        "action_id": "r3_a2",
+        "action_text": "實施每週定期清空與消毒作業",
+        "action_effects": {
+          "budget_remaining": -2,
+          "problem_improvement": 5,
+          "satisfaction": 4,
+          "fairness": 5
+        }
+      }
+    ],
+    "total_score": 82,
+    "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
+    "review": "本次採用「增設公共冰箱方案」。在「第一回合：評估各樓層交誼廳空間與電力負載狀況」中，玩家選擇了「召開學生公聽會蒐集意見」；完成模擬後，剩餘預算為 46，總分為 82 分。",
+    "review_note": "回顧採用本機整理的提示；AI 回顧失敗或欄位無效。"
   }
 ]
