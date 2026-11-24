@@ -1,9 +1,15 @@
 {% extends "base.html" %}
+{% block page_class %}error-page{% endblock %}
 {% block content %}
 <section class="card error-card">
-  <p class="step">需要留意</p>
-  <h1>{{ title }}</h1>
-  <p>{{ message }}</p>
+  <div class="visual-heading error-visual-heading">
+    <div class="visual-copy">
+      <p class="step">需要留意</p>
+      <h1>{{ title }}</h1>
+      <p>{{ message }}</p>
+    </div>
+    <img class="page-illustration" src="{{ url_for('static', filename='error-illustration.svg') }}" alt="" aria-hidden="true">
+  </div>
   {% if retry %}
     <form action="/interview/retry" method="post">
       <button type="submit">重試 <span aria-hidden="true">→</span></button>

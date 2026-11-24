@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 340" fill="none">
+  <circle cx="382" cy="75" r="38" fill="#EEE5D5"/>
+  <path d="M32 287c72-15 145-18 214-10 71 8 132 7 202-12" stroke="#D8D2C6" stroke-width="2" stroke-linecap="round"/>
+  <path d="M58 269h363" stroke="#C9C4B8" stroke-width="2" stroke-linecap="round"/>
+
+  <path d="M68 153h344v111H68z" fill="#E9E3D8"/>
+  <path d="M58 145h364v16H58z" fill="#AFA48E"/>
+  <path d="M77 172h326v2H77zm0 42h326v2H77z" fill="#C7BDAA"/>
+  <path d="M68 153h344v111H68z" stroke="#8D8D7D" stroke-width="3"/>
+
+  <path d="M190 99h100v164H190z" fill="#E2D9CA"/>
+  <path d="M180 94h120v12H180z" fill="#8D8D7D"/>
+  <path d="M190 99h100v164H190z" stroke="#8D8D7D" stroke-width="3"/>
+  <path d="M193 91 240 52l47 39h-94Z" fill="#AFA48E"/>
+  <path d="M193 91 240 52l47 39" stroke="#777F70" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M231 52V34h18v18" fill="#C3A77D"/>
+  <path d="M231 34h18l13 8h-18l-13-8Z" fill="#B7846F"/>
+  <circle cx="240" cy="82" r="15" fill="#F5F2EC" stroke="#8D8D7D" stroke-width="2"/>
+  <path d="M240 73v9l7 4" stroke="#7A8070" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <g fill="#C5D0C2" stroke="#A3A899" stroke-width="2">
+    <path d="M84 178h25v25H84zm43 0h25v25h-25zm43 0h25v25h-25zm102 0h25v25h-25zm43 0h25v25h-25zm43 0h25v25h-25z"/>
+    <path d="M84 222h25v25H84zm43 0h25v25h-25zm43 0h25v25h-25zm102 0h25v25h-25zm43 0h25v25h-25zm43 0h25v25h-25z"/>
+  </g>
+  <path d="M218 163h44v8h-44z" fill="#C3A77D"/>
+  <path d="M221 174h38v44h-38z" fill="#B9A98E" stroke="#8D806A" stroke-width="2"/>
+  <path d="M240 175v42m-19-21h38" stroke="#8D806A" stroke-width="2"/>
+  <path d="M213 219h54v8h-54zm-7 9h68v8h-68zm-8 9h84v8h-84z" fill="#C9C4B8"/>
+  <path d="M211 252h58" stroke="#8D8D7D" stroke-width="3" stroke-linecap="round"/>
+
+  <path d="M102 129h276v7H102z" fill="#777F70"/>
+  <path d="M201 126h78v14h-78z" fill="#F5F2EC" stroke="#AFA48E" stroke-width="2"/>
+  <text x="240" y="136" fill="#6F7567" font-family="Segoe UI, sans-serif" font-size="8" font-weight="700" letter-spacing="1.5" text-anchor="middle">CAMPUS</text>
+
+  <path d="M47 266v-50m0 17c-11-2-18-10-19-21 11 0 19 6 21 15m-2 21c11-2 18-10 19-21-11 0-19 6-21 15" stroke="#7D8D78" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M431 266v-56m0 20c-12-2-19-10-20-22 12 0 20 6 22 16m-2 21c12-2 19-10 20-22-12 0-20 6-22 16" stroke="#7D8D78" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M37 274c7-13 14-13 21 0m382 0c7-13 14-13 21 0" stroke="#B7A58B" stroke-width="3" stroke-linecap="round"/>
+  <path d="m376 138 4 8 8 4-8 4-4 8-4-8-8-4 8-4 4-8Z" fill="#C9A97B"/>
+  <circle cx="91" cy="94" r="4" fill="#C9A97B"/>
+</svg>

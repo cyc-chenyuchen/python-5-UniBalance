@@ -1,9 +1,15 @@
 {% extends "base.html" %}
+{% block page_class %}interview-page{% endblock %}
 {% block content %}
 <section class="card form-card">
-  <p class="step">問題探索訪談 · {{ question_number }} / 2</p>
-  <div class="progress-track" role="progressbar" aria-label="訪談進度" aria-valuemin="1" aria-valuemax="2" aria-valuenow="{{ question_number }}" style="--progress: {{ question_number * 50 }}%"><span></span></div>
-  <h1 class="question-title">{{ question.question }}</h1>
+  <div class="visual-heading form-visual-heading">
+    <div class="visual-copy">
+      <p class="step">問題探索訪談 · {{ question_number }} / 2</p>
+      <div class="progress-track" role="progressbar" aria-label="訪談進度" aria-valuemin="1" aria-valuemax="2" aria-valuenow="{{ question_number }}" style="--progress: {{ question_number * 50 }}%"><span></span></div>
+      <h1 class="question-title">{{ question.question }}</h1>
+    </div>
+    <img class="page-illustration" src="{{ url_for('static', filename='interview-illustration.svg') }}" alt="" aria-hidden="true">
+  </div>
   <form action="/interview/answer" method="post">
     <div class="option-list">
     {% for option in question.options %}

@@ -1,10 +1,14 @@
 {% extends "base.html" %}
+{% block page_class %}records-page{% endblock %}
 {% block content %}
 <section>
-  <div class="page-heading">
-    <span class="eyebrow">問題探索紀錄</span>
-    <h1>歷史結果</h1>
-    <p>回顧曾經探索過的校園改革方案與模擬成果。</p>
+  <div class="page-heading visual-heading">
+    <div class="visual-copy">
+      <span class="eyebrow">問題探索紀錄</span>
+      <h1>歷史結果</h1>
+      <p>回顧曾經探索過的校園改革方案與模擬成果。</p>
+    </div>
+    <img class="page-illustration" src="{{ url_for('static', filename='records-illustration.svg') }}" alt="" aria-hidden="true">
   </div>
   {% if records %}
     <div class="grid">

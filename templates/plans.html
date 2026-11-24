@@ -1,10 +1,14 @@
 {% extends "base.html" %}
+{% block page_class %}plans-page{% endblock %}
 {% block content %}
 <section>
-  <div class="page-heading">
-    <span class="eyebrow">方案探索</span>
-    <h1>{{ scenario_title }}</h1>
-    <p>比較不同改革方向的特色與影響，選擇一個方案進入模擬。</p>
+  <div class="page-heading visual-heading">
+    <div class="visual-copy">
+      <span class="eyebrow">方案探索</span>
+      <h1>{{ scenario_title }}</h1>
+      <p>比較不同改革方向的特色與影響，選擇一個方案進入模擬。</p>
+    </div>
+    <img class="page-illustration" src="{{ url_for('static', filename='plans-illustration.svg') }}" alt="" aria-hidden="true">
   </div>
   <div class="grid">
     {% for plan in recommendations %}

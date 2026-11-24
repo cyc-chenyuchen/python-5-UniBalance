@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 190" fill="none">
+  <circle cx="136" cy="88" r="76" fill="#F0ECE3"/>
+  <path d="M55 56h73a10 10 0 0 1 10 10v35a10 10 0 0 1-10 10H94l-19 15v-15H55a10 10 0 0 1-10-10V66a10 10 0 0 1 10-10Z" fill="#E9ECE5" stroke="#C9CDBF" stroke-width="2"/>
+  <path d="M68 76h48m-48 14h33" stroke="#A3A899" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="m149 76 16 15-16 15" stroke="#C6A579" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M176 104h47a9 9 0 0 1 9 9v20a9 9 0 0 1-9 9h-18l-13 10v-10h-16a9 9 0 0 1-9-9v-20a9 9 0 0 1 9-9Z" fill="#F3ECDF" stroke="#E8DCC5" stroke-width="2"/>
+  <circle cx="189" cy="123" r="3" fill="#A98459"/>
+  <circle cx="201" cy="123" r="3" fill="#A98459"/>
+  <circle cx="213" cy="123" r="3" fill="#A98459"/>
+  <path d="M55 151h77" stroke="#C9C4B8" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M68 150v-16m0 5c-6-1-9-5-10-10 6 0 9 3 10 7m0 4c6-1 9-5 10-10-6 0-9 3-10 7" stroke="#87927D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m214 45 4 8 8 4-8 4-4 8-4-8-8-4 8-4 4-8Z" fill="#C6A579"/>
+  <circle cx="69" cy="40" r="4" fill="#C6A579"/>
+</svg>

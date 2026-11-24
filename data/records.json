@@ -474,5 +474,209 @@
     "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
     "review": "本次採用「全面重鋪與排水升級」。在「第一階段：工程規劃與管線勘查，需決定施工範圍與時間。」中，玩家選擇了「避開考試週於週末進行連續施工」；完成模擬後，問題改善為 100，總分為 82 分。",
     "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
+  },
+  {
+    "record_id": "0bd84728acb513becf6246078b69ec4d",
+    "created_at": "2026-11-24T08:20:21.268697+00:00",
+    "scenario_id": "campus_custom",
+    "scenario_title": "中午時段餐廳人潮擁擠改善方案",
+    "proposal": "中午時段餐廳人潮擁擠",
+    "plan_id": "plan_2",
+    "plan_title": "推動餐廳預訂與取餐系統",
+    "plan_strategy": "數位分流",
+    "plan_description": "開發線上點餐系統，讓學生預約時間快取餐點。",
+    "plan_reason": "減少人群聚集時間，提升整體用餐效率。",
+    "plan_effects": {
+      "budget_remaining": -15,
+      "problem_improvement": 10,
+      "satisfaction": 8,
+      "fairness": 4
+    },
+    "initial_metrics": {
+      "budget_remaining": 75,
+      "problem_improvement": 75,
+      "satisfaction": 75,
+      "fairness": 75
+    },
+    "final_metrics": {
+      "budget_remaining": 49,
+      "problem_improvement": 97,
+      "satisfaction": 90,
+      "fairness": 84
+    },
+    "metric_labels": {
+      "budget_remaining": "剩餘預算",
+      "problem_improvement": "問題改善",
+      "satisfaction": "學生滿意度",
+      "fairness": "公平性"
+    },
+    "actions": [
+      {
+        "round": 1,
+        "event": "第一階段：宿舍區周邊販賣點試營運",
+        "action_index": 1,
+        "action_id": "r1_a2",
+        "action_text": "設立流動餐車",
+        "action_effects": {
+          "budget_remaining": -8,
+          "problem_improvement": 7,
+          "satisfaction": 3,
+          "fairness": 2
+        }
+      },
+      {
+        "round": 2,
+        "event": "第二階段：優化線上點餐與分流政策",
+        "action_index": 0,
+        "action_id": "r2_a1",
+        "action_text": "推廣快取專用窗口",
+        "action_effects": {
+          "budget_remaining": -3,
+          "problem_improvement": 5,
+          "satisfaction": 4,
+          "fairness": 3
+        }
+      }
+    ],
+    "total_score": 80,
+    "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
+    "review": "本次採用「推動餐廳預訂與取餐系統」。在「第二階段：優化線上點餐與分流政策」中，玩家選擇了「推廣快取專用窗口」；完成模擬後，問題改善為 97，總分為 80 分。",
+    "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
+  },
+  {
+    "record_id": "d61118faad332d47e60bed400e27363d",
+    "created_at": "2026-11-24T08:30:23.334483+00:00",
+    "scenario_id": "campus_custom",
+    "scenario_title": "宿舍冰箱不足改善計畫",
+    "proposal": "宿舍冰箱不夠",
+    "plan_id": "plan_1",
+    "plan_title": "公共走廊增設冰箱",
+    "plan_strategy": "空間分散配置",
+    "plan_description": "於各樓層公共走廊增設大型共用冰箱，方便同學就近存放食材。",
+    "plan_reason": "走廊空間充足且鄰近寢室，能最直接解決存放距離遠的問題。",
+    "plan_effects": {
+      "budget_remaining": -15,
+      "problem_improvement": 15,
+      "satisfaction": 5,
+      "fairness": 2
+    },
+    "initial_metrics": {
+      "budget_remaining": 75,
+      "problem_improvement": 75,
+      "satisfaction": 75,
+      "fairness": 75
+    },
+    "final_metrics": {
+      "budget_remaining": 51,
+      "problem_improvement": 100,
+      "satisfaction": 85,
+      "fairness": 83
+    },
+    "metric_labels": {
+      "budget_remaining": "剩餘預算",
+      "problem_improvement": "問題改善",
+      "satisfaction": "學生滿意度",
+      "fairness": "公平性"
+    },
+    "actions": [
+      {
+        "round": 1,
+        "event": "冰箱投入使用後，部分同學反映通道空間受到影響。",
+        "action_index": 0,
+        "action_id": "r1_a1",
+        "action_text": "調整冰箱擺放位置以擴大走道空間",
+        "action_effects": {
+          "budget_remaining": -5,
+          "problem_improvement": 4,
+          "satisfaction": 3,
+          "fairness": 2
+        }
+      },
+      {
+        "round": 2,
+        "event": "期末考期間冰箱使用量激增，出現清理不及的衛生問題。",
+        "action_index": 1,
+        "action_id": "r2_a2",
+        "action_text": "實施每週強制清空與消毒作業",
+        "action_effects": {
+          "budget_remaining": -4,
+          "problem_improvement": 8,
+          "satisfaction": 2,
+          "fairness": 4
+        }
+      }
+    ],
+    "total_score": 80,
+    "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
+    "review": "本次採用「公共走廊增設冰箱」。在「冰箱投入使用後，部分同學反映通道空間受到影響。」中，玩家選擇了「調整冰箱擺放位置以擴大走道空間」；完成模擬後，問題改善為 100，總分為 80 分。",
+    "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
+  },
+  {
+    "record_id": "16b0981ab0309d5f48aa02dccb8aaef4",
+    "created_at": "2026-11-24T08:38:29.422306+00:00",
+    "scenario_id": "campus_custom",
+    "scenario_title": "校園午晚餐人潮擁擠改善計畫",
+    "proposal": "中午及晚餐時段路上人潮擁擠",
+    "plan_id": "plan_2",
+    "plan_title": "主幹道交通管制與接駁方案",
+    "plan_strategy": "人車分流與電動接駁",
+    "plan_description": "在尖峰時段限制校園主幹道車輛通行，並加開校內電動接駁車。",
+    "plan_reason": "可減少行人與車輛交織，確保移動安全並提升通行效率。",
+    "plan_effects": {
+      "budget_remaining": -18,
+      "problem_improvement": 18,
+      "satisfaction": 8,
+      "fairness": 5
+    },
+    "initial_metrics": {
+      "budget_remaining": 75,
+      "problem_improvement": 75,
+      "satisfaction": 75,
+      "fairness": 75
+    },
+    "final_metrics": {
+      "budget_remaining": 49,
+      "problem_improvement": 100,
+      "satisfaction": 88,
+      "fairness": 83
+    },
+    "metric_labels": {
+      "budget_remaining": "剩餘預算",
+      "problem_improvement": "問題改善",
+      "satisfaction": "學生滿意度",
+      "fairness": "公平性"
+    },
+    "actions": [
+      {
+        "round": 1,
+        "event": "第一回合：午餐時段餐廳周邊湧現大量排隊人潮，造成通行困難。",
+        "action_index": 1,
+        "action_id": "r1_a2",
+        "action_text": "設置臨時遮陽棚與取餐窗口加快出餐速度。",
+        "action_effects": {
+          "budget_remaining": -5,
+          "problem_improvement": 7,
+          "satisfaction": 3,
+          "fairness": 2
+        }
+      },
+      {
+        "round": 2,
+        "event": "第二回合：校園主要幹道因下課時間人車爭道，交通狀況險象環生。",
+        "action_index": 0,
+        "action_id": "r2_a1",
+        "action_text": "於主要路口設置臨時交通號誌與警示標語。",
+        "action_effects": {
+          "budget_remaining": -3,
+          "problem_improvement": 5,
+          "satisfaction": 2,
+          "fairness": 1
+        }
+      }
+    ],
+    "total_score": 80,
+    "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
+    "review": "本次採用「主幹道交通管制與接駁方案」。在「第二回合：校園主要幹道因下課時間人車爭道，交通狀況險象環生。」中，玩家選擇了「於主要路口設置臨時交通號誌與警示標語。」；完成模擬後，問題改善為 100，總分為 80 分。",
+    "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
   }
 ]

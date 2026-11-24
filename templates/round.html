@@ -1,9 +1,15 @@
 {% extends "base.html" %}
+{% block page_class %}simulation-page{% endblock %}
 {% block content %}
 <section class="card form-card">
-  <p class="step">情境模擬 · 回合 {{ round_number }} / 2</p>
-  <div class="progress-track" role="progressbar" aria-label="模擬進度" aria-valuemin="1" aria-valuemax="2" aria-valuenow="{{ round_number }}" style="--progress: {{ round_number * 50 }}%"><span></span></div>
-  <h1 class="question-title">{{ round_data.event }}</h1>
+  <div class="visual-heading form-visual-heading">
+    <div class="visual-copy">
+      <p class="step">情境模擬 · 回合 {{ round_number }} / 2</p>
+      <div class="progress-track" role="progressbar" aria-label="模擬進度" aria-valuemin="1" aria-valuemax="2" aria-valuenow="{{ round_number }}" style="--progress: {{ round_number * 50 }}%"><span></span></div>
+      <h1 class="question-title">{{ round_data.event }}</h1>
+    </div>
+    <img class="page-illustration" src="{{ url_for('static', filename='simulation-illustration.svg') }}" alt="" aria-hidden="true">
+  </div>
   <h3>目前校園指標</h3>
   <div class="metrics">
     {% for name, value in metrics.items() %}

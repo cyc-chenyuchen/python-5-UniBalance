@@ -1,12 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="hero">
-  <span class="eyebrow">從想法開始，讓校園更好</span>
-  <h1>把校園觀察，化為<br>真正可行的改變</h1>
-  <p>描述你想解決的校園問題，透過 AI 訪談產生改革方案，再用情境模擬探索執行時的取捨。</p>
+<section class="hero home-hero">
+  <div class="hero-copy">
+    <span class="eyebrow">從想法開始，讓校園更好</span>
+    <h1>把校園觀察，化為<br>真正可行的改變</h1>
+    <p>描述你想解決的校園問題，透過 AI 訪談產生改革方案，再用情境模擬探索執行時的取捨。</p>
+  </div>
+  <img class="hero-illustration" src="{{ url_for('static', filename='campus-illustration.svg') }}" alt="" aria-hidden="true">
 </section>
 <section class="card form-card">
-  <h2>你想解決什麼校園問題？</h2>
+  <h2 class="form-heading">
+    <span class="heading-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M5 4.75h9.5A2.5 2.5 0 0 1 17 7.25v12H7.5A2.5 2.5 0 0 0 5 21.75v-17Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+        <path d="M5 19.25a2.5 2.5 0 0 1 2.5-2.5H17m-8-8h4m-4 4h4m3-5.5h2.5A1.5 1.5 0 0 1 20 8.75v10.5h-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    <span>你想解決什麼校園問題？</span>
+  </h2>
   <p>描述你希望改善的校園生活、設施、服務或制度問題；AI 會根據內容協助產生改革方案。</p>
   <div class="notice privacy-note">為保障隱私，請勿輸入姓名、電話、學號或其他個人資料。</div>
   <form action="/interview/start" method="post">
