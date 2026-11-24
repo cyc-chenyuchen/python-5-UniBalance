@@ -921,5 +921,86 @@
     "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
     "review": "本次採用「增設公共冰箱方案」。在「第一回合：評估各樓層交誼廳空間與電力負載狀況」中，玩家選擇了「召開學生公聽會蒐集意見」；完成模擬後，剩餘預算為 46，總分為 82 分。",
     "review_note": "回顧採用本機整理的提示；AI 回顧失敗或欄位無效。"
+  },
+  {
+    "record_id": "dc0c4f667f7373ed4800162d74d2df96",
+    "created_at": "2026-11-24T14:45:12.297826+00:00",
+    "scenario_id": "campus_custom",
+    "scenario_title": "宿舍區內室內腳踏車停放處擴建與管理模擬",
+    "proposal": "學校內室內腳踏車停放處太少",
+    "plan_id": "plan_1",
+    "plan_title": "宿舍區新建室內車棚",
+    "plan_strategy": "基礎建設",
+    "plan_description": "在學生宿舍周邊空地規劃並興建多層室內腳踏車專用停放棚，提供完善防雨設施。",
+    "plan_reason": "此方案能直接解決停放空間不足問題，滿足學生即時需求。",
+    "plan_effects": {
+      "budget_remaining": -15,
+      "problem_improvement": 18,
+      "satisfaction": 8,
+      "fairness": 6
+    },
+    "initial_metrics": {
+      "budget_remaining": 75,
+      "problem_improvement": 75,
+      "satisfaction": 75,
+      "fairness": 75
+    },
+    "final_metrics": {
+      "budget_remaining": 49,
+      "problem_improvement": 100,
+      "satisfaction": 95,
+      "fairness": 91
+    },
+    "metric_labels": {
+      "budget_remaining": "剩餘預算",
+      "problem_improvement": "問題改善",
+      "satisfaction": "學生滿意度",
+      "fairness": "公平性"
+    },
+    "actions": [
+      {
+        "round": 1,
+        "event": "第一回合：宿舍區居民反映腳踏車無處可停且經常淋雨生鏽。",
+        "action_index": 1,
+        "action_id": "r1_a2",
+        "action_text": "召開公聽會收集學生對室內停車場設置點的意見。",
+        "action_effects": {
+          "budget_remaining": -2,
+          "problem_improvement": 3,
+          "satisfaction": 3,
+          "fairness": 3
+        }
+      },
+      {
+        "round": 2,
+        "event": "第二回合：工程預算與施工地點引發部分宿舍管理員擔憂。",
+        "action_index": 0,
+        "action_id": "r2_a1",
+        "action_text": "調整施工範圍以保留宿舍綠地並縮短工期。",
+        "action_effects": {
+          "budget_remaining": -6,
+          "problem_improvement": 6,
+          "satisfaction": 4,
+          "fairness": 2
+        }
+      },
+      {
+        "round": 3,
+        "event": "第三回合：車位編號管理實施後部分學生抱怨抽籤不公。",
+        "action_index": 0,
+        "action_id": "r3_a1",
+        "action_text": "優化抽籤系統並提供身障生與大一新生優先保留名額。",
+        "action_effects": {
+          "budget_remaining": -3,
+          "problem_improvement": 8,
+          "satisfaction": 5,
+          "fairness": 5
+        }
+      }
+    ],
+    "total_score": 84,
+    "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
+    "review": "本次採用「宿舍區新建室內車棚」。在「第二回合：工程預算與施工地點引發部分宿舍管理員擔憂。」中，玩家選擇了「調整施工範圍以保留宿舍綠地並縮短工期。」；完成模擬後，問題改善為 100，總分為 84 分。",
+    "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
   }
 ]
