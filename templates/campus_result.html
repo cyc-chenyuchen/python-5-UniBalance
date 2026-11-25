@@ -137,13 +137,27 @@
     <div class="game-panel-heading"><div><p class="game-kicker">YOUR DECISIONS, FIVE YEARS</p><h2>十學期決策年表</h2></div><span class="panel-note">{{ record.history|length }} 個學期</span></div>
     <ol class="action-list decade-action-list game-chronicle">
       {% for item in record.history %}
+      {% set butterfly = item.get("butterfly", "") %}
+      {% set settled = item.get("settled_consequences", []) %}
       <li>
-        <span class="chronicle-turn">第 {{ item.year }} 年 · 第 {{ item.semester }} 學期</span>
-        <div class="chronicle-event"><strong>{{ item.event }}</strong><span>{{ item.resident }}（{{ item.role }}）</span></div>
-        <div class="chronicle-decision"><span>事件回應</span><strong>{{ item.response }}</strong></div>
-        <div class="chronicle-decision"><span>校務措施</span><strong>{{ item.development }} · {{ item.category }}</strong></div>
-        <p>{{ item.butterfly }}</p>
-        {% if item.settled_consequences %}<div class="settled-effects">{% for consequence in item.settled_consequences %}<span>已結算：{{ consequence.origin_event }} · {{ consequence.description }}</span>{% endfor %}</div>{% endif %}
+        <span class="chronicle-turn">Y{{ item.year }} · S{{ item.semester }}</span>
+        <div class="chronicle-event">
+          <strong title="{{ item.event }}">{{ item.event|truncate(38, true, "…") }}</strong>
+          <span>{{ item.resident }} · {{ item.role }}</span>
+        </div>
+        <div class="chronicle-decision"><span>回應</span><strong title="{{ item.response }}">{{ item.response|truncate(34, true, "…") }}</strong></div>
+        <div class="chronicle-decision"><span>措施</span><strong title="{{ item.development }} · {{ item.category }}">{{ item.development|truncate(34, true, "…") }}</strong></div>
+        {% if butterfly or settled %}
+        <details class="chronicle-more">
+          <summary>{% if butterfly and settled %}影響與後續 {{ settled|length }} 項{% elif butterfly %}影響摘要{% else %}後續效果 {{ settled|length }} 項{% endif %}</summary>
+          <div class="chronicle-more-content">
+            {% if butterfly %}<p title="{{ butterfly }}">影響：{{ butterfly }}</p>{% endif %}
+            {% for consequence in settled %}
+            <p><strong>{{ consequence.get("origin_event", "後續事件") }}</strong> · {{ consequence.description }}</p>
+            {% endfor %}
+          </div>
+        </details>
+        {% endif %}
       </li>
       {% endfor %}
     </ol>

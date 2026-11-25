@@ -1120,6 +1120,46 @@ class CampusCampaignTests(unittest.TestCase):
             response.data,
         )
 
+    def test_campaign_result_keeps_long_timeline_details_collapsed(self):
+        campaign = self._new_test_campaign()
+        event = "圖書館尖峰時段座位不足，學生經常找不到合適的自習空間"
+        response_text = "延長開放時間並增設夜間服務，定期收集學生使用意見"
+        consequence = {
+            "origin_event": "上學期圖書館空間調整",
+            "description": "夜間使用人數增加，後續需持續留意清潔與人力安排",
+        }
+        campaign["history"] = [{
+            "year": 1,
+            "semester": 2,
+            "event": event,
+            "resident": "蕭述一",
+            "role": "大學生",
+            "response": response_text,
+            "development": "延長圖書館開放時間並增設夜間服務",
+            "category": "校園服務",
+            "butterfly": "增加夜間使用機會，也提高了晚間清潔與服務人力需求。",
+            "settled_consequences": [consequence],
+        }]
+        record = make_campaign_record(campaign)
+
+        flow_id = "campus-result-compact-chronicle-test"
+        GAMES[flow_id] = {"campaign": campaign, "result": record}
+        self.addCleanup(GAMES.pop, flow_id, None)
+        with self.client.session_transaction() as session:
+            session["flow_id"] = flow_id
+
+        response = self.client.get("/campus/result")
+        page = response.get_data(as_text=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('class="chronicle-turn">Y1 · S2</span>', page)
+        self.assertIn('<details class="chronicle-more">', page)
+        self.assertIn("<summary>影響與後續 1 項</summary>", page)
+        self.assertIn(f'title="{event}"', page)
+        self.assertIn(
+            f'<strong>{consequence["origin_event"]}</strong> · {consequence["description"]}',
+            page,
+        )
+
     def test_homepage_has_one_problem_input(self):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)

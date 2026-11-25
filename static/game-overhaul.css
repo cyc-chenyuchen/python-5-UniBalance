@@ -530,14 +530,17 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .result-award-grid > li > small:last-child { grid-column: 2; color: #a08a60; }
 .result-residents-panel .resident-grid { grid-template-columns: repeat(4,minmax(0,1fr)); }
 .game-chronicle { max-height: none; overflow: visible; gap: 9px; }
-.game-chronicle > li { position: relative; display: grid; grid-template-columns: 100px minmax(0,1fr) minmax(0,.95fr) minmax(0,.95fr); align-items: start; gap: 7px 12px; padding: 12px; border: 1px solid #e4e0d5; border-radius: 13px; background: #faf9f4; }
-.chronicle-turn { grid-row: span 2; padding: 5px 7px; border-radius: 8px; background: #e9ebdf; color: #5b684f; font-size: 15px; font-weight: 800; }
+.game-chronicle > li { position: relative; display: grid; grid-template-columns: 88px minmax(0,1.1fr) minmax(0,.95fr) minmax(0,.95fr); align-items: start; gap: 7px 12px; padding: 12px; border: 1px solid #e4e0d5; border-radius: 13px; background: #faf9f4; }
+.chronicle-turn { padding: 5px 7px; border-radius: 8px; background: #e9ebdf; color: #5b684f; font-size: 15px; font-weight: 800; white-space: nowrap; }
 .chronicle-event, .chronicle-decision { display: grid; gap: 2px; }
-.chronicle-event strong { color: #50564c; font-size: 15px; }
+.chronicle-event strong { display: -webkit-box; overflow: hidden; color: #50564c; font-size: 15px; overflow-wrap: anywhere; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 .chronicle-event span, .chronicle-decision span { color: #898677; font-size: 15px; }
-.chronicle-decision strong { color: #666a5e; font-size: 15px; line-height: 1.45; }
-.game-chronicle li > p { grid-column: 2 / -1; margin: 0; color: #77766b; font-size: 15px; line-height: 1.5; }
-.game-chronicle .settled-effects { grid-column: 2 / -1; }
+.chronicle-decision strong { display: -webkit-box; overflow: hidden; color: #666a5e; font-size: 15px; line-height: 1.4; overflow-wrap: anywhere; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.chronicle-more { grid-column: 2 / -1; min-width: 0; }
+.chronicle-more summary { width: fit-content; color: #766b54; font-size: 15px; font-weight: 700; cursor: pointer; }
+.chronicle-more-content { display: grid; gap: 5px; margin-top: 6px; padding: 8px 10px; border-left: 2px solid #d5c7a6; border-radius: 0 8px 8px 0; background: #f5f1e7; }
+.chronicle-more-content p { margin: 0; color: #747266; font-size: 15px; line-height: 1.45; overflow-wrap: anywhere; }
+.chronicle-more-content strong { color: #5e6654; }
 .future-outlook { display: grid; grid-template-columns: minmax(0,1fr) 85px; align-items: center; background: linear-gradient(110deg,#edf0e7,#f9f5eb); }
 .future-outlook h2 { margin: 0 0 6px; font-size: 23px; }
 .future-outlook p { margin: 3px 0; font-size: 15px; }
@@ -704,7 +707,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   .game-chronicle > li { grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
   .chronicle-turn { grid-column: 1 / -1; grid-row: auto; width: fit-content; }
   .game-chronicle .chronicle-event { grid-column: 1 / -1; }
-  .game-chronicle li > p, .game-chronicle .settled-effects { grid-column: 1 / -1; }
+  .chronicle-more { grid-column: 1 / -1; }
   .future-outlook { grid-template-columns: minmax(0,1fr) 58px; }
   .outlook-seal { width: 53px; height: 53px; font-size: 15px; }
   .result-actions > * { flex: 1 1 40%; }
