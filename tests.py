@@ -351,6 +351,24 @@ class GeminiRequestTests(unittest.TestCase):
         self.assertIs(response, success)
         sleep.assert_called_once_with(9)
 
+    def test_service_unavailable_respects_http_date_retry_after(self):
+        unavailable = Mock(
+            status_code=503,
+            headers={"Retry-After": "Wed, 21 Oct 2099 07:28:00 GMT"},
+        )
+        success = Mock(status_code=200)
+        with (
+            patch(
+                "ai_service.requests.post",
+                side_effect=[unavailable, success],
+            ),
+            patch("ai_service.time.sleep") as sleep,
+        ):
+            response = send_request("https://example.test/generate", {}, {})
+
+        self.assertIs(response, success)
+        sleep.assert_called_once_with(60)
+
 
 class OfflineDemoTests(unittest.TestCase):
     def setUp(self):

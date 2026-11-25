@@ -2,6 +2,8 @@ import json
 import os
 import random
 import time
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 
 import requests
 
@@ -199,7 +201,19 @@ def send_request(url, headers, request_data):
                 try:
                     delay = min(max(float(retry_after), 0), 60)
                 except (TypeError, ValueError):
-                    delay = retry_delays[attempt]
+                    try:
+                        retry_at = parsedate_to_datetime(retry_after)
+                        if retry_at.tzinfo is None:
+                            retry_at = retry_at.replace(tzinfo=timezone.utc)
+                        delay = min(
+                            max(
+                                (retry_at - datetime.now(timezone.utc)).total_seconds(),
+                                0,
+                            ),
+                            60,
+                        )
+                    except (TypeError, ValueError, OverflowError):
+                        delay = retry_delays[attempt]
                 time.sleep(delay)
                 continue
             raise RuntimeError(
