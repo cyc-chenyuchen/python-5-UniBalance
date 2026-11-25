@@ -19,7 +19,7 @@ from ai_service import (
     send_request,
 )
 from app import GAMES, app
-from campus_simulation import advance_campaign, new_campaign
+from campus_simulation import advance_campaign, new_campaign, resident_profiles
 from simulation import apply_effects, calculate_total_score, make_comment, run_round_choice
 
 
@@ -477,6 +477,8 @@ class CampaignAiGenerationTests(unittest.TestCase):
                 "event": f"由玩家決策衍生的校園議題 {event_index + 1}",
                 "category": "policy",
                 "group": "students",
+                "resident_id": "lin_muqing",
+                "resident_quote": "我希望學校也能理解我的日常和長期目標。",
                 "resident_concern": "資源分配與服務可及性",
                 "actions": [
                     {
@@ -486,6 +488,10 @@ class CampaignAiGenerationTests(unittest.TestCase):
                             "problem_improvement": action_index,
                             "satisfaction": 1,
                             "fairness": 2 - action_index,
+                        },
+                        "resident_effects": {
+                            "trust": action_index,
+                            "stress": -action_index,
                         },
                     }
                     for action_index in range(3)
@@ -500,7 +506,13 @@ class CampaignAiGenerationTests(unittest.TestCase):
             "response": "調整輪班",
             "management_measure": "培訓支援人力",
         }
-        state = {"year": 2, "semester": 1, "treasury": 540, "resources": {"staffing": 42}}
+        state = {
+            "year": 2,
+            "semester": 1,
+            "treasury": 540,
+            "resources": {"staffing": 42},
+            "characters": resident_profiles(),
+        }
         with (
             patch.dict(os.environ, {"DEMO_MODE": "0"}),
             patch("ai_service._request_gemini", return_value=self._event_payload()) as request,
@@ -530,7 +542,44 @@ class CampaignAiGenerationTests(unittest.TestCase):
             patch("ai_service._request_gemini", return_value=payload),
         ):
             with self.assertRaisesRegex(ValueError, "problem_improvement=11"):
-                generate_campaign_events("改善校園服務", [], {}, opening=True)
+                generate_campaign_events(
+                    "改善校園服務",
+                    [],
+                    {"characters": resident_profiles()},
+                    opening=True,
+                )
+
+    def test_event_rejects_unknown_or_mismatched_character(self):
+        for field, value in (("resident_id", "not_a_character"), ("group", "faculty")):
+            with self.subTest(field=field):
+                payload = self._event_payload()
+                payload["events"][0][field] = value
+                with (
+                    patch.dict(os.environ, {"DEMO_MODE": "0"}),
+                    patch("ai_service._request_gemini", return_value=payload),
+                ):
+                    with self.assertRaisesRegex(ValueError, "指定的教職員生不存在"):
+                        generate_campaign_events(
+                            "改善校園服務",
+                            [],
+                            {"characters": resident_profiles()},
+                            opening=True,
+                        )
+
+    def test_invalid_ai_personal_effects_are_rejected(self):
+        payload = self._event_payload()
+        payload["events"][0]["actions"][0]["resident_effects"]["trust"] = 6
+        with (
+            patch.dict(os.environ, {"DEMO_MODE": "0"}),
+            patch("ai_service._request_gemini", return_value=payload),
+        ):
+            with self.assertRaisesRegex(ValueError, "trust=6"):
+                generate_campaign_events(
+                    "改善校園服務",
+                    [],
+                    {"characters": resident_profiles()},
+                    opening=True,
+                )
 
     def test_campaign_plans_use_problem_specific_api_output(self):
         response_data = {
@@ -619,7 +668,11 @@ class CampusCampaignTests(unittest.TestCase):
         event_deck = generate_campaign_events(
             proposal,
             [],
-            {"year": 1, "semester": 1},
+            {
+                "year": 1,
+                "semester": 1,
+                "characters": resident_profiles(),
+            },
             opening=True,
         )
         return new_campaign(
@@ -653,6 +706,7 @@ class CampusCampaignTests(unittest.TestCase):
             self.assertEqual(response.status_code, 200)
             self.assertIn("第 1 年第 1 學期".encode("utf-8"), response.data)
             self.assertIn('class="event-portrait"'.encode("utf-8"), response.data)
+            self.assertIn("個人目標".encode("utf-8"), response.data)
             with self.client.session_transaction() as session:
                 flow_id = session["flow_id"]
 
@@ -681,6 +735,45 @@ class CampusCampaignTests(unittest.TestCase):
         self.assertEqual(len(campaign["history"]), 20)
         self.assertEqual(len(campaign["yearly"]), 10)
 
+    def test_each_character_has_a_unique_portrait_and_personal_profile(self):
+        campaign = self._new_test_campaign()
+        residents = campaign["residents"]
+        portraits = [resident["portrait"] for resident in residents]
+        self.assertEqual(len(residents), 8)
+        self.assertEqual(len(set(portraits)), len(residents))
+        for resident in residents:
+            self.assertTrue(resident["personality"])
+            self.assertTrue(resident["goal"])
+            self.assertTrue(
+                (Path(__file__).parent / "static" / resident["portrait"]).is_file()
+            )
+
+    def test_choice_changes_only_the_focused_character_relationship(self):
+        campaign = self._new_test_campaign()
+        event = campaign["current_event"]
+        focused = event["resident"]
+        action = event["actions"][0]
+        other_trust = {
+            resident["id"]: resident["trust"]
+            for resident in campaign["residents"]
+            if resident["id"] != focused["id"]
+        }
+        expected_trust = max(
+            0, min(100, focused["trust"] + action["resident_effects"]["trust"])
+        )
+        expected_stress = max(
+            0, min(100, focused["stress"] + action["resident_effects"]["stress"])
+        )
+
+        advance_campaign(campaign, action["action_id"], "audit")
+
+        self.assertEqual(focused["trust"], expected_trust)
+        self.assertEqual(focused["stress"], expected_stress)
+        self.assertEqual(
+            {resident["id"]: resident["trust"] for resident in campaign["residents"] if resident["id"] != focused["id"]},
+            other_trust,
+        )
+
     def test_failed_event_batch_keeps_the_decision_retryable(self):
         response = self.client.post(
             "/campus/start",
@@ -701,7 +794,11 @@ class CampusCampaignTests(unittest.TestCase):
         generated_batch = generate_campaign_events(
             campaign["concern"],
             campaign["history"],
-            {"year": 1, "semester": 1},
+            {
+                "year": 1,
+                "semester": 1,
+                "characters": resident_profiles(campaign["residents"]),
+            },
         )
         with patch(
             "app.generate_campaign_events",

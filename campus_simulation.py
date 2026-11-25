@@ -1,5 +1,4 @@
 from datetime import datetime, timezone
-import random
 import secrets
 
 
@@ -13,15 +12,59 @@ GROUP_PORTRAITS = {
 }
 
 RESIDENTS = (
-    {"name": "林沐晴", "role": "學生", "group": "students", "concern": "課業與生活平衡"},
-    {"name": "陳以安", "role": "研究生", "group": "students", "concern": "研究資源與空間"},
-    {"name": "周明哲", "role": "教授", "group": "faculty", "concern": "教學與研究負荷"},
-    {"name": "許雅雯", "role": "教授", "group": "faculty", "concern": "研究支持與合作"},
-    {"name": "王思涵", "role": "行政人員", "group": "staff", "concern": "行政流程與人力"},
-    {"name": "張家豪", "role": "校園服務人員", "group": "staff", "concern": "服務品質與工作條件"},
-    {"name": "李承恩", "role": "通勤學生", "group": "students", "concern": "交通與校園安全"},
-    {"name": "黃可欣", "role": "國際學生", "group": "students", "concern": "友善環境與資訊取得"},
+    {
+        "id": "lin_muqing", "name": "林沐晴", "role": "大學生", "group": "students",
+        "concern": "課業與生活平衡", "personality": "熱心、容易替別人操心",
+        "goal": "成立讓新生安心求助的同儕社群", "portrait": "portrait-lin-muqing.svg",
+    },
+    {
+        "id": "chen_yian", "name": "陳以安", "role": "研究生", "group": "students",
+        "concern": "研究資源與空間", "personality": "安靜、做事有條理",
+        "goal": "完成研究並爭取海外交流機會", "portrait": "portrait-chen-yian.svg",
+    },
+    {
+        "id": "zhou_mingzhe", "name": "周明哲", "role": "教授", "group": "faculty",
+        "concern": "教學與研究負荷", "personality": "嚴謹、願意提攜後輩",
+        "goal": "建立跨院合作的永續研究團隊", "portrait": "portrait-zhou-mingzhe.svg",
+    },
+    {
+        "id": "xu_yawen", "name": "許雅雯", "role": "教授", "group": "faculty",
+        "concern": "研究支持與合作", "personality": "好奇、擅長傾聽",
+        "goal": "設計更多學生參與的實作課程", "portrait": "portrait-xu-yawen.svg",
+    },
+    {
+        "id": "wang_sihan", "name": "王思涵", "role": "行政人員", "group": "staff",
+        "concern": "行政流程與人力", "personality": "細心、喜歡把事情安排妥當",
+        "goal": "讓校園行政服務更簡單又友善", "portrait": "portrait-wang-sihan.svg",
+    },
+    {
+        "id": "zhang_jiahao", "name": "張家豪", "role": "校園服務人員", "group": "staff",
+        "concern": "服務品質與工作條件", "personality": "爽朗、遇到問題就想動手處理",
+        "goal": "改善校園維護工具與安全設備", "portrait": "portrait-zhang-jiahao.svg",
+    },
+    {
+        "id": "li_chengen", "name": "李承恩", "role": "通勤學生", "group": "students",
+        "concern": "交通與校園安全", "personality": "務實、重視時間安排",
+        "goal": "組成安全通勤倡議小組", "portrait": "portrait-li-chengen.svg",
+    },
+    {
+        "id": "huang_kexin", "name": "黃可欣", "role": "國際學生", "group": "students",
+        "concern": "友善環境與資訊取得", "personality": "勇於嘗試、喜歡認識新朋友",
+        "goal": "籌辦讓不同文化交流的校園活動", "portrait": "portrait-huang-kexin.svg",
+    },
 )
+
+def resident_profiles(residents=None):
+    source = residents if residents is not None else RESIDENTS
+    fields = (
+        "id", "name", "role", "group", "concern", "personality", "goal",
+        "satisfaction", "trust", "stress",
+    )
+    return [
+        {field: resident[field] for field in fields if field in resident}
+        for resident in source
+    ]
+
 
 DEVELOPMENTS = (
     {
@@ -157,8 +200,13 @@ def _materialize_event(state, raw_event, turn):
     if group not in GROUP_NAMES:
         raise ValueError("AI 事件格式錯誤：受影響對象無效。")
     source = raw_event.get("source", "gemini")
-    residents = [resident for resident in state["residents"] if resident["group"] == group]
-    resident = random.Random(f"{state['seed']}:{turn}").choice(residents)
+    resident_id = raw_event.get("resident_id")
+    resident = next(
+        (item for item in state["residents"] if item["id"] == resident_id),
+        None,
+    )
+    if resident is None or resident["group"] != group:
+        raise ValueError("AI 事件格式錯誤：指定的教職員生不存在或類型不符。")
     actions = []
     for action in raw_event["actions"]:
         effects = dict(action["effects"])
@@ -168,6 +216,7 @@ def _materialize_event(state, raw_event, turn):
             "text": action["text"],
             "cost": action["cost"],
             "effects": effects,
+            "resident_effects": dict(action["resident_effects"]),
             "resources": {},
             "group_effect": effects["satisfaction"],
             "cause": f"這項決策使問題改善 {effects['problem_improvement']:+d}、滿意度 {effects['satisfaction']:+d}、公平性 {effects['fairness']:+d}",
@@ -184,7 +233,8 @@ def _materialize_event(state, raw_event, turn):
         "group_label": GROUP_NAMES[group],
         "resident": resident,
         "actions": actions,
-        "quote": f"「{raw_event['resident_concern']}是我目前最關注的事，希望學校能說明後續安排。」",
+        "quote": raw_event["resident_quote"],
+        "resident_concern": raw_event["resident_concern"],
         "source": source,
     }
 
@@ -212,8 +262,9 @@ def new_campaign(concern, event_deck, plan, scenario_title, seed=None):
         "residents": [
             dict(
                 resident,
-                portrait=GROUP_PORTRAITS[resident["group"]],
                 satisfaction=68 + index % 5 * 3,
+                trust=42 + index % 4 * 8,
+                stress=38 + index % 4 * 9,
             )
             for index, resident in enumerate(RESIDENTS)
         ],
@@ -328,6 +379,13 @@ def advance_campaign(state, action_id, development_id, next_events=None):
     for resource, amount in development["resources"].items():
         state["resources"][resource] = _bounded(state["resources"][resource] + amount)
     _update_residents(state, event["group"], action["group_effect"])
+    personal_effects = action["resident_effects"]
+    event["resident"]["trust"] = _bounded(
+        event["resident"]["trust"] + personal_effects["trust"]
+    )
+    event["resident"]["stress"] = _bounded(
+        event["resident"]["stress"] + personal_effects["stress"]
+    )
     if development.get("group_effect"):
         target_group = "faculty" if development.get("policy") == "workload" else "students"
         _update_residents(state, target_group, development["group_effect"])
@@ -376,6 +434,8 @@ def advance_campaign(state, action_id, development_id, next_events=None):
         "event": event["event"],
         "resident": event["resident"]["name"],
         "role": event["resident"]["role"],
+        "resident_trust": event["resident"]["trust"],
+        "resident_stress": event["resident"]["stress"],
         "response": action["title"],
         "development": development["title"],
         "category": development["category"],

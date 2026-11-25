@@ -1083,5 +1083,701 @@
     "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
     "review": "本次採用「增設簡易醫療站」。在「第二回合：招募志工與規劃巡邏車行駛路線」中，玩家選擇了「培訓教職員與學生急救志工隊」；完成模擬後，問題改善為 100，總分為 81 分。",
     "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
+  },
+  {
+    "record_id": "eb4d71861ec1946b8c24c4e59d7bc1fb",
+    "created_at": "2026-11-25T05:56:59.458969+00:00",
+    "scenario_id": "campus_decade",
+    "scenario_title": "保健室距離過遠問題",
+    "proposal": "保健室只有一間在圖書館裡，如果在距離很遠的地方受傷，要走很遠才能抵達。",
+    "plan_title": "設立多點小型急救站",
+    "plan_strategy": "分散據點",
+    "plan_description": "在各大樓與宿舍區增設無人或輕量急救箱與AED點，並由校安人員定期巡檢補充。",
+    "plan_reason": "能大幅縮短偏遠地區受傷學生的就醫距離，提升急救效率。",
+    "plan_effects": {
+      "budget_remaining": -15,
+      "problem_improvement": 18,
+      "satisfaction": 8,
+      "fairness": 6
+    },
+    "initial_metrics": {
+      "budget_remaining": 71,
+      "problem_improvement": 45,
+      "satisfaction": 70,
+      "fairness": 63
+    },
+    "final_metrics": {
+      "budget_remaining": 11,
+      "problem_improvement": 99,
+      "satisfaction": 95,
+      "fairness": 99
+    },
+    "metric_labels": {
+      "budget_remaining": "財政健康",
+      "problem_improvement": "問題改善",
+      "satisfaction": "教職員生滿意度",
+      "fairness": "公平性"
+    },
+    "total_score": 66,
+    "comment": "十年校務仍有改善空間，可優先補足低分指標並維持教職員生參與。",
+    "years": 10,
+    "history": [
+      {
+        "year": 1,
+        "semester": 1,
+        "event": "校園內目前僅有一處保健室設於圖書館內，偏遠校區的學生若突發受傷或身體不適，往往需耗費大量時間移動，延誤黃金救援時機。",
+        "resident": "林沐晴",
+        "role": "大學生",
+        "resident_trust": 46,
+        "resident_stress": 35,
+        "response": "動支經費增設兩處小型臨時急救站並配駐護理人員",
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +3",
+        "next_event": "隨著醫療與急救需求提升，行政與後勤人員反映現有急救物資調度與校安通報流程過於繁瑣，增加日常工作負擔。",
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +8、滿意度 +4、公平性 +3，接續浮現「隨著醫療與急救需求提升，行政與後勤人員反映現有急救物資調度與校安通報流程過於繁瑣，增加日常工作負擔。」",
+        "metrics": {
+          "budget_remaining": 56,
+          "problem_improvement": 70,
+          "satisfaction": 82,
+          "fairness": 71
+        }
+      },
+      {
+        "year": 1,
+        "semester": 2,
+        "event": "隨著醫療與急救需求提升，行政與後勤人員反映現有急救物資調度與校安通報流程過於繁瑣，增加日常工作負擔。",
+        "resident": "王思涵",
+        "role": "行政人員",
+        "resident_trust": 45,
+        "resident_stress": 36,
+        "response": "編列預算全面升級校安與醫療通報數位平台",
+        "development": "簡化行政流程與教職員工作負荷",
+        "category": "政策",
+        "benefit": "行政與教學流程改善，教職員時間增加",
+        "cause": "這項決策使問題改善 +6、滿意度 +3、公平性 +3",
+        "next_event": "隨著醫療與急救需求提升，行政與後勤人員反映現有急救物資調度與校安通報流程過於繁瑣，增加日常工作負擔。",
+        "butterfly": "簡化行政流程與教職員工作負荷使行政與教學流程改善，教職員時間增加；這項決策使問題改善 +6、滿意度 +3、公平性 +3，接續浮現「隨著醫療與急救需求提升，行政與後勤人員反映現有急救物資調度與校安通報流程過於繁瑣，增加日常工作負擔。」",
+        "metrics": {
+          "budget_remaining": 48,
+          "problem_improvement": 78,
+          "satisfaction": 82,
+          "fairness": 76
+        }
+      },
+      {
+        "year": 2,
+        "semester": 1,
+        "event": "隨著醫療與急救需求提升，行政與後勤人員反映現有急救物資調度與校安通報流程過於繁瑣，增加日常工作負擔。",
+        "resident": "王思涵",
+        "role": "行政人員",
+        "resident_trust": 49,
+        "resident_stress": 33,
+        "response": "編列預算全面升級校安與醫療通報數位平台",
+        "development": "簡化行政流程與教職員工作負荷",
+        "category": "政策",
+        "benefit": "行政與教學流程改善，教職員時間增加",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +3",
+        "next_event": "圖書館與遠距急救站增設後，夜間自習與醫療待命的能源消耗暴增，引發環保與水電費用的隱憂。",
+        "butterfly": "簡化行政流程與教職員工作負荷使行政與教學流程改善，教職員時間增加；這項決策使問題改善 +8、滿意度 +4、公平性 +3，接續浮現「圖書館與遠距急救站增設後，夜間自習與醫療待命的能源消耗暴增，引發環保與水電費用的隱憂。」",
+        "metrics": {
+          "budget_remaining": 41,
+          "problem_improvement": 88,
+          "satisfaction": 83,
+          "fairness": 81
+        }
+      },
+      {
+        "year": 2,
+        "semester": 2,
+        "event": "圖書館與遠距急救站增設後，夜間自習與醫療待命的能源消耗暴增，引發環保與水電費用的隱憂。",
+        "resident": "周明哲",
+        "role": "教授",
+        "resident_trust": 63,
+        "resident_stress": 54,
+        "response": "全面導入智慧電網與綠能設施來平衡消耗",
+        "development": "汰換高耗能設備並節水",
+        "category": "資源",
+        "benefit": "能源與用水韌性提升，長期營運成本下降",
+        "cause": "這項決策使問題改善 +9、滿意度 +5、公平性 +4",
+        "next_event": "圖書館與遠距急救站增設後，夜間自習與醫療待命的能源消耗暴增，引發環保與水電費用的隱憂。",
+        "butterfly": "汰換高耗能設備並節水使能源與用水韌性提升，長期營運成本下降；這項決策使問題改善 +9、滿意度 +5、公平性 +4，接續浮現「圖書館與遠距急救站增設後，夜間自習與醫療待命的能源消耗暴增，引發環保與水電費用的隱憂。」",
+        "metrics": {
+          "budget_remaining": 35,
+          "problem_improvement": 98,
+          "satisfaction": 84,
+          "fairness": 86
+        }
+      },
+      {
+        "year": 3,
+        "semester": 1,
+        "event": "圖書館與遠距急救站增設後，夜間自習與醫療待命的能源消耗暴增，引發環保與水電費用的隱憂。",
+        "resident": "周明哲",
+        "role": "教授",
+        "resident_trust": 67,
+        "resident_stress": 52,
+        "response": "全面導入智慧電網與綠能設施來平衡消耗並汰換老舊高耗能設備",
+        "development": "汰換高耗能設備並節水",
+        "category": "資源",
+        "benefit": "能源與用水韌性提升，長期營運成本下降",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +3",
+        "next_event": "隨著遠距急救站與各項設施擴建，校園服務人員反映維護工具與人力嚴重不足，難以負荷日常清潔與安全巡檢。",
+        "butterfly": "汰換高耗能設備並節水使能源與用水韌性提升，長期營運成本下降；這項決策使問題改善 +8、滿意度 +4、公平性 +3，接續浮現「隨著遠距急救站與各項設施擴建，校園服務人員反映維護工具與人力嚴重不足，難以負荷日常清潔與安全巡檢。」",
+        "metrics": {
+          "budget_remaining": 29,
+          "problem_improvement": 100,
+          "satisfaction": 85,
+          "fairness": 90
+        }
+      },
+      {
+        "year": 3,
+        "semester": 2,
+        "event": "隨著遠距急救站與各項設施擴建，校園服務人員反映維護工具與人力嚴重不足，難以負荷日常清潔與安全巡檢。",
+        "resident": "張家豪",
+        "role": "校園服務人員",
+        "resident_trust": 55,
+        "resident_stress": 44,
+        "response": "編列專款採購現代化維護工具並適度增聘校園服務人力",
+        "development": "培訓校園服務與支援人力",
+        "category": "資源",
+        "benefit": "服務量能提升，教職員生等待時間縮短",
+        "cause": "這項決策使問題改善 +7、滿意度 +4、公平性 +4",
+        "next_event": "隨著遠距急救站與各項設施擴建，校園服務人員反映維護工具與人力嚴重不足，難以負荷日常清潔與安全巡檢。",
+        "butterfly": "培訓校園服務與支援人力使服務量能提升，教職員生等待時間縮短；這項決策使問題改善 +7、滿意度 +4、公平性 +4，接續浮現「隨著遠距急救站與各項設施擴建，校園服務人員反映維護工具與人力嚴重不足，難以負荷日常清潔與安全巡檢。」",
+        "metrics": {
+          "budget_remaining": 24,
+          "problem_improvement": 100,
+          "satisfaction": 86,
+          "fairness": 95
+        }
+      },
+      {
+        "year": 4,
+        "semester": 1,
+        "event": "隨著遠距急救站與各項設施擴建，校園服務人員反映維護工具與人力嚴重不足，難以負荷日常清潔與安全巡檢。",
+        "resident": "張家豪",
+        "role": "校園服務人員",
+        "resident_trust": 59,
+        "resident_stress": 41,
+        "response": "編列專款採購現代化維護工具並適度增聘校園服務人力",
+        "development": "增建宿舍與公共生活空間",
+        "category": "建設",
+        "benefit": "居住容量增加，學生生活滿意度改善",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +3",
+        "next_event": "行政人員與教授群指出，隨著各類遠距急救站與智慧設施增加，跨部門的溝通與維修申請常常互相卡件。",
+        "butterfly": "增建宿舍與公共生活空間使居住容量增加，學生生活滿意度改善；這項決策使問題改善 +8、滿意度 +4、公平性 +3，接續浮現「行政人員與教授群指出，隨著各類遠距急救站與智慧設施增加，跨部門的溝通與維修申請常常互相卡件。」",
+        "metrics": {
+          "budget_remaining": 8,
+          "problem_improvement": 100,
+          "satisfaction": 87,
+          "fairness": 99
+        }
+      },
+      {
+        "year": 4,
+        "semester": 2,
+        "event": "行政人員與教授群指出，隨著各類遠距急救站與智慧設施增加，跨部門的溝通與維修申請常常互相卡件。",
+        "resident": "許雅雯",
+        "role": "教授",
+        "resident_trust": 69,
+        "resident_stress": 63,
+        "response": "設立跨部門整合單一窗口並優化報修審核流程",
+        "development": "培訓校園服務與支援人力",
+        "category": "資源",
+        "benefit": "服務量能提升，教職員生等待時間縮短",
+        "cause": "這項決策使問題改善 +7、滿意度 +4、公平性 +3",
+        "next_event": "行政人員與教授群指出，隨著各類遠距急救站與智慧設施增加，跨部門的溝通與維修申請常常互相卡件。",
+        "butterfly": "培訓校園服務與支援人力使服務量能提升，教職員生等待時間縮短；這項決策使問題改善 +7、滿意度 +4、公平性 +3，接續浮現「行政人員與教授群指出，隨著各類遠距急救站與智慧設施增加，跨部門的溝通與維修申請常常互相卡件。」",
+        "metrics": {
+          "budget_remaining": 3,
+          "problem_improvement": 100,
+          "satisfaction": 88,
+          "fairness": 100
+        }
+      },
+      {
+        "year": 5,
+        "semester": 1,
+        "event": "行政人員與教授群指出，隨著各類遠距急救站與智慧設施增加，跨部門的溝通與維修申請常常互相卡件。",
+        "resident": "王思涵",
+        "role": "行政人員",
+        "resident_trust": 48,
+        "resident_stress": 35,
+        "response": "維持現行各部門分工審核，僅加開每週協調會議",
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +3、滿意度 +1、公平性 +1",
+        "next_event": "研究生與部分教授反應，跨部門溝通改善後，實驗室與研究空間的設備更新速度仍跟不上智慧化需求。",
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +3、滿意度 +1、公平性 +1，接續浮現「研究生與部分教授反應，跨部門溝通改善後，實驗室與研究空間的設備更新速度仍跟不上智慧化需求。」",
+        "metrics": {
+          "budget_remaining": 6,
+          "problem_improvement": 99,
+          "satisfaction": 88,
+          "fairness": 99
+        }
+      },
+      {
+        "year": 5,
+        "semester": 2,
+        "event": "研究生與部分教授反應，跨部門溝通改善後，實驗室與研究空間的設備更新速度仍跟不上智慧化需求。",
+        "resident": "周明哲",
+        "role": "教授",
+        "resident_trust": 72,
+        "resident_stress": 48,
+        "response": "專款補助重點實驗室汰換老舊儀器設備",
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +9、滿意度 +5、公平性 +3",
+        "next_event": "隨著保健室僅設於圖書館導致遠距離急救不便，學生與教職員再次要求評估在校園各角落增設小型急救箱與自動體外心臟除顫器（AED），以縮短黃金救援時間。",
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +9、滿意度 +5、公平性 +3，接續浮現「隨著保健室僅設於圖書館導致遠距離急救不便，學生與教職員再次要求評估在校園各角落增設小型急救箱與自動體外心臟除顫器（AED），以縮短黃金救援時間。」",
+        "metrics": {
+          "budget_remaining": 6,
+          "problem_improvement": 99,
+          "satisfaction": 89,
+          "fairness": 99
+        }
+      },
+      {
+        "year": 6,
+        "semester": 1,
+        "event": "隨著保健室僅設於圖書館導致遠距離急救不便，學生與教職員再次要求評估在校園各角落增設小型急救箱與自動體外心臟除顫器（AED），以縮短黃金救援時間。",
+        "resident": "林沐晴",
+        "role": "大學生",
+        "resident_trust": 48,
+        "resident_stress": 34,
+        "response": "由校安中心培訓各系所志工組成緊急救護隊，替代固定設備建置",
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +5、滿意度 +2、公平性 +2",
+        "next_event": "為配合分散式急救站與智慧實驗室的擴充，教職員與後勤部門針對夜間電力調配與用電安全提出緊急檢討，憂心過載跳電影響教學品質。",
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +5、滿意度 +2、公平性 +2，接續浮現「為配合分散式急救站與智慧實驗室的擴充，教職員與後勤部門針對夜間電力調配與用電安全提出緊急檢討，憂心過載跳電影響教學品質。」",
+        "metrics": {
+          "budget_remaining": 8,
+          "problem_improvement": 99,
+          "satisfaction": 89,
+          "fairness": 99
+        }
+      },
+      {
+        "year": 6,
+        "semester": 2,
+        "event": "為配合分散式急救站與智慧實驗室的擴充，教職員與後勤部門針對夜間電力調配與用電安全提出緊急檢討，憂心過載跳電影響教學品質。",
+        "resident": "周明哲",
+        "role": "教授",
+        "resident_trust": 77,
+        "resident_stress": 44,
+        "response": "撥款全面升級校園主變電所與老舊線路，確保供電穩定",
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +9、滿意度 +5、公平性 +3",
+        "next_event": "為配合分散式急救站與智慧實驗室的擴充，教職員與後勤部門針對夜間電力調配與用電安全提出緊急檢討，憂心過載跳電影響教學品質。",
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +9、滿意度 +5、公平性 +3，接續浮現「為配合分散式急救站與智慧實驗室的擴充，教職員與後勤部門針對夜間電力調配與用電安全提出緊急檢討，憂心過載跳電影響教學品質。」",
+        "metrics": {
+          "budget_remaining": 8,
+          "problem_improvement": 99,
+          "satisfaction": 90,
+          "fairness": 99
+        }
+      },
+      {
+        "year": 7,
+        "semester": 1,
+        "event": "為配合分散式急救站與智慧實驗室的擴充，教職員與後勤部門針對夜間電力調配與用電安全提出緊急檢討，憂心過載跳電影響教學品質。",
+        "resident": "周明哲",
+        "role": "教授",
+        "resident_trust": 81,
+        "resident_stress": 41,
+        "response": "撥款全面升級主變電站與老舊線路，確保夜間供電絕對穩定。",
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +3",
+        "next_event": "遠距急救站與分散式醫療箱的設立引發了管理死角，部分學生反映急救箱常被私人物品佔用或藥品補給不及。",
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +8、滿意度 +4、公平性 +3，接續浮現「遠距急救站與分散式醫療箱的設立引發了管理死角，部分學生反映急救箱常被私人物品佔用或藥品補給不及。」",
+        "metrics": {
+          "budget_remaining": 7,
+          "problem_improvement": 99,
+          "satisfaction": 90,
+          "fairness": 99
+        }
+      },
+      {
+        "year": 7,
+        "semester": 2,
+        "event": "遠距急救站與分散式醫療箱的設立引發了管理死角，部分學生反映急救箱常被私人物品佔用或藥品補給不及。",
+        "resident": "林沐晴",
+        "role": "大學生",
+        "resident_trust": 52,
+        "resident_stress": 32,
+        "response": "建立數位物聯網急救箱監控系統，並安排專人每日定點巡查補給。",
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +7、滿意度 +4、公平性 +4",
+        "next_event": "保健室僅設於圖書館，距離遙遠導致偏遠教學大樓與運動場發生突發狀況時，傷者常需長途跋涉求醫。",
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +7、滿意度 +4、公平性 +4，接續浮現「保健室僅設於圖書館，距離遙遠導致偏遠教學大樓與運動場發生突發狀況時，傷者常需長途跋涉求醫。」",
+        "metrics": {
+          "budget_remaining": 8,
+          "problem_improvement": 99,
+          "satisfaction": 91,
+          "fairness": 99
+        }
+      },
+      {
+        "year": 8,
+        "semester": 1,
+        "event": "保健室僅設於圖書館，距離遙遠導致偏遠教學大樓與運動場發生突發狀況時，傷者常需長途跋涉求醫。",
+        "resident": "林沐晴",
+        "role": "大學生",
+        "resident_trust": 56,
+        "resident_stress": 29,
+        "response": "動支預算在各大樓增設衛星保健站與急救箱",
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +9、滿意度 +5、公平性 +4",
+        "next_event": "遠距急救站與分散式醫療箱的管理死角頻傳，學生反映急救物資常被佔用或耗盡，影響緊急應變效能。",
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +9、滿意度 +5、公平性 +4，接續浮現「遠距急救站與分散式醫療箱的管理死角頻傳，學生反映急救物資常被佔用或耗盡，影響緊急應變效能。」",
+        "metrics": {
+          "budget_remaining": 8,
+          "problem_improvement": 99,
+          "satisfaction": 92,
+          "fairness": 99
+        }
+      },
+      {
+        "year": 8,
+        "semester": 2,
+        "event": "遠距急救站與分散式醫療箱的管理死角頻傳，學生反映急救物資常被佔用或耗盡，影響緊急應變效能。",
+        "resident": "王思涵",
+        "role": "行政人員",
+        "resident_trust": 51,
+        "resident_stress": 33,
+        "response": "導入物聯網監控與電子智慧鎖並委外定期巡檢",
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +3",
+        "next_event": "保健室僅設於圖書館的空間限制尚未徹底解決，偏遠教學大樓與運動場發生突發狀況時，學生反映傷者仍需長途跋涉求醫。",
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +8、滿意度 +4、公平性 +3，接續浮現「保健室僅設於圖書館的空間限制尚未徹底解決，偏遠教學大樓與運動場發生突發狀況時，學生反映傷者仍需長途跋涉求醫。」",
+        "metrics": {
+          "budget_remaining": 9,
+          "problem_improvement": 99,
+          "satisfaction": 92,
+          "fairness": 99
+        }
+      },
+      {
+        "year": 9,
+        "semester": 1,
+        "event": "保健室僅設於圖書館的空間限制尚未徹底解決，偏遠教學大樓與運動場發生突發狀況時，學生反映傷者仍需長途跋涉求醫。",
+        "resident": "林沐晴",
+        "role": "大學生",
+        "resident_trust": 60,
+        "resident_stress": 26,
+        "response": "編列專款在各教學大樓與體育館增設常駐護理人員的微型保健站",
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +9、滿意度 +5、公平性 +4",
+        "next_event": "行政與後勤人員針對持續擴充的微型保健站與物聯網急救設備提出人力吃緊警訊，擔憂日常維護與備品盤點負荷過重。",
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +9、滿意度 +5、公平性 +4，接續浮現「行政與後勤人員針對持續擴充的微型保健站與物聯網急救設備提出人力吃緊警訊，擔憂日常維護與備品盤點負荷過重。」",
+        "metrics": {
+          "budget_remaining": 8,
+          "problem_improvement": 99,
+          "satisfaction": 94,
+          "fairness": 99
+        }
+      },
+      {
+        "year": 9,
+        "semester": 2,
+        "event": "行政與後勤人員針對持續擴充的微型保健站與物聯網急救設備提出人力吃緊警訊，擔憂日常維護與備品盤點負荷過重。",
+        "resident": "王思涵",
+        "role": "行政人員",
+        "resident_trust": 55,
+        "resident_stress": 29,
+        "response": "增聘專職醫療行政助理並導入自動化補給追蹤系統減輕負擔",
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +3",
+        "next_event": "行政與後勤人員針對持續擴充的微型保健站與物聯網急救設備提出人力吃緊警訊，擔憂日常維護與備品盤點負荷過重。",
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +8、滿意度 +4、公平性 +3，接續浮現「行政與後勤人員針對持續擴充的微型保健站與物聯網急救設備提出人力吃緊警訊，擔憂日常維護與備品盤點負荷過重。」",
+        "metrics": {
+          "budget_remaining": 8,
+          "problem_improvement": 99,
+          "satisfaction": 94,
+          "fairness": 99
+        }
+      },
+      {
+        "year": 10,
+        "semester": 1,
+        "event": "行政與後勤人員針對持續擴充的微型保健站與物聯網急救設備提出人力吃緊警訊，擔憂日常維護與備品盤點負荷過重。",
+        "resident": "王思涵",
+        "role": "行政人員",
+        "resident_trust": 59,
+        "resident_stress": 25,
+        "response": "增聘專職醫療行政助理並導入自動化補給追蹤系統",
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +3",
+        "next_event": "隨著微型保健站與急救設備的普及，部分學生建議開放夜間與週末的自主急救訓練工作坊，以提升校園整體自救能力。",
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +8、滿意度 +4、公平性 +3，接續浮現「隨著微型保健站與急救設備的普及，部分學生建議開放夜間與週末的自主急救訓練工作坊，以提升校園整體自救能力。」",
+        "metrics": {
+          "budget_remaining": 9,
+          "problem_improvement": 99,
+          "satisfaction": 94,
+          "fairness": 99
+        }
+      },
+      {
+        "year": 10,
+        "semester": 2,
+        "event": "隨著微型保健站與急救設備的普及，部分學生建議開放夜間與週末的自主急救訓練工作坊，以提升校園整體自救能力。",
+        "resident": "林沐晴",
+        "role": "大學生",
+        "resident_trust": 63,
+        "resident_stress": 24,
+        "response": "委託專業機構開辦系列急救認證課程並補助學費",
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +7、滿意度 +5、公平性 +4",
+        "next_event": "十年校務成果已完成",
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價，十年改革進入成果盤點",
+        "metrics": {
+          "budget_remaining": 11,
+          "problem_improvement": 99,
+          "satisfaction": 95,
+          "fairness": 99
+        }
+      }
+    ],
+    "yearly": [
+      {
+        "year": 1,
+        "satisfaction": 82,
+        "population": 10198,
+        "treasury": 582,
+        "score": 59
+      },
+      {
+        "year": 2,
+        "satisfaction": 84,
+        "population": 10296,
+        "treasury": 417,
+        "score": 63
+      },
+      {
+        "year": 3,
+        "satisfaction": 86,
+        "population": 10394,
+        "treasury": 292,
+        "score": 65
+      },
+      {
+        "year": 4,
+        "satisfaction": 88,
+        "population": 10492,
+        "treasury": 39,
+        "score": 65
+      },
+      {
+        "year": 5,
+        "satisfaction": 89,
+        "population": 10590,
+        "treasury": 75,
+        "score": 65
+      },
+      {
+        "year": 6,
+        "satisfaction": 90,
+        "population": 10688,
+        "treasury": 96,
+        "score": 65
+      },
+      {
+        "year": 7,
+        "satisfaction": 91,
+        "population": 10786,
+        "treasury": 102,
+        "score": 65
+      },
+      {
+        "year": 8,
+        "satisfaction": 92,
+        "population": 10884,
+        "treasury": 103,
+        "score": 65
+      },
+      {
+        "year": 9,
+        "satisfaction": 94,
+        "population": 10982,
+        "treasury": 99,
+        "score": 65
+      },
+      {
+        "year": 10,
+        "satisfaction": 95,
+        "population": 11080,
+        "treasury": 135,
+        "score": 66
+      }
+    ],
+    "population": {
+      "students": 9800,
+      "faculty": 840,
+      "staff": 440
+    },
+    "resources": {
+      "energy": 85,
+      "water": 89,
+      "staffing": 66
+    },
+    "buildings": {
+      "library": 0,
+      "housing": 1,
+      "wellbeing": 0
+    },
+    "building_labels": {
+      "library": "學習空間",
+      "housing": "宿舍",
+      "wellbeing": "健康支持中心"
+    },
+    "policies": {
+      "workload": 2,
+      "conservation": 2,
+      "training": 2
+    },
+    "policy_labels": {
+      "scholarships": "助學支持",
+      "workload": "簡政減負",
+      "accessibility": "無障礙與多語服務",
+      "conservation": "節能節水",
+      "training": "服務人力培訓"
+    },
+    "treasury": 135,
+    "residents": [
+      {
+        "id": "lin_muqing",
+        "name": "林沐晴",
+        "role": "大學生",
+        "group": "students",
+        "concern": "課業與生活平衡",
+        "personality": "熱心、容易替別人操心",
+        "goal": "成立讓新生安心求助的同儕社群",
+        "portrait": "portrait-lin-muqing.svg",
+        "satisfaction": 100,
+        "trust": 63,
+        "stress": 24
+      },
+      {
+        "id": "chen_yian",
+        "name": "陳以安",
+        "role": "研究生",
+        "group": "students",
+        "concern": "研究資源與空間",
+        "personality": "安靜、做事有條理",
+        "goal": "完成研究並爭取海外交流機會",
+        "portrait": "portrait-chen-yian.svg",
+        "satisfaction": 90,
+        "trust": 50,
+        "stress": 47
+      },
+      {
+        "id": "zhou_mingzhe",
+        "name": "周明哲",
+        "role": "教授",
+        "group": "faculty",
+        "concern": "教學與研究負荷",
+        "personality": "嚴謹、願意提攜後輩",
+        "goal": "建立跨院合作的永續研究團隊",
+        "portrait": "portrait-zhou-mingzhe.svg",
+        "satisfaction": 100,
+        "trust": 81,
+        "stress": 41
+      },
+      {
+        "id": "xu_yawen",
+        "name": "許雅雯",
+        "role": "教授",
+        "group": "faculty",
+        "concern": "研究支持與合作",
+        "personality": "好奇、擅長傾聽",
+        "goal": "設計更多學生參與的實作課程",
+        "portrait": "portrait-xu-yawen.svg",
+        "satisfaction": 99,
+        "trust": 69,
+        "stress": 63
+      },
+      {
+        "id": "wang_sihan",
+        "name": "王思涵",
+        "role": "行政人員",
+        "group": "staff",
+        "concern": "行政流程與人力",
+        "personality": "細心、喜歡把事情安排妥當",
+        "goal": "讓校園行政服務更簡單又友善",
+        "portrait": "portrait-wang-sihan.svg",
+        "satisfaction": 100,
+        "trust": 59,
+        "stress": 25
+      },
+      {
+        "id": "zhang_jiahao",
+        "name": "張家豪",
+        "role": "校園服務人員",
+        "group": "staff",
+        "concern": "服務品質與工作條件",
+        "personality": "爽朗、遇到問題就想動手處理",
+        "goal": "改善校園維護工具與安全設備",
+        "portrait": "portrait-zhang-jiahao.svg",
+        "satisfaction": 89,
+        "trust": 59,
+        "stress": 41
+      },
+      {
+        "id": "li_chengen",
+        "name": "李承恩",
+        "role": "通勤學生",
+        "group": "students",
+        "concern": "交通與校園安全",
+        "personality": "務實、重視時間安排",
+        "goal": "組成安全通勤倡議小組",
+        "portrait": "portrait-li-chengen.svg",
+        "satisfaction": 90,
+        "trust": 58,
+        "stress": 56
+      },
+      {
+        "id": "huang_kexin",
+        "name": "黃可欣",
+        "role": "國際學生",
+        "group": "students",
+        "concern": "友善環境與資訊取得",
+        "personality": "勇於嘗試、喜歡認識新朋友",
+        "goal": "籌辦讓不同文化交流的校園活動",
+        "portrait": "portrait-huang-kexin.svg",
+        "satisfaction": 93,
+        "trust": 66,
+        "stress": 65
+      }
+    ],
+    "forecast": {
+      "next_year_population": 11178,
+      "next_year_satisfaction": 98,
+      "risk": "財政與資源緩衝偏低，建議先投資韌性"
+    }
   }
 ]

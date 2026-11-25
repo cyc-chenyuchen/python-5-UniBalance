@@ -17,6 +17,7 @@ from campus_simulation import (
     campaign_context,
     make_campaign_record,
     new_campaign,
+    resident_profiles,
     validate_campaign_choice,
 )
 from simulation import apply_effects, calculate_total_score, make_comment
@@ -485,6 +486,7 @@ def _prepare_campaign_start(game):
         "resources": {"energy": 68, "water": 72, "staffing": 64},
         "buildings": {"library": 0, "housing": 0, "wellbeing": 0},
         "policies": {},
+        "characters": resident_profiles(),
     }
     events = generate_campaign_events(
         game["proposal"],
@@ -617,6 +619,7 @@ def _process_campaign_decision(game, action_id, development_id):
                     "resources": dict(campaign["resources"]),
                     "buildings": dict(campaign["buildings"]),
                     "policies": dict(campaign["policies"]),
+                    "characters": resident_profiles(campaign["residents"]),
                 },
                 next_decision={
                     "current_issue": campaign["current_event"]["event"],

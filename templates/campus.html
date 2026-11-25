@@ -39,6 +39,8 @@
       <div>
         <strong>{{ event.resident.name }} · {{ event.resident.role }}</strong>
         <blockquote>{{ event.quote }}</blockquote>
+        <p class="event-profile">{{ event.resident.personality }} · 個人目標：{{ event.resident.goal }}</p>
+        <small class="event-bond">信任 {{ event.resident.trust }} · 壓力 {{ event.resident.stress }}</small>
       </div>
     </div>
     <form action="/campus/choose" method="post" class="campaign-form">
@@ -48,7 +50,7 @@
           {% for action in event.actions %}
           <label class="campaign-option">
             <input type="radio" name="action_id" value="{{ action.action_id }}" required>
-            <span><strong>{{ action.text }}</strong><small>即時支出 {{ action.cost }} 點 · 問題改善 {{ "%+d"|format(action.effects.problem_improvement) }} · 滿意度 {{ "%+d"|format(action.effects.satisfaction) }} · 公平 {{ "%+d"|format(action.effects.fairness) }}</small></span>
+            <span><strong>{{ action.text }}</strong><small>即時支出 {{ action.cost }} 點 · 問題改善 {{ "%+d"|format(action.effects.problem_improvement) }} · 滿意度 {{ "%+d"|format(action.effects.satisfaction) }} · 公平 {{ "%+d"|format(action.effects.fairness) }} · 對{{ event.resident.name }}信任 {{ "%+d"|format(action.resident_effects.trust) }} · 壓力 {{ "%+d"|format(action.resident_effects.stress) }}</small></span>
           </label>
           {% endfor %}
         </div>
@@ -87,6 +89,8 @@
         <span>{{ resident.concern }}</span>
         <div class="resident-meter" role="meter" aria-label="{{ resident.name }}滿意度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ resident.satisfaction }}"><i style="width: {{ resident.satisfaction }}%"></i></div>
         <small>滿意度 {{ resident.satisfaction }}</small>
+        <small>{{ resident.personality }} · 目標：{{ resident.goal }}</small>
+        <small>信任 {{ resident.trust }} · 壓力 {{ resident.stress }}</small>
       </article>
       {% endfor %}
     </div>
@@ -98,7 +102,7 @@
     {% if history %}
     <ol class="butterfly-list">
       {% for item in history[-4:]|reverse %}
-      <li><small>第 {{ item.year }} 年第 {{ item.semester }} 學期 · {{ item.resident }}</small><span>{{ item.butterfly }}</span></li>
+      <li><small>第 {{ item.year }} 年第 {{ item.semester }} 學期 · {{ item.resident }} · 信任 {{ item.resident_trust }} · 壓力 {{ item.resident_stress }}</small><span>{{ item.butterfly }}</span></li>
       {% endfor %}
     </ol>
     {% else %}
