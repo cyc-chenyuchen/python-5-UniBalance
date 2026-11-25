@@ -5,19 +5,19 @@
   <div>
     <p class="step">十年校園經營 · 第 {{ year }} 年第 {{ quarter }} 季</p>
     <h1>把一個問題，經營成一所更好的大學</h1>
-    <p>第 {{ turn_number }} / {{ total_turns }} 季 · 每季處理居民事件，再做一項校務投資。</p>
+    <p>第 {{ turn_number }} / {{ total_turns }} 季 · 每季處理教職員生議題，再做一項校務投資。</p>
   </div>
-  <div class="campaign-score"><strong>{{ metrics.satisfaction }}</strong><span>居民滿意度</span></div>
+  <div class="campaign-score"><strong>{{ metrics.satisfaction }}</strong><span>教職員生滿意度</span></div>
   <div class="campaign-progress progress-track" role="progressbar" aria-label="十年經營進度" aria-valuemin="0" aria-valuemax="{{ total_turns }}" aria-valuenow="{{ turn_number - 1 }}" style="--progress: {{ progress }}%"><span></span></div>
 </section>
 
 <div class="campaign-dashboard">
   <section class="card campaign-indicators">
-    <div class="campaign-section-heading"><div><p class="step">財政與居民</p><h2>校務儀表板</h2></div><strong>校務基金 {{ treasury }} 點</strong></div>
+    <div class="campaign-section-heading"><div><p class="step">財政與教職員生</p><h2>校務儀表板</h2></div><strong>校務基金 {{ treasury }} 點</strong></div>
     <div class="metrics">
       <div><strong>財政健康</strong><span>{{ metrics.budget_remaining }}</span></div>
       <div><strong>問題改善</strong><span>{{ metrics.problem_improvement }}</span></div>
-      <div><strong>居民滿意度</strong><span>{{ metrics.satisfaction }}</span></div>
+      <div><strong>教職員生滿意度</strong><span>{{ metrics.satisfaction }}</span></div>
       <div><strong>公平性</strong><span>{{ metrics.fairness }}</span></div>
     </div>
     <div class="campaign-facts">
@@ -36,7 +36,7 @@
     <blockquote>{{ event.resident.name }}（{{ event.resident.role }}）：{{ event.quote }}</blockquote>
     <form action="/campus/choose" method="post" class="campaign-form">
       <fieldset>
-        <legend>一、如何回應居民問題？</legend>
+        <legend>一、如何回應教職員生問題？</legend>
         <div class="campaign-options">
           {% for action in event.actions %}
           <label class="campaign-option">
@@ -57,7 +57,7 @@
           {% endfor %}
         </div>
       </fieldset>
-      <p class="notice">每個決策都會改變財政、居民、資源與下一季事件；財政不足時，請善用盤點或暫緩支出。</p>
+      <p class="notice">每個決策都會改變財政、教職員生狀況、資源與下一季事件；財政不足時，請善用盤點或暫緩支出。</p>
       <button type="submit">執行本季決策 <span aria-hidden="true">→</span></button>
     </form>
   </section>
@@ -66,12 +66,12 @@
     <p class="step">未來模擬</p>
     <h2>下一年度展望</h2>
     <p>預估校園人口：<strong>{{ forecast.next_year_population }}</strong></p>
-    <p>預估居民滿意度：<strong>{{ forecast.next_year_satisfaction }} / 100</strong></p>
+    <p>預估教職員生滿意度：<strong>{{ forecast.next_year_satisfaction }} / 100</strong></p>
     <p class="notice">{{ forecast.risk }}</p>
   </aside>
 
   <section class="card campaign-residents">
-    <div class="campaign-section-heading"><div><p class="step">校園居民模擬</p><h2>八位居民的近況</h2></div></div>
+    <div class="campaign-section-heading"><div><p class="step">教職員生模擬</p><h2>八位教職員生的近況</h2></div></div>
     <div class="resident-grid">
       {% for resident in residents %}
       <article class="resident-card">

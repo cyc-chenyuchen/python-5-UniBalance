@@ -31,7 +31,7 @@
     <h2>十年人口與滿意度變化</h2>
     <div class="yearly-table-wrap">
       <table class="yearly-table">
-        <thead><tr><th>學年</th><th>校園人口</th><th>居民滿意度</th><th>校務基金</th><th>當年評分</th></tr></thead>
+        <thead><tr><th>學年</th><th>校園人口</th><th>教職員生滿意度</th><th>校務基金</th><th>當年評分</th></tr></thead>
         <tbody>
           {% for year in record.yearly %}
           <tr><th>第 {{ year.year }} 年</th><td>{{ year.population }}</td><td>{{ year.satisfaction }} / 100</td><td>{{ year.treasury }}</td><td>{{ year.score }}</td></tr>
@@ -42,7 +42,7 @@
   </section>
 
   <section class="result-section">
-    <h2>居民聲音</h2>
+    <h2>教職員生心聲</h2>
     <div class="resident-grid">
       {% for resident in record.residents %}
       <article class="resident-card"><strong>{{ resident.name }} <small>{{ resident.role }}</small></strong><span>{{ resident.concern }}</span><div class="resident-meter" role="meter" aria-label="{{ resident.name }}滿意度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ resident.satisfaction }}"><i style="width: {{ resident.satisfaction }}%"></i></div><small>十年後滿意度 {{ resident.satisfaction }}</small></article>
@@ -66,7 +66,7 @@
 
   <section class="result-section">
     <h2>未來一年模擬</h2>
-    <p>預估校園人口 {{ record.forecast.next_year_population }} 人，居民滿意度 {{ record.forecast.next_year_satisfaction }} / 100。</p>
+    <p>預估校園人口 {{ record.forecast.next_year_population }} 人，教職員生滿意度 {{ record.forecast.next_year_satisfaction }} / 100。</p>
     <p class="notice">{{ record.forecast.risk }}</p>
   </section>
   <div class="result-actions">

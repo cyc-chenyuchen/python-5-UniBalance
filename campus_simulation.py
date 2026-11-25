@@ -42,13 +42,13 @@ EVENTS = (
 RESPONSES = (
     {
         "id": "listen",
-        "title": "先聽取居民意見，組成跨單位工作小組",
+        "title": "先聽取教職員生意見，組成跨單位工作小組",
         "cost": 10,
         "effects": {"problem_improvement": 2, "satisfaction": 3, "fairness": 4},
         "resources": {"staffing": -2},
         "group_effect": 4,
         "category": "policy",
-        "cause": "居民參與增加，後續政策更貼近需求",
+        "cause": "教職員生參與增加，後續政策更貼近需求",
     },
     {
         "id": "act",
@@ -134,7 +134,7 @@ DEVELOPMENTS = (
         "resources": {},
         "policy": "accessibility",
         "group_effect": 2,
-        "benefit": "校園服務對不同背景居民更友善",
+        "benefit": "校園服務對不同背景的教職員生更友善",
     },
     {
         "id": "conservation",
@@ -155,7 +155,7 @@ DEVELOPMENTS = (
         "resources": {"staffing": 10},
         "policy": "training",
         "group_effect": 2,
-        "benefit": "服務量能提升，居民等待時間縮短",
+        "benefit": "服務量能提升，教職員生等待時間縮短",
     },
     {
         "id": "audit",
@@ -175,7 +175,7 @@ DEVELOPMENTS = (
         "treasury_gain": 32,
         "effects": {"problem_improvement": -1, "satisfaction": -2, "fairness": -1},
         "resources": {"staffing": -2},
-        "benefit": "短期財務壓力下降，但居民服務承受代價",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
     },
 )
 
@@ -345,7 +345,7 @@ def advance_campaign(state, action_id, development_id):
     event = state["current_event"]
     action = next((item for item in event["actions"] if item["action_id"] == action_id), None)
     if action is None:
-        raise ValueError("請選擇有效的居民問題處理方式。")
+        raise ValueError("請選擇有效的教職員生問題處理方式。")
     development = next(
         (item for item in available_developments(state) if item["id"] == development_id),
         None,
@@ -444,7 +444,7 @@ def forecast(state):
         "risk": (
             "財政與資源緩衝偏低，建議先投資韌性"
             if state["treasury"] < 250 or resource_average < 35
-            else "居民滿意度與公平性將影響招生及人才留任"
+            else "教職員生滿意度與公平性將影響招生及人才留任"
             if satisfaction < 55 or state["metrics"]["fairness"] < 50
             else "目前趨勢穩定，可逐步擴大長期建設"
         ),
@@ -474,7 +474,7 @@ def make_campaign_record(state):
         "scenario_title": f"十年校園經營：{state['concern']}",
         "proposal": state["concern"],
         "plan_title": "十年校務發展藍圖",
-        "plan_strategy": "居民回應、設施建設與永續治理並進",
+        "plan_strategy": "教職員生回應、設施建設與永續治理並進",
         "plan_description": "每季處理校園事件並選擇一項年度經營措施。",
         "initial_metrics": {
             "budget_remaining": 71, "problem_improvement": 45, "satisfaction": 70, "fairness": 63,
@@ -483,13 +483,13 @@ def make_campaign_record(state):
         "metric_labels": {
             "budget_remaining": "財政健康",
             "problem_improvement": "問題改善",
-            "satisfaction": "居民滿意度",
+            "satisfaction": "教職員生滿意度",
             "fairness": "公平性",
         },
         "total_score": score,
         "comment": (
-            "十年校務兼顧了居民需求、財政韌性與長期發展。"
-            if score >= 70 else "十年校務仍有改善空間，可優先補足低分指標並維持居民參與。"
+            "十年校務兼顧了教職員生需求、財政韌性與長期發展。"
+            if score >= 70 else "十年校務仍有改善空間，可優先補足低分指標並維持教職員生參與。"
         ),
         "years": YEARS,
         "history": state["history"],
