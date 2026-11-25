@@ -1,4 +1,5 @@
 import json
+import math
 import os
 import random
 import time
@@ -27,6 +28,10 @@ INTERVIEW_QUESTION_COUNT = 3
 SIMULATION_ROUND_COUNT = 3
 CAMPAIGN_EVENT_BATCH_SIZE = 2
 CAMPAIGN_HISTORY_CONTEXT_TURNS = 4
+DEFAULT_GEMINI_FALLBACK_MODELS = (
+    "gemini-3.5-flash-lite",
+    "gemini-3.6-flash",
+)
 CAMPAIGN_GROUPS = {"students", "faculty", "staff"}
 CAMPAIGN_CATEGORIES = {
     "infrastructure",
@@ -166,11 +171,79 @@ REVIEW_RESPONSE_SCHEMA = {
 }
 
 
-def send_request(url, headers, request_data):
-    retry_delays = (5, 12, 20)
-    connection_retry_delays = retry_delays[:2]
+class GeminiUnavailableError(RuntimeError):
+    def __init__(self, status_code, retry_count=3):
+        self.status_code = status_code
+        self.retry_count = retry_count
+        super().__init__(
+            f"Gemini 服務暫時無法使用（HTTP {status_code}），"
+            f"已自動重試 {retry_count} 次仍失敗，請稍後再試。"
+        )
+
+
+class GeminiConnectionError(RuntimeError):
+    pass
+
+
+def _retry_after_seconds(response):
+    retry_after = getattr(response, "headers", {}).get("Retry-After")
+    if retry_after is None:
+        return None
+    try:
+        seconds = float(retry_after)
+        if math.isfinite(seconds):
+            return min(max(seconds, 0), 60)
+    except (TypeError, ValueError):
+        pass
+    try:
+        retry_at = parsedate_to_datetime(retry_after)
+        if retry_at.tzinfo is None:
+            retry_at = retry_at.replace(tzinfo=timezone.utc)
+        return min(
+            max((retry_at - datetime.now(timezone.utc)).total_seconds(), 0),
+            60,
+        )
+    except (TypeError, ValueError, OverflowError):
+        return None
+
+
+def _retry_delay(attempt, retry_after=None):
+    if retry_after is not None:
+        return min(60, retry_after + random.uniform(0, 1))
+    exponential_delay = min(32, 2 ** attempt)
+    return min(32, exponential_delay + random.uniform(0, 1))
+
+
+def _gemini_fallback_models(primary_model):
+    configured_models = os.environ.get("GEMINI_FALLBACK_MODELS")
+    if configured_models is None:
+        configured_models = os.environ.get("GEMINI_FALLBACK_MODEL")
+    if configured_models is None:
+        candidates = DEFAULT_GEMINI_FALLBACK_MODELS
+    else:
+        candidates = configured_models.split(",")
+
+    fallback_models = []
+    for candidate in candidates:
+        model = candidate.strip()
+        if model and model != primary_model and model not in fallback_models:
+            fallback_models.append(model)
+    if len(fallback_models) > 2:
+        raise RuntimeError("最多只能設定兩個 Gemini 備援模型。")
+    return fallback_models
+
+
+def send_request(url, headers, request_data, max_retries=3):
+    if (
+        isinstance(max_retries, bool)
+        or not isinstance(max_retries, int)
+        or not 0 <= max_retries <= 5
+    ):
+        raise ValueError("Gemini 重試次數必須介於 0 到 5 次。")
+    status_retry_limit = max_retries
+    connection_retry_limit = min(2, max_retries)
     retryable_status_codes = {429, 500, 502, 503, 504}
-    for attempt in range(len(retry_delays) + 1):
+    for attempt in range(status_retry_limit + 1):
         try:
             response = requests.post(
                 url,
@@ -182,44 +255,31 @@ def send_request(url, headers, request_data):
             requests.exceptions.Timeout,
             requests.exceptions.ConnectionError,
         ) as error:
-            if attempt < len(connection_retry_delays):
-                time.sleep(connection_retry_delays[attempt])
+            if attempt < connection_retry_limit:
+                time.sleep(_retry_delay(attempt))
                 continue
             if isinstance(error, requests.exceptions.Timeout):
                 raise TimeoutError(
                     "Gemini 請求逾時（連線上限 5 秒、回應上限 30 秒），"
-                    "已自動重試兩次仍失敗，請稍後再試。"
+                    f"已自動重試 {connection_retry_limit} 次仍失敗，請稍後再試。"
                 ) from error
-            raise RuntimeError(
-                "Gemini 連線失敗，已自動重試兩次仍失敗，請稍後再試。"
+            raise GeminiConnectionError(
+                f"Gemini 連線失敗，已自動重試 {connection_retry_limit} 次仍失敗，請稍後再試。"
             ) from error
         except requests.exceptions.RequestException as error:
             raise RuntimeError("Gemini 連線失敗，請重試。") from error
 
         if response.status_code in retryable_status_codes:
-            if attempt < len(retry_delays):
-                retry_after = getattr(response, "headers", {}).get("Retry-After")
-                try:
-                    delay = min(max(float(retry_after), 0), 60)
-                except (TypeError, ValueError):
-                    try:
-                        retry_at = parsedate_to_datetime(retry_after)
-                        if retry_at.tzinfo is None:
-                            retry_at = retry_at.replace(tzinfo=timezone.utc)
-                        delay = min(
-                            max(
-                                (retry_at - datetime.now(timezone.utc)).total_seconds(),
-                                0,
-                            ),
-                            60,
-                        )
-                    except (TypeError, ValueError, OverflowError):
-                        delay = retry_delays[attempt]
-                time.sleep(delay)
+            if attempt < status_retry_limit:
+                time.sleep(
+                    _retry_delay(attempt, _retry_after_seconds(response))
+                )
                 continue
+            if response.status_code == 503:
+                raise GeminiUnavailableError(response.status_code, max_retries)
             raise RuntimeError(
                 f"Gemini 服務暫時無法使用（HTTP {response.status_code}），"
-                "已自動重試三次仍失敗，請稍後再試。"
+                f"已自動重試 {max_retries} 次仍失敗，請稍後再試。"
             )
 
         try:
@@ -245,10 +305,6 @@ def _request_gemini(system_prompt, user_prompt, response_schema, temperature=0.7
     if not model:
         raise RuntimeError("未設定 GEMINI_MODEL。")
 
-    url = (
-        f"https://generativelanguage.googleapis.com/v1beta/models/"
-        f"{model}:generateContent?key={api_key}"
-    )
     headers = {"Content-Type": "application/json"}
     request_data = {
         "systemInstruction": {"parts": [{"text": system_prompt}]},
@@ -259,7 +315,54 @@ def _request_gemini(system_prompt, user_prompt, response_schema, temperature=0.7
             "temperature": temperature,
         },
     }
-    response = send_request(url, headers, request_data)
+    url = (
+        f"https://generativelanguage.googleapis.com/v1beta/models/"
+        f"{model}:generateContent?key={api_key}"
+    )
+    try:
+        response = send_request(url, headers, request_data)
+    except (
+        GeminiUnavailableError,
+        GeminiConnectionError,
+        TimeoutError,
+    ) as primary_error:
+        fallback_models = _gemini_fallback_models(model)
+        if not fallback_models:
+            raise RuntimeError(
+                f"主要模型 {model} 失敗：{primary_error}；沒有可用的備援模型。"
+            ) from primary_error
+        fallback_failures = []
+        for fallback_model in fallback_models:
+            fallback_url = (
+                f"https://generativelanguage.googleapis.com/v1beta/models/"
+                f"{fallback_model}:generateContent?key={api_key}"
+            )
+            try:
+                response = send_request(
+                    fallback_url,
+                    headers,
+                    request_data,
+                    max_retries=0,
+                )
+                break
+            except (
+                GeminiUnavailableError,
+                GeminiConnectionError,
+                TimeoutError,
+            ) as fallback_error:
+                fallback_failures.append(
+                    f"{fallback_model} 失敗（單次嘗試）：{fallback_error}"
+                )
+            except RuntimeError as fallback_error:
+                raise RuntimeError(
+                    f"主要模型 {model} 失敗：{primary_error}；"
+                    f"備援模型 {fallback_model} 失敗：{fallback_error}"
+                ) from fallback_error
+        else:
+            raise RuntimeError(
+                f"主要模型 {model} 失敗：{primary_error}；備援模型也無法使用："
+                + "；".join(fallback_failures)
+            ) from primary_error
     try:
         payload = response.json()
         text = payload["candidates"][0]["content"]["parts"][0]["text"]

@@ -12,8 +12,10 @@ os.environ["DEMO_MODE"] = "1"
 from ai_service import (
     CAMPAIGN_EVENT_BATCH_SIZE,
     CAMPAIGN_HISTORY_CONTEXT_TURNS,
+    GeminiUnavailableError,
     METRIC_RANGES,
     PLAN_RESPONSE_SCHEMA,
+    _request_gemini,
     _validate_effects,
     generate_campaign_events,
     recommend_campaign_plans,
@@ -277,14 +279,16 @@ class GeminiRequestTests(unittest.TestCase):
         with patch(
             "ai_service.requests.post",
             side_effect=requests.exceptions.ReadTimeout,
-        ) as post, patch("ai_service.time.sleep") as sleep:
-            with self.assertRaisesRegex(TimeoutError, "已自動重試兩次仍失敗"):
+        ) as post, patch("ai_service.time.sleep") as sleep, patch(
+            "ai_service.random.uniform", side_effect=[0.25, 0.75]
+        ):
+            with self.assertRaisesRegex(TimeoutError, "已自動重試 2 次仍失敗"):
                 send_request("https://example.test/generate", {}, {})
 
         self.assertEqual(post.call_count, 3)
         self.assertEqual(
             [call.args[0] for call in sleep.call_args_list],
-            [5, 12],
+            [1.25, 2.75],
         )
         post.assert_called_with(
             "https://example.test/generate",
@@ -309,6 +313,10 @@ class GeminiRequestTests(unittest.TestCase):
                 ],
             ) as post,
             patch("ai_service.time.sleep") as sleep,
+            patch(
+                "ai_service.random.uniform",
+                side_effect=[0.25, 0.5, 0.75],
+            ),
         ):
             response = send_request("https://example.test/generate", {}, {})
 
@@ -316,7 +324,7 @@ class GeminiRequestTests(unittest.TestCase):
         self.assertEqual(post.call_count, 4)
         self.assertEqual(
             [call.args[0] for call in sleep.call_args_list],
-            [5, 12, 20],
+            [1.25, 2.5, 4.75],
         )
 
     def test_repeated_service_unavailable_reports_retry_failure(self):
@@ -327,14 +335,18 @@ class GeminiRequestTests(unittest.TestCase):
                 side_effect=[unavailable, unavailable, unavailable, unavailable],
             ) as post,
             patch("ai_service.time.sleep") as sleep,
+            patch(
+                "ai_service.random.uniform",
+                side_effect=[0.25, 0.5, 0.75],
+            ),
         ):
-            with self.assertRaisesRegex(RuntimeError, "已自動重試三次仍失敗"):
+            with self.assertRaisesRegex(RuntimeError, "已自動重試 3 次仍失敗"):
                 send_request("https://example.test/generate", {}, {})
 
         self.assertEqual(post.call_count, 4)
         self.assertEqual(
             [call.args[0] for call in sleep.call_args_list],
-            [5, 12, 20],
+            [1.25, 2.5, 4.75],
         )
 
     def test_rate_limit_respects_retry_after_header(self):
@@ -346,11 +358,12 @@ class GeminiRequestTests(unittest.TestCase):
                 side_effect=[limited, success],
             ),
             patch("ai_service.time.sleep") as sleep,
+            patch("ai_service.random.uniform", return_value=0.5),
         ):
             response = send_request("https://example.test/generate", {}, {})
 
         self.assertIs(response, success)
-        sleep.assert_called_once_with(9)
+        sleep.assert_called_once_with(9.5)
 
     def test_service_unavailable_respects_http_date_retry_after(self):
         unavailable = Mock(
@@ -364,11 +377,216 @@ class GeminiRequestTests(unittest.TestCase):
                 side_effect=[unavailable, success],
             ),
             patch("ai_service.time.sleep") as sleep,
+            patch("ai_service.random.uniform", return_value=0.5),
         ):
             response = send_request("https://example.test/generate", {}, {})
 
         self.assertIs(response, success)
         sleep.assert_called_once_with(60)
+
+
+class GeminiFallbackTests(unittest.TestCase):
+    def test_503_uses_configured_fallback_model(self):
+        response = Mock()
+        response.json.return_value = {
+            "candidates": [{"content": {"parts": [{"text": '{"ok": true}'}]}}]
+        }
+        with (
+            patch.dict(
+                os.environ,
+                {
+                    "GEMINI_API_KEY": "test-key",
+                    "GEMINI_MODEL": "primary-model",
+                    "GEMINI_FALLBACK_MODEL": "backup-model",
+                },
+            ),
+            patch(
+                "ai_service.send_request",
+                side_effect=[GeminiUnavailableError(503), response],
+            ) as request,
+        ):
+            result = _request_gemini("system", "prompt", {})
+
+        self.assertEqual(result, {"ok": True})
+        self.assertIn(
+            "/primary-model:generateContent?",
+            request.call_args_list[0].args[0],
+        )
+        self.assertIn(
+            "/backup-model:generateContent?",
+            request.call_args_list[1].args[0],
+        )
+        self.assertEqual(request.call_args_list[1].kwargs["max_retries"], 0)
+
+    def test_default_fallbacks_skip_primary_and_use_distinct_models(self):
+        response = Mock()
+        response.json.return_value = {
+            "candidates": [{"content": {"parts": [{"text": '{"ok": true}'}]}}]
+        }
+        with (
+            patch.dict(
+                os.environ,
+                {
+                    "GEMINI_API_KEY": "test-key",
+                    "GEMINI_MODEL": "gemini-3.5-flash-lite",
+                },
+                clear=True,
+            ),
+            patch(
+                "ai_service.send_request",
+                side_effect=[
+                    GeminiUnavailableError(503),
+                    response,
+                ],
+            ) as request,
+        ):
+            result = _request_gemini("system", "prompt", {})
+
+        self.assertEqual(result, {"ok": True})
+        self.assertIn("gemini-3.6-flash:generateContent", request.call_args_list[1].args[0])
+        self.assertEqual(
+            request.call_args_list[1].kwargs["max_retries"],
+            0,
+        )
+
+    def test_primary_timeout_uses_fallback_model(self):
+        response = Mock()
+        response.json.return_value = {
+            "candidates": [{"content": {"parts": [{"text": '{"ok": true}'}]}}]
+        }
+        with (
+            patch.dict(
+                os.environ,
+                {
+                    "GEMINI_API_KEY": "test-key",
+                    "GEMINI_MODEL": "primary-model",
+                    "GEMINI_FALLBACK_MODELS": "backup-one,backup-two",
+                },
+            ),
+            patch(
+                "ai_service.send_request",
+                side_effect=[
+                    TimeoutError("Gemini read timeout"),
+                    TimeoutError("First fallback timeout"),
+                    response,
+                ],
+            ) as request,
+        ):
+            result = _request_gemini("system", "prompt", {})
+
+        self.assertEqual(result, {"ok": True})
+        self.assertIn("backup-one:generateContent", request.call_args_list[1].args[0])
+        self.assertIn("backup-two:generateContent", request.call_args_list[2].args[0])
+        self.assertEqual(request.call_args_list[1].kwargs["max_retries"], 0)
+        self.assertEqual(request.call_args_list[2].kwargs["max_retries"], 0)
+
+    def test_multiple_configured_fallbacks_are_tried_in_order(self):
+        response = Mock()
+        response.json.return_value = {
+            "candidates": [{"content": {"parts": [{"text": '{"ok": true}'}]}}]
+        }
+        with (
+            patch.dict(
+                os.environ,
+                {
+                    "GEMINI_API_KEY": "test-key",
+                    "GEMINI_MODEL": "primary-model",
+                    "GEMINI_FALLBACK_MODELS": "backup-one, backup-two",
+                },
+                clear=True,
+            ),
+            patch(
+                "ai_service.send_request",
+                side_effect=[
+                    GeminiUnavailableError(503),
+                    GeminiUnavailableError(503),
+                    response,
+                ],
+            ) as request,
+        ):
+            result = _request_gemini("system", "prompt", {})
+
+        self.assertEqual(result, {"ok": True})
+        self.assertIn("backup-one:generateContent", request.call_args_list[1].args[0])
+        self.assertIn("backup-two:generateContent", request.call_args_list[2].args[0])
+        self.assertTrue(all(call.kwargs["max_retries"] == 0 for call in request.call_args_list[1:]))
+
+    def test_zero_retries_makes_one_attempt(self):
+        unavailable = Mock(status_code=503)
+        with (
+            patch("ai_service.requests.post", return_value=unavailable) as post,
+            patch("ai_service.time.sleep") as sleep,
+        ):
+            with self.assertRaisesRegex(GeminiUnavailableError, "重試 0 次"):
+                send_request(
+                    "https://example.test/generate",
+                    {},
+                    {},
+                    max_retries=0,
+                )
+
+        post.assert_called_once()
+        sleep.assert_not_called()
+
+    def test_503_error_identifies_when_both_models_are_unavailable(self):
+        with (
+            patch.dict(
+                os.environ,
+                {
+                    "GEMINI_API_KEY": "test-key",
+                    "GEMINI_MODEL": "primary-model",
+                    "GEMINI_FALLBACK_MODEL": "backup-model",
+                },
+            ),
+            patch(
+                "ai_service.send_request",
+                side_effect=[
+                    GeminiUnavailableError(503),
+                    GeminiUnavailableError(503),
+                ],
+            ),
+        ):
+            with self.assertRaisesRegex(
+                RuntimeError,
+                "primary-model.*backup-model.*HTTP 503",
+            ):
+                _request_gemini("system", "prompt", {})
+
+    def test_rate_limit_does_not_switch_models(self):
+        with (
+            patch.dict(
+                os.environ,
+                {
+                    "GEMINI_API_KEY": "test-key",
+                    "GEMINI_MODEL": "primary-model",
+                    "GEMINI_FALLBACK_MODEL": "backup-model",
+                },
+            ),
+            patch(
+                "ai_service.send_request",
+                side_effect=RuntimeError("Gemini HTTP 429"),
+            ) as request,
+        ):
+            with self.assertRaisesRegex(RuntimeError, "HTTP 429"):
+                _request_gemini("system", "prompt", {})
+
+        request.assert_called_once()
+
+    def test_client_errors_are_not_retried(self):
+        for status_code in (400, 401, 403):
+            with self.subTest(status_code=status_code):
+                response = Mock(status_code=status_code)
+                response.raise_for_status.side_effect = requests.exceptions.HTTPError(
+                    response=response
+                )
+                with patch(
+                    "ai_service.requests.post", return_value=response
+                ) as post:
+                    with self.assertRaisesRegex(
+                        RuntimeError, f"HTTP {status_code}"
+                    ):
+                        send_request("https://example.test/generate", {}, {})
+                post.assert_called_once()
 
 
 class OfflineDemoTests(unittest.TestCase):
