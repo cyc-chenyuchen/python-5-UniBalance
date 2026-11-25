@@ -4787,5 +4787,844 @@
       "next_year_satisfaction": 91,
       "risk": "財政與資源緩衝偏低，建議先投資韌性"
     }
+  },
+  {
+    "record_id": "b26298272f60ac8d633075668027b78e",
+    "created_at": "2026-11-25T08:20:32.984351+00:00",
+    "scenario_id": "campus_decade",
+    "scenario_title": "宿舍晒衣場不足因應對策",
+    "proposal": "宿舍晒衣場太少",
+    "plan_title": "增設戶外大型太陽能棚晒衣場",
+    "plan_strategy": "集中擴建戶外設施",
+    "plan_description": "在宿舍區空地建造具備太陽能發電與自動遮雨功能的頂棚大型晒衣場，大幅增加吊掛空間。",
+    "plan_reason": "此方案利用垂直空間與綠能結合，能根本解決晾衣空間不足的痛點，並兼顧環燙效益。",
+    "plan_effects": {
+      "budget_remaining": -18,
+      "problem_improvement": 20,
+      "satisfaction": 10,
+      "fairness": 5
+    },
+    "initial_metrics": {
+      "budget_remaining": 44,
+      "problem_improvement": 69,
+      "satisfaction": 83,
+      "fairness": 66
+    },
+    "final_metrics": {
+      "budget_remaining": 16,
+      "problem_improvement": 100,
+      "satisfaction": 92,
+      "fairness": 100
+    },
+    "metric_labels": {
+      "budget_remaining": "財政健康",
+      "problem_improvement": "問題改善",
+      "satisfaction": "教職員生滿意度",
+      "fairness": "公平性"
+    },
+    "total_score": 66,
+    "comment": "五年校務仍有改善空間，可優先補足低分指標並維持教職員生參與。",
+    "years": 5,
+    "campus_profile": {
+      "id": "innovation_campus",
+      "name": "新興創意校園",
+      "description": "新學院與社團快速成長；機會多，但服務量能仍在追趕。",
+      "treasury_delta": -100,
+      "population_delta": {
+        "students": 600,
+        "faculty": 40,
+        "staff": 0
+      },
+      "resource_delta": {
+        "energy": 5,
+        "water": 5,
+        "staffing": -4
+      },
+      "metric_delta": {
+        "problem_improvement": 4,
+        "satisfaction": 4,
+        "fairness": -2
+      },
+      "resident_delta": {
+        "students": {
+          "stress": 4
+        },
+        "staff": {
+          "stress": 3
+        }
+      }
+    },
+    "story_arc": {
+      "id": "story_li_chengen",
+      "title": "李承恩的三學期支線",
+      "resident_id": "li_chengen",
+      "resident_name": "李承恩",
+      "resident_role": "通勤學生",
+      "group": "students",
+      "concern": "交通與校園安全",
+      "goal": "組成安全通勤倡議小組",
+      "stage": 3,
+      "next_stage": 0,
+      "support_score": 26,
+      "ending": "co_created",
+      "ending_text": "李承恩與校方一起推進了「組成安全通勤倡議小組」。這條支線沒有停在群組的「收到」。",
+      "last_beat": "第 3 幕完成：李承恩與校方一起推進了「組成安全通勤倡議小組」。這條支線沒有停在群組的「收到」。"
+    },
+    "history": [
+      {
+        "year": 1,
+        "semester": 1,
+        "event": "宿舍晒衣場嚴重不足，學生每逢陰雨天便無處晾衣，甚至在走廊違規拉繩，引發消防與衛生隱憂。",
+        "resident": "林沐晴",
+        "role": "大學生",
+        "resident_trust": 46,
+        "resident_stress": 39,
+        "response": "斥巨資增建多處戶外雨棚晒衣場並配置自動烘乾機",
+        "follow_up": "大幅緩解晒衣空間不足，學生生活品質顯著提升。",
+        "delayed_effects": {
+          "problem_improvement": 6,
+          "fairness": 2,
+          "treasury": -30
+        },
+        "story_beat": null,
+        "event_rule_result": "危機止損成功：本次改善達標，沒有追加損失。",
+        "campus_reaction": "校園匿名板熱帖：校務群組的驚嘆號依然很忙，但至少有了處理方向。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [],
+        "development": "盤點採購與合約，回收閒置預算",
+        "category": "財政",
+        "benefit": "財務透明度提升並釋出可運用預算",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +3",
+        "next_event": "通勤學生李承恩為爭取校園周邊交通安全與完善車位，開始串聯同學準備成立倡議小組，向校方提出改革訴求。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "盤點採購與合約，回收閒置預算使財務透明度提升並釋出可運用預算；這項決策使問題改善 +8、滿意度 +4、公平性 +3，接續浮現「通勤學生李承恩為爭取校園周邊交通安全與完善車位，開始串聯同學準備成立倡議小組，向校方提出改革訴求。」；選擇後續回響：大幅緩解晒衣空間不足，學生生活品質顯著提升。",
+        "metrics": {
+          "budget_remaining": 44,
+          "problem_improvement": 78,
+          "satisfaction": 84,
+          "fairness": 70
+        }
+      },
+      {
+        "year": 1,
+        "semester": 2,
+        "event": "通勤學生李承恩為爭取校園周邊交通安全與完善車位，開始串聯同學準備成立倡議小組，向校方提出改革訴求。",
+        "resident": "李承恩",
+        "role": "通勤學生",
+        "resident_trust": 63,
+        "resident_stress": 58,
+        "response": "全額資助李承恩的通勤倡議小組並納入正式校務諮詢",
+        "follow_up": "建立良好的學生對話管道，後續交通政策推動更加順暢。",
+        "delayed_effects": {
+          "problem_improvement": 5,
+          "fairness": 4,
+          "treasury": -20
+        },
+        "story_beat": {
+          "stage": 1,
+          "support_change": 11,
+          "message": "第 1 幕完成：李承恩願意把目標說出口。校園支線正式開啟，這次不是只在群組回「收到」。",
+          "ending": null
+        },
+        "event_rule_result": "人物主線會記下這次選擇，信任、公平與壓力將影響後續結局。",
+        "campus_reaction": "校園匿名板熱帖：主線進度條動了，角色目標沒有繼續在待辦清單裡吃灰。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "宿舍晒衣場嚴重不足，學生每逢陰雨天便無處晾衣，甚至在走廊違規拉繩，引發消防與衛生隱憂。",
+            "resident": "林沐晴",
+            "description": "大幅緩解晒衣空間不足，學生生活品質顯著提升。",
+            "effects": {
+              "problem_improvement": 6,
+              "fairness": 2,
+              "treasury": -30
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +6、滿意度 +5、公平性 +4",
+        "next_event": "通勤學生李承恩與倡議小組提出校園周邊車位與動線改革方案，要求校方正視機車停車位不足及人行道動線危機。",
+        "annual_challenge": "幸福校園",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +6、滿意度 +5、公平性 +4，接續浮現「通勤學生李承恩與倡議小組提出校園周邊車位與動線改革方案，要求校方正視機車停車位不足及人行道動線危機。」；選擇後續回響：建立良好的學生對話管道，後續交通政策推動更加順暢。；第 1 幕完成：李承恩願意把目標說出口。校園支線正式開啟，這次不是只在群組回「收到」。；年度挑戰「幸福校園」完成，獲得 30 點基金獎勵；「宿舍晒衣場嚴重不足，學生每逢陰雨天便無處晾衣，甚至在走廊違規拉繩，引發消防與衛生隱憂。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 45,
+          "problem_improvement": 89,
+          "satisfaction": 85,
+          "fairness": 75
+        }
+      },
+      {
+        "year": 2,
+        "semester": 1,
+        "event": "通勤學生李承恩與倡議小組提出校園周邊車位與動線改革方案，要求校方正視機車停車位不足及人行道動線危機。",
+        "resident": "李承恩",
+        "role": "通勤學生",
+        "resident_trust": 64,
+        "resident_stress": 59,
+        "response": "僅撥發部分經費協助漆繪標線，並由總務處研擬長遠的分階段改善計畫。",
+        "follow_up": "學生認為改革牛步，通勤族抱怨聲音持續在社群發酵。",
+        "delayed_effects": {
+          "problem_improvement": 3,
+          "fairness": 0,
+          "treasury": -10
+        },
+        "story_beat": {
+          "stage": 2,
+          "support_change": 1,
+          "message": "第 2 幕完成：試辦結果讓李承恩的目標有了新方向。進度條終於動了，先別急著截圖慶祝。",
+          "ending": null
+        },
+        "event_rule_result": "人物主線會記下這次選擇，信任、公平與壓力將影響後續結局。",
+        "campus_reaction": "校園匿名板熱帖：主線進度條動了，角色目標沒有繼續在待辦清單裡吃灰。 有建設，才有建樹。",
+        "settled_consequences": [
+          {
+            "origin_event": "通勤學生李承恩為爭取校園周邊交通安全與完善車位，開始串聯同學準備成立倡議小組，向校方提出改革訴求。",
+            "resident": "李承恩",
+            "description": "建立良好的學生對話管道，後續交通政策推動更加順暢。",
+            "effects": {
+              "problem_improvement": 5,
+              "fairness": 4,
+              "treasury": -20
+            }
+          }
+        ],
+        "development": "設置健康支持與諮詢中心",
+        "category": "建設",
+        "benefit": "身心支持服務與校園韌性提升",
+        "cause": "這項決策使問題改善 +4、滿意度 +1、公平性 +1",
+        "next_event": "李承恩的通勤倡議小組成功促成校園交通安全委員會成立，他邀請校長與全體師生共同簽署交通友善盟約，為本學期劃下句點。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "設置健康支持與諮詢中心使身心支持服務與校園韌性提升；這項決策使問題改善 +4、滿意度 +1、公平性 +1，接續浮現「李承恩的通勤倡議小組成功促成校園交通安全委員會成立，他邀請校長與全體師生共同簽署交通友善盟約，為本學期劃下句點。」；選擇後續回響：學生認為改革牛步，通勤族抱怨聲音持續在社群發酵。；第 2 幕完成：試辦結果讓李承恩的目標有了新方向。進度條終於動了，先別急著截圖慶祝。；「通勤學生李承恩為爭取校園周邊交通安全與完善車位，開始串聯同學準備成立倡議小組，向校方提出改革訴求。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 32,
+          "problem_improvement": 100,
+          "satisfaction": 85,
+          "fairness": 82
+        }
+      },
+      {
+        "year": 2,
+        "semester": 2,
+        "event": "李承恩的通勤倡議小組成功促成校園交通安全委員會成立，他邀請校長與全體師生共同簽署交通友善盟約，為本學期劃下句點。",
+        "resident": "李承恩",
+        "role": "通勤學生",
+        "resident_trust": 69,
+        "resident_stress": 52,
+        "response": "正式將交通友善盟約納入校務白皮書，並每年編列固定預算維護交通設施。",
+        "follow_up": "校園交通安全制度化，學生與校方建立長期互信的夥伴關係。",
+        "delayed_effects": {
+          "problem_improvement": 8,
+          "fairness": 6,
+          "treasury": -25
+        },
+        "story_beat": {
+          "stage": 3,
+          "support_change": 14,
+          "message": "第 3 幕完成：李承恩與校方一起推進了「組成安全通勤倡議小組」。這條支線沒有停在群組的「收到」。",
+          "ending": "co_created"
+        },
+        "event_rule_result": "人物主線會記下這次選擇，信任、公平與壓力將影響後續結局。",
+        "campus_reaction": "校園匿名板熱帖：主線進度條動了，角色目標沒有繼續在待辦清單裡吃灰。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "通勤學生李承恩與倡議小組提出校園周邊車位與動線改革方案，要求校方正視機車停車位不足及人行道動線危機。",
+            "resident": "李承恩",
+            "description": "學生認為改革牛步，通勤族抱怨聲音持續在社群發酵。",
+            "effects": {
+              "problem_improvement": 3,
+              "fairness": 0,
+              "treasury": -10
+            }
+          }
+        ],
+        "development": "盤點採購與合約，回收閒置預算",
+        "category": "財政",
+        "benefit": "財務透明度提升並釋出可運用預算",
+        "cause": "這項決策使問題改善 +9、滿意度 +5、公平性 +5",
+        "next_event": "圖書館夜間自修室因期末將至一位難求，研究生與大學生為了佔位問題在討論板上起口角，甚至出現佔位書本被移開的衝突。",
+        "annual_challenge": "校園升級",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "盤點採購與合約，回收閒置預算使財務透明度提升並釋出可運用預算；這項決策使問題改善 +9、滿意度 +5、公平性 +5，接續浮現「圖書館夜間自修室因期末將至一位難求，研究生與大學生為了佔位問題在討論板上起口角，甚至出現佔位書本被移開的衝突。」；選擇後續回響：校園交通安全制度化，學生與校方建立長期互信的夥伴關係。；第 3 幕完成：李承恩與校方一起推進了「組成安全通勤倡議小組」。這條支線沒有停在群組的「收到」。；年度挑戰「校園升級」完成，獲得 30 點基金獎勵；「通勤學生李承恩與倡議小組提出校園周邊車位與動線改革方案，要求校方正視機車停車位不足及人行道動線危機。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 34,
+          "problem_improvement": 100,
+          "satisfaction": 87,
+          "fairness": 90
+        }
+      },
+      {
+        "year": 3,
+        "semester": 1,
+        "event": "圖書館夜間自修室因期末將至一位難求，研究生與大學生為了佔位問題在討論板上起口角，甚至出現佔位書本被移開的衝突。",
+        "resident": "陳以安",
+        "role": "研究生",
+        "resident_trust": 54,
+        "resident_stress": 48,
+        "response": "斥巨資增設24小時臨時K書中心並派駐保全",
+        "follow_up": "夜間K書空間有效分流，期末佔位衝突大幅降低，學生專心投入學業。",
+        "delayed_effects": {
+          "problem_improvement": 6,
+          "fairness": 3,
+          "treasury": -30
+        },
+        "story_beat": null,
+        "event_rule_result": "危機止損成功：本次改善達標，沒有追加損失。",
+        "campus_reaction": "校園匿名板熱帖：校務群組的驚嘆號依然很忙，但至少有了處理方向。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "李承恩的通勤倡議小組成功促成校園交通安全委員會成立，他邀請校長與全體師生共同簽署交通友善盟約，為本學期劃下句點。",
+            "resident": "李承恩",
+            "description": "校園交通安全制度化，學生與校方建立長期互信的夥伴關係。",
+            "effects": {
+              "problem_improvement": 8,
+              "fairness": 6,
+              "treasury": -25
+            }
+          }
+        ],
+        "development": "盤點採購與合約，回收閒置預算",
+        "category": "財政",
+        "benefit": "財務透明度提升並釋出可運用預算",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +3",
+        "next_event": "教職員生對於校園內老舊飲水機水質與濾心更換頻率感到擔憂，教授與行政人員紛紛向健康中心反映，要求全面升級飲水設備。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "盤點採購與合約，回收閒置預算使財務透明度提升並釋出可運用預算；這項決策使問題改善 +8、滿意度 +4、公平性 +3，接續浮現「教職員生對於校園內老舊飲水機水質與濾心更換頻率感到擔憂，教授與行政人員紛紛向健康中心反映，要求全面升級飲水設備。」；選擇後續回響：夜間K書空間有效分流，期末佔位衝突大幅降低，學生專心投入學業。；「李承恩的通勤倡議小組成功促成校園交通安全委員會成立，他邀請校長與全體師生共同簽署交通友善盟約，為本學期劃下句點。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 32,
+          "problem_improvement": 100,
+          "satisfaction": 88,
+          "fairness": 100
+        }
+      },
+      {
+        "year": 3,
+        "semester": 2,
+        "event": "教職員生對於校園內老舊飲水機水質與濾心更換頻率感到擔憂，教授與行政人員紛紛向健康中心反映，要求全面升級飲水設備。",
+        "resident": "周明哲",
+        "role": "教授",
+        "resident_trust": 63,
+        "resident_stress": 53,
+        "response": "投入經費全面更換智慧聯網濾水設備並即時公布水質",
+        "follow_up": "全校飲用水品質大幅提升，教職員生健康獲得實質保障。",
+        "delayed_effects": {
+          "problem_improvement": 6,
+          "fairness": 4,
+          "treasury": -25
+        },
+        "story_beat": null,
+        "event_rule_result": "把握限時機會：校務基金獲得 20 點紅利。",
+        "campus_reaction": "校園匿名板熱帖：基金與機會的相遇，至少有留下會議紀錄。 財政有節，校務不劫。",
+        "settled_consequences": [
+          {
+            "origin_event": "圖書館夜間自修室因期末將至一位難求，研究生與大學生為了佔位問題在討論板上起口角，甚至出現佔位書本被移開的衝突。",
+            "resident": "陳以安",
+            "description": "夜間K書空間有效分流，期末佔位衝突大幅降低，學生專心投入學業。",
+            "effects": {
+              "problem_improvement": 6,
+              "fairness": 3,
+              "treasury": -30
+            }
+          }
+        ],
+        "development": "盤點採購與合約，回收閒置預算",
+        "category": "財政",
+        "benefit": "財務透明度提升並釋出可運用預算",
+        "cause": "這項決策使問題改善 +7、滿意度 +5、公平性 +4",
+        "next_event": "教職員生對於校園內老舊飲水機水質與濾心更換頻率感到擔憂，教授與行政人員紛紛向健康中心反映，要求全面升級飲水設備。",
+        "annual_challenge": "安心學期",
+        "challenge_completed": false,
+        "challenge_reward": 0,
+        "butterfly": "盤點採購與合約，回收閒置預算使財務透明度提升並釋出可運用預算；這項決策使問題改善 +7、滿意度 +5、公平性 +4，接續浮現「教職員生對於校園內老舊飲水機水質與濾心更換頻率感到擔憂，教授與行政人員紛紛向健康中心反映，要求全面升級飲水設備。」；選擇後續回響：全校飲用水品質大幅提升，教職員生健康獲得實質保障。；年度挑戰「安心學期」未完成；「圖書館夜間自修室因期末將至一位難求，研究生與大學生為了佔位問題在討論板上起口角，甚至出現佔位書本被移開的衝突。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 32,
+          "problem_improvement": 100,
+          "satisfaction": 89,
+          "fairness": 100
+        }
+      },
+      {
+        "year": 4,
+        "semester": 1,
+        "event": "教職員生對於校園內老舊飲水機水質與濾心更換頻率感到擔憂，教授與行政人員紛紛向健康中心反映，要求全面升級飲水設備。",
+        "resident": "周明哲",
+        "role": "教授",
+        "resident_trust": 67,
+        "resident_stress": 50,
+        "response": "斥巨資全面更換全校智慧聯網飲水機並即時公開水質檢測數據",
+        "follow_up": "全校飲用水品質大幅提升，教職員生健康獲得實質保障，疑慮完全消除。",
+        "delayed_effects": {
+          "problem_improvement": 6,
+          "fairness": 4,
+          "treasury": -30
+        },
+        "story_beat": null,
+        "event_rule_result": "危機止損成功：本次改善達標，沒有追加損失。",
+        "campus_reaction": "校園匿名板熱帖：消防栓今天有出場，還好不是只負責背景。 資源省著用，耐心不用省著給。",
+        "settled_consequences": [
+          {
+            "origin_event": "教職員生對於校園內老舊飲水機水質與濾心更換頻率感到擔憂，教授與行政人員紛紛向健康中心反映，要求全面升級飲水設備。",
+            "resident": "周明哲",
+            "description": "全校飲用水品質大幅提升，教職員生健康獲得實質保障。",
+            "effects": {
+              "problem_improvement": 6,
+              "fairness": 4,
+              "treasury": -25
+            }
+          }
+        ],
+        "development": "汰換高耗能設備並節水",
+        "category": "資源",
+        "benefit": "能源與用水韌性提升，長期營運成本下降",
+        "cause": "這項決策使問題改善 +8、滿意度 +5、公平性 +4",
+        "next_event": "校園內外送車輛頻繁違規亂停，甚至在教學區人行道飆速，行政人員王思涵擔憂引發安全事故，建議推行智慧車管與禁行時段。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "汰換高耗能設備並節水使能源與用水韌性提升，長期營運成本下降；這項決策使問題改善 +8、滿意度 +5、公平性 +4，接續浮現「校園內外送車輛頻繁違規亂停，甚至在教學區人行道飆速，行政人員王思涵擔憂引發安全事故，建議推行智慧車管與禁行時段。」；選擇後續回響：全校飲用水品質大幅提升，教職員生健康獲得實質保障，疑慮完全消除。；「教職員生對於校園內老舊飲水機水質與濾心更換頻率感到擔憂，教授與行政人員紛紛向健康中心反映，要求全面升級飲水設備。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 23,
+          "problem_improvement": 100,
+          "satisfaction": 90,
+          "fairness": 100
+        }
+      },
+      {
+        "year": 4,
+        "semester": 2,
+        "event": "校園內外送車輛頻繁違規亂停，甚至在教學區人行道飆速，行政人員王思涵擔憂引發安全事故，建議推行智慧車管與禁行時段。",
+        "resident": "王思涵",
+        "role": "行政人員",
+        "resident_trust": 47,
+        "resident_stress": 39,
+        "response": "建置全校外送轉運站並補助建置智慧車管系統，全面規範動線",
+        "follow_up": "有效改善校園交通秩序，行政人員與師生步行更加安全順暢。",
+        "delayed_effects": {
+          "problem_improvement": 5,
+          "fairness": 4,
+          "treasury": -25
+        },
+        "story_beat": null,
+        "event_rule_result": "把握限時機會：校務基金獲得 20 點紅利。",
+        "campus_reaction": "校園匿名板熱帖：基金與機會的相遇，至少有留下會議紀錄。 財政有節，校務不劫。",
+        "settled_consequences": [
+          {
+            "origin_event": "教職員生對於校園內老舊飲水機水質與濾心更換頻率感到擔憂，教授與行政人員紛紛向健康中心反映，要求全面升級飲水設備。",
+            "resident": "周明哲",
+            "description": "全校飲用水品質大幅提升，教職員生健康獲得實質保障，疑慮完全消除。",
+            "effects": {
+              "problem_improvement": 6,
+              "fairness": 4,
+              "treasury": -30
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +7、滿意度 +4、公平性 +4",
+        "next_event": "校園內外送車輛頻繁違規亂停，甚至在教學區人行道飆速，行政人員王思涵擔憂引發安全事故，建議推行智慧車管與禁行時段。",
+        "annual_challenge": "信任社群",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +7、滿意度 +4、公平性 +4，接續浮現「校園內外送車輛頻繁違規亂停，甚至在教學區人行道飆速，行政人員王思涵擔憂引發安全事故，建議推行智慧車管與禁行時段。」；選擇後續回響：有效改善校園交通秩序，行政人員與師生步行更加安全順暢。；年度挑戰「信任社群」完成，獲得 30 點基金獎勵；「教職員生對於校園內老舊飲水機水質與濾心更換頻率感到擔憂，教授與行政人員紛紛向健康中心反映，要求全面升級飲水設備。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 25,
+          "problem_improvement": 100,
+          "satisfaction": 90,
+          "fairness": 100
+        }
+      },
+      {
+        "year": 5,
+        "semester": 1,
+        "event": "校園內外送車輛頻繁違規亂停，甚至在教學區人行道飆速，行政人員王思涵擔憂引發安全事故，建議推行智慧車管與禁行時段。",
+        "resident": "王思涵",
+        "role": "行政人員",
+        "resident_trust": 51,
+        "resident_stress": 36,
+        "response": "斥巨資全面建置智慧車牌辨識與外送轉運站，嚴格執行人行道禁行",
+        "follow_up": "徹底解決校園交通亂象，行人安全獲得強力保障。",
+        "delayed_effects": {
+          "problem_improvement": 6,
+          "fairness": 3,
+          "treasury": -25
+        },
+        "story_beat": null,
+        "event_rule_result": "危機止損成功：本次改善達標，沒有追加損失。",
+        "campus_reaction": "校園匿名板熱帖：校務群組的驚嘆號依然很忙，但至少有了處理方向。 節能節水，水到渠成。",
+        "settled_consequences": [
+          {
+            "origin_event": "校園內外送車輛頻繁違規亂停，甚至在教學區人行道飆速，行政人員王思涵擔憂引發安全事故，建議推行智慧車管與禁行時段。",
+            "resident": "王思涵",
+            "description": "有效改善校園交通秩序，行政人員與師生步行更加安全順暢。",
+            "effects": {
+              "problem_improvement": 5,
+              "fairness": 4,
+              "treasury": -25
+            }
+          }
+        ],
+        "development": "培訓校園服務與支援人力",
+        "category": "資源",
+        "benefit": "服務量能提升，教職員生等待時間縮短",
+        "cause": "這項決策使問題改善 +9、滿意度 +4、公平性 +3",
+        "next_event": "圖書館與教學大樓周邊的無障礙斜坡與電梯老舊頻繁故障，身障生與推車負擔加重，教授許雅雯建議全面檢修並升級無障礙設施。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "培訓校園服務與支援人力使服務量能提升，教職員生等待時間縮短；這項決策使問題改善 +9、滿意度 +4、公平性 +3，接續浮現「圖書館與教學大樓周邊的無障礙斜坡與電梯老舊頻繁故障，身障生與推車負擔加重，教授許雅雯建議全面檢修並升級無障礙設施。」；選擇後續回響：徹底解決校園交通亂象，行人安全獲得強力保障。；「校園內外送車輛頻繁違規亂停，甚至在教學區人行道飆速，行政人員王思涵擔憂引發安全事故，建議推行智慧車管與禁行時段。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 16,
+          "problem_improvement": 100,
+          "satisfaction": 92,
+          "fairness": 100
+        }
+      },
+      {
+        "year": 5,
+        "semester": 2,
+        "event": "圖書館與教學大樓周邊的無障礙斜坡與電梯老舊頻繁故障，身障生與推車負擔加重，教授許雅雯建議全面檢修並升級無障礙設施。",
+        "resident": "許雅雯",
+        "role": "教授",
+        "resident_trust": 70,
+        "resident_stress": 63,
+        "response": "專款撥發優化全校無障礙電梯與斜坡，並結合智慧預約導引系統",
+        "follow_up": "無障礙體驗大躍進，校園多元共融獲得師生高度肯定。",
+        "delayed_effects": {
+          "problem_improvement": 5,
+          "fairness": 4,
+          "treasury": -20
+        },
+        "story_beat": null,
+        "event_rule_result": "把握限時機會：校務基金獲得 20 點紅利。",
+        "campus_reaction": "校園匿名板熱帖：基金與機會的相遇，至少有留下會議紀錄。 財政有節，校務不劫。",
+        "settled_consequences": [
+          {
+            "origin_event": "校園內外送車輛頻繁違規亂停，甚至在教學區人行道飆速，行政人員王思涵擔憂引發安全事故，建議推行智慧車管與禁行時段。",
+            "resident": "王思涵",
+            "description": "徹底解決校園交通亂象，行人安全獲得強力保障。",
+            "effects": {
+              "problem_improvement": 6,
+              "fairness": 3,
+              "treasury": -25
+            }
+          },
+          {
+            "origin_event": "圖書館與教學大樓周邊的無障礙斜坡與電梯老舊頻繁故障，身障生與推車負擔加重，教授許雅雯建議全面檢修並升級無障礙設施。",
+            "resident": "許雅雯",
+            "description": "無障礙體驗大躍進，校園多元共融獲得師生高度肯定。",
+            "effects": {
+              "problem_improvement": 5,
+              "fairness": 4,
+              "treasury": -20
+            }
+          }
+        ],
+        "development": "盤點採購與合約，回收閒置預算",
+        "category": "財政",
+        "benefit": "財務透明度提升並釋出可運用預算",
+        "cause": "這項決策使問題改善 +8、滿意度 +5、公平性 +5",
+        "next_event": "5年校務成果已完成",
+        "annual_challenge": "永續校園",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "盤點採購與合約，回收閒置預算使財務透明度提升並釋出可運用預算，五年改革進入成果盤點；選擇後續回響：無障礙體驗大躍進，校園多元共融獲得師生高度肯定。；年度挑戰「永續校園」完成，獲得 30 點基金獎勵；「校園內外送車輛頻繁違規亂停，甚至在教學區人行道飆速，行政人員王思涵擔憂引發安全事故，建議推行智慧車管與禁行時段。」的後續影響已結算；「圖書館與教學大樓周邊的無障礙斜坡與電梯老舊頻繁故障，身障生與推車負擔加重，教授許雅雯建議全面檢修並升級無障礙設施。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 16,
+          "problem_improvement": 100,
+          "satisfaction": 92,
+          "fairness": 100
+        }
+      }
+    ],
+    "yearly": [
+      {
+        "year": 1,
+        "satisfaction": 85,
+        "population": 10838,
+        "treasury": 539,
+        "score": 61,
+        "challenge": "幸福校園",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 2,
+        "satisfaction": 87,
+        "population": 10936,
+        "treasury": 414,
+        "score": 65,
+        "challenge": "校園升級",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 3,
+        "satisfaction": 89,
+        "population": 11034,
+        "treasury": 382,
+        "score": 67,
+        "challenge": "安心學期",
+        "challenge_completed": false,
+        "challenge_reward": 0
+      },
+      {
+        "year": 4,
+        "satisfaction": 90,
+        "population": 11132,
+        "treasury": 296,
+        "score": 67,
+        "challenge": "信任社群",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 5,
+        "satisfaction": 92,
+        "population": 11230,
+        "treasury": 196,
+        "score": 66,
+        "challenge": "永續校園",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      }
+    ],
+    "challenges": [
+      {
+        "id": "popular_campus",
+        "title": "幸福校園",
+        "description": "本年度結束時教職員生滿意度達到 70。",
+        "rule": "satisfaction",
+        "year": 1,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "campus_builder",
+        "title": "校園升級",
+        "description": "至少完成一項校園建設。",
+        "rule": "buildings",
+        "year": 2,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "healthy_semester",
+        "title": "安心學期",
+        "description": "本年度結束時教職員生平均壓力不高於 52。",
+        "rule": "stress",
+        "year": 3,
+        "completed": false,
+        "reward": 30
+      },
+      {
+        "id": "trusted_community",
+        "title": "信任社群",
+        "description": "本年度結束時教職員生平均信任達到 58。",
+        "rule": "trust",
+        "year": 4,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "green_campus",
+        "title": "永續校園",
+        "description": "本年度結束時平均資源存量達到 60。",
+        "rule": "resources",
+        "year": 5,
+        "completed": true,
+        "reward": 30
+      }
+    ],
+    "titles": [
+      {
+        "id": "campus_favorite",
+        "name": "人氣校長",
+        "description": "教職員生滿意度達到 78。",
+        "earned_turn": 0
+      },
+      {
+        "id": "green_guardian",
+        "name": "永續守護者",
+        "description": "平均資源存量達到 70。",
+        "earned_turn": 0
+      },
+      {
+        "id": "problem_solver",
+        "name": "問題終結者",
+        "description": "問題改善度達到 75。",
+        "earned_turn": 1
+      },
+      {
+        "id": "equity_champion",
+        "name": "公平推手",
+        "description": "公平性達到 75。",
+        "earned_turn": 2
+      },
+      {
+        "id": "trusted_leader",
+        "name": "傾聽者",
+        "description": "教職員生平均信任達到 58。",
+        "earned_turn": 8
+      },
+      {
+        "id": "challenge_collector",
+        "name": "挑戰收藏家",
+        "description": "完成至少三項年度挑戰。",
+        "earned_turn": 8
+      }
+    ],
+    "population": {
+      "students": 10000,
+      "faculty": 820,
+      "staff": 410
+    },
+    "resources": {
+      "energy": 82,
+      "water": 86,
+      "staffing": 65
+    },
+    "buildings": {
+      "library": 0,
+      "housing": 0,
+      "wellbeing": 1
+    },
+    "building_labels": {
+      "library": "學習空間",
+      "housing": "宿舍",
+      "wellbeing": "健康支持中心"
+    },
+    "policies": {
+      "conservation": 1,
+      "training": 1
+    },
+    "policy_labels": {
+      "scholarships": "助學支持",
+      "workload": "簡政減負",
+      "accessibility": "無障礙與多語服務",
+      "conservation": "節能節水",
+      "training": "服務人力培訓"
+    },
+    "treasury": 196,
+    "residents": [
+      {
+        "id": "lin_muqing",
+        "name": "林沐晴",
+        "role": "大學生",
+        "group": "students",
+        "concern": "課業與生活平衡",
+        "personality": "熱心、容易替別人操心",
+        "goal": "成立讓新生安心求助的同儕社群",
+        "portrait": "portrait-lin-muqing.svg",
+        "satisfaction": 88,
+        "trust": 46,
+        "stress": 39
+      },
+      {
+        "id": "chen_yian",
+        "name": "陳以安",
+        "role": "研究生",
+        "group": "students",
+        "concern": "研究資源與空間",
+        "personality": "安靜、做事有條理",
+        "goal": "完成研究並爭取海外交流機會",
+        "portrait": "portrait-chen-yian.svg",
+        "satisfaction": 91,
+        "trust": 54,
+        "stress": 48
+      },
+      {
+        "id": "zhou_mingzhe",
+        "name": "周明哲",
+        "role": "教授",
+        "group": "faculty",
+        "concern": "教學與研究負荷",
+        "personality": "嚴謹、願意提攜後輩",
+        "goal": "建立跨院合作的永續研究團隊",
+        "portrait": "portrait-zhou-mingzhe.svg",
+        "satisfaction": 96,
+        "trust": 67,
+        "stress": 50
+      },
+      {
+        "id": "xu_yawen",
+        "name": "許雅雯",
+        "role": "教授",
+        "group": "faculty",
+        "concern": "研究支持與合作",
+        "personality": "好奇、擅長傾聽",
+        "goal": "設計更多學生參與的實作課程",
+        "portrait": "portrait-xu-yawen.svg",
+        "satisfaction": 96,
+        "trust": 70,
+        "stress": 63
+      },
+      {
+        "id": "wang_sihan",
+        "name": "王思涵",
+        "role": "行政人員",
+        "group": "staff",
+        "concern": "行政流程與人力",
+        "personality": "細心、喜歡把事情安排妥當",
+        "goal": "讓校園行政服務更簡單又友善",
+        "portrait": "portrait-wang-sihan.svg",
+        "satisfaction": 98,
+        "trust": 51,
+        "stress": 36
+      },
+      {
+        "id": "zhang_jiahao",
+        "name": "張家豪",
+        "role": "校園服務人員",
+        "group": "staff",
+        "concern": "服務品質與工作條件",
+        "personality": "爽朗、遇到問題就想動手處理",
+        "goal": "改善校園維護工具與安全設備",
+        "portrait": "portrait-zhang-jiahao.svg",
+        "satisfaction": 80,
+        "trust": 50,
+        "stress": 50
+      },
+      {
+        "id": "li_chengen",
+        "name": "李承恩",
+        "role": "通勤學生",
+        "group": "students",
+        "concern": "交通與校園安全",
+        "personality": "務實、重視時間安排",
+        "goal": "組成安全通勤倡議小組",
+        "portrait": "portrait-li-chengen.svg",
+        "satisfaction": 99,
+        "trust": 69,
+        "stress": 52
+      },
+      {
+        "id": "huang_kexin",
+        "name": "黃可欣",
+        "role": "國際學生",
+        "group": "students",
+        "concern": "友善環境與資訊取得",
+        "personality": "勇於嘗試、喜歡認識新朋友",
+        "goal": "籌辦讓不同文化交流的校園活動",
+        "portrait": "portrait-huang-kexin.svg",
+        "satisfaction": 91,
+        "trust": 66,
+        "stress": 69
+      }
+    ],
+    "forecast": {
+      "next_year_population": 11328,
+      "next_year_satisfaction": 95,
+      "risk": "財政與資源緩衝偏低，建議先投資韌性"
+    }
   }
 ]
