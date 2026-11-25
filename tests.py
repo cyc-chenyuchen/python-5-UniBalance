@@ -292,24 +292,30 @@ class GeminiRequestTests(unittest.TestCase):
             timeout=(5, 30),
         )
 
-    def test_service_unavailable_retries_twice_then_succeeds(self):
+    def test_service_unavailable_retries_three_times_then_succeeds(self):
         unavailable = Mock(status_code=503)
         still_unavailable = Mock(status_code=503)
+        third_unavailable = Mock(status_code=503)
         success = Mock(status_code=200)
         with (
             patch(
                 "ai_service.requests.post",
-                side_effect=[unavailable, still_unavailable, success],
+                side_effect=[
+                    unavailable,
+                    still_unavailable,
+                    third_unavailable,
+                    success,
+                ],
             ) as post,
             patch("ai_service.time.sleep") as sleep,
         ):
             response = send_request("https://example.test/generate", {}, {})
 
         self.assertIs(response, success)
-        self.assertEqual(post.call_count, 3)
+        self.assertEqual(post.call_count, 4)
         self.assertEqual(
             [call.args[0] for call in sleep.call_args_list],
-            [5, 12],
+            [5, 12, 20],
         )
 
     def test_repeated_service_unavailable_reports_retry_failure(self):
@@ -317,17 +323,17 @@ class GeminiRequestTests(unittest.TestCase):
         with (
             patch(
                 "ai_service.requests.post",
-                side_effect=[unavailable, unavailable, unavailable],
+                side_effect=[unavailable, unavailable, unavailable, unavailable],
             ) as post,
             patch("ai_service.time.sleep") as sleep,
         ):
-            with self.assertRaisesRegex(RuntimeError, "已自動重試兩次仍失敗"):
+            with self.assertRaisesRegex(RuntimeError, "已自動重試三次仍失敗"):
                 send_request("https://example.test/generate", {}, {})
 
-        self.assertEqual(post.call_count, 3)
+        self.assertEqual(post.call_count, 4)
         self.assertEqual(
             [call.args[0] for call in sleep.call_args_list],
-            [5, 12],
+            [5, 12, 20],
         )
 
     def test_rate_limit_respects_retry_after_header(self):

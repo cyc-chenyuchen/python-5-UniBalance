@@ -1,73 +1,5 @@
 [
   {
-    "record_id": "60ddd39ce560f869b5a8e483a9e80626",
-    "created_at": "2026-11-24T08:00:57.676087+00:00",
-    "scenario_id": "campus_custom",
-    "scenario_title": "宿舍前道路磁磚整修工程",
-    "proposal": "宿舍前道路磁磚不平整，常常積水且腳踏車行駛顛簸。",
-    "plan_id": "plan_1",
-    "plan_title": "方案一局部修繕",
-    "plan_strategy": "精準修補",
-    "plan_description": "局部修繕破損磁磚並改善排水孔設計，降低經費消耗並快速解決積水問題。",
-    "plan_reason": "針對嚴重積水處優先處理，施工期短且影響範圍小。",
-    "plan_effects": {
-      "budget_remaining": -10,
-      "problem_improvement": 12,
-      "satisfaction": 5,
-      "fairness": 3
-    },
-    "initial_metrics": {
-      "budget_remaining": 75,
-      "problem_improvement": 75,
-      "satisfaction": 75,
-      "fairness": 75
-    },
-    "final_metrics": {
-      "budget_remaining": 58,
-      "problem_improvement": 94,
-      "satisfaction": 88,
-      "fairness": 85
-    },
-    "metric_labels": {
-      "budget_remaining": "剩餘預算",
-      "problem_improvement": "問題改善",
-      "satisfaction": "學生滿意度",
-      "fairness": "公平性"
-    },
-    "actions": [
-      {
-        "round": 1,
-        "event": "第一回合：施工前期進行交通管制，引發部分學生不滿。",
-        "action_index": 0,
-        "action_id": "r1_a1",
-        "action_text": "增設明顯的改道標示與夜間照明",
-        "action_effects": {
-          "budget_remaining": -3,
-          "problem_improvement": 2,
-          "satisfaction": 3,
-          "fairness": 2
-        }
-      },
-      {
-        "round": 2,
-        "event": "第二回合：部分排水孔周邊磁磚出現微幅沉陷需要複檢。",
-        "action_index": 1,
-        "action_id": "r2_a2",
-        "action_text": "成立學生監督小組進行驗收覆查",
-        "action_effects": {
-          "budget_remaining": -4,
-          "problem_improvement": 5,
-          "satisfaction": 5,
-          "fairness": 5
-        }
-      }
-    ],
-    "total_score": 81,
-    "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
-    "review": "本次採用「方案一局部修繕」。在「第一回合：施工前期進行交通管制，引發部分學生不滿。」中，玩家選擇了「增設明顯的改道標示與夜間照明」；完成模擬後，問題改善為 94，總分為 81 分。",
-    "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
-  },
-  {
     "record_id": "2e95e354c2b22c8f1646342fe1f99fea",
     "created_at": "2026-11-24T08:02:41.763689+00:00",
     "scenario_id": "campus_custom",
@@ -7845,6 +7777,856 @@
     "forecast": {
       "next_year_population": 11908,
       "next_year_satisfaction": 89,
+      "risk": "目前趨勢穩定，可逐步擴大長期建設"
+    }
+  },
+  {
+    "record_id": "5939dbc6f47b63a0da909b5091658b42",
+    "created_at": "2026-11-25T13:12:48.306867+00:00",
+    "scenario_id": "campus_decade",
+    "scenario_title": "宿舍晒衣場空間不足",
+    "proposal": "宿舍晒衣場空間不足",
+    "plan_title": "智慧烘衣設備升級方案",
+    "plan_strategy": "導入商用聯網烘衣機與APP預約",
+    "plan_description": "編列預算全面汰換舊有晒衣設施，改建為室內智慧烘衣與集水晒衣中心，結合APP遠端預約與通知，徹底解決天候與空間限制。",
+    "plan_reason": "以科技設備取代實體擴建，節省土地成本並大幅提升效率，但初始建置費用較高。",
+    "plan_effects": {
+      "budget_remaining": -15,
+      "problem_improvement": 18,
+      "satisfaction": 8,
+      "fairness": 5
+    },
+    "initial_metrics": {
+      "budget_remaining": 62,
+      "problem_improvement": 68,
+      "satisfaction": 81,
+      "fairness": 68
+    },
+    "final_metrics": {
+      "budget_remaining": 45,
+      "problem_improvement": 100,
+      "satisfaction": 89,
+      "fairness": 100
+    },
+    "metric_labels": {
+      "budget_remaining": "財政健康",
+      "problem_improvement": "問題改善",
+      "satisfaction": "教職員生滿意度",
+      "fairness": "公平性"
+    },
+    "total_score": 68,
+    "comment": "五年校務仍有改善空間，可優先補足低分指標並維持教職員生參與。",
+    "years": 5,
+    "campus_profile": {
+      "id": "research_hub",
+      "name": "研究重鎮",
+      "description": "研究量能與教職員規模較大；能源消耗和教學負荷是隱憂。",
+      "treasury_delta": 80,
+      "population_delta": {
+        "students": -300,
+        "faculty": 100,
+        "staff": 20
+      },
+      "resource_delta": {
+        "energy": -8,
+        "water": 0,
+        "staffing": 3
+      },
+      "metric_delta": {
+        "problem_improvement": 5,
+        "satisfaction": -2
+      },
+      "resident_delta": {
+        "faculty": {
+          "stress": 6
+        }
+      }
+    },
+    "story_arc": {
+      "id": "story_zhou_mingzhe",
+      "title": "陳土扁的三學期支線",
+      "resident_id": "zhou_mingzhe",
+      "resident_name": "陳土扁",
+      "resident_role": "教授",
+      "group": "faculty",
+      "concern": "教學與研究負荷",
+      "goal": "建立跨院合作的永續研究團隊",
+      "stage": 3,
+      "next_stage": 0,
+      "support_score": 34,
+      "ending": "co_created",
+      "ending_text": "陳土扁與校方一起推進了「建立跨院合作的永續研究團隊」。這條支線沒有停在群組的「收到」。",
+      "last_beat": "第 3 幕完成：陳土扁與校方一起推進了「建立跨院合作的永續研究團隊」。這條支線沒有停在群組的「收到」。"
+    },
+    "history": [
+      {
+        "year": 1,
+        "semester": 1,
+        "event": "宿舍晒衣場空間不足導致學生衣物無處晾曬，學生宿舍區的戶外晒衣架嚴重短缺，梅雨季節更讓晾衣需求塞爆交誼廳。",
+        "resident": "蕭述一",
+        "role": "大學生",
+        "resident_trust": 46,
+        "resident_stress": 35,
+        "response": "緊急採購並加裝大容量戶外電動升降晒衣架與遮雨棚",
+        "follow_up": "大幅緩解晒衣空間壓力，學生生活品質提升，但需注意後續維護成本。",
+        "delayed_effects": {
+          "problem_improvement": 6,
+          "fairness": 3,
+          "treasury": -20
+        },
+        "story_beat": null,
+        "event_rule_result": "危機止損成功：本次改善達標，沒有追加損失。",
+        "campus_reaction": "校園匿名板熱帖：校務群組的驚嘆號依然很忙，但至少有了處理方向。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +3",
+        "next_event": "陳土扁教授注意到宿舍晒衣場不足的問題延伸至研究生宿舍，因研究壓力繁重加上晾衣空間受擠壓，團隊成員的實驗專注力大受影響。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +8、滿意度 +4、公平性 +3，接續浮現「陳土扁教授注意到宿舍晒衣場不足的問題延伸至研究生宿舍，因研究壓力繁重加上晾衣空間受擠壓，團隊成員的實驗專注力大受影響。」；選擇後續回響：大幅緩解晒衣空間壓力，學生生活品質提升，但需注意後續維護成本。",
+        "metrics": {
+          "budget_remaining": 62,
+          "problem_improvement": 75,
+          "satisfaction": 82,
+          "fairness": 70
+        }
+      },
+      {
+        "year": 1,
+        "semester": 2,
+        "event": "陳土扁教授注意到宿舍晒衣場不足的問題延伸至研究生宿舍，因研究壓力繁重加上晾衣空間受擠壓，團隊成員的實驗專注力大受影響。",
+        "resident": "陳土扁",
+        "role": "教授",
+        "resident_trust": 62,
+        "resident_stress": 59,
+        "response": "結合永續研究團隊資源，由師生共創規劃智慧節能晒衣與烘衣中心",
+        "follow_up": "不僅解決空間不足，還成為跨院實作與永續研究的新亮點。",
+        "delayed_effects": {
+          "problem_improvement": 7,
+          "fairness": 4,
+          "treasury": -18
+        },
+        "story_beat": {
+          "stage": 1,
+          "support_change": 11,
+          "message": "第 1 幕完成：陳土扁願意把目標說出口。校園支線正式開啟，這次不是只在群組回「收到」。",
+          "ending": null
+        },
+        "event_rule_result": "人物主線會記下這次選擇，信任、公平與壓力將影響後續結局。",
+        "campus_reaction": "校園匿名板熱帖：主線進度條動了，角色目標沒有繼續在待辦清單裡吃灰。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "宿舍晒衣場空間不足導致學生衣物無處晾曬，學生宿舍區的戶外晒衣架嚴重短缺，梅雨季節更讓晾衣需求塞爆交誼廳。",
+            "resident": "蕭述一",
+            "description": "大幅緩解晒衣空間壓力，學生生活品質提升，但需注意後續維護成本。",
+            "effects": {
+              "problem_improvement": 6,
+              "fairness": 3,
+              "treasury": -20
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +7、滿意度 +4、公平性 +4",
+        "next_event": "陳土扁教授在推動智慧節能晒衣與烘衣中心時，發現研究生宿舍的電力迴路老舊，若同時運作多台大功率烘衣機恐跳電，進一步影響跨院永續研究團隊的實驗進度。",
+        "annual_challenge": "財政韌性",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +7、滿意度 +4、公平性 +4，接續浮現「陳土扁教授在推動智慧節能晒衣與烘衣中心時，發現研究生宿舍的電力迴路老舊，若同時運作多台大功率烘衣機恐跳電，進一步影響跨院永續研究團隊的實驗進度。」；選擇後續回響：不僅解決空間不足，還成為跨院實作與永續研究的新亮點。；第 1 幕完成：陳土扁願意把目標說出口。校園支線正式開啟，這次不是只在群組回「收到」。；年度挑戰「財政韌性」完成，獲得 30 點基金獎勵；「宿舍晒衣場空間不足導致學生衣物無處晾曬，學生宿舍區的戶外晒衣架嚴重短缺，梅雨季節更讓晾衣需求塞爆交誼廳。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 64,
+          "problem_improvement": 87,
+          "satisfaction": 82,
+          "fairness": 76
+        }
+      },
+      {
+        "year": 2,
+        "semester": 1,
+        "event": "陳土扁教授在推動智慧節能晒衣與烘衣中心時，發現研究生宿舍的電力迴路老舊，若同時運作多台大功率烘衣機恐跳電，進一步影響跨院永續研究團隊的實驗進度。",
+        "resident": "陳土扁",
+        "role": "教授",
+        "resident_trust": 66,
+        "resident_stress": 56,
+        "response": "投入經費全面升級研究生宿舍區配電盤，並增設智慧斷電與負載平衡系統",
+        "follow_up": "徹底解決電力隱患，確保研究與生活機能順暢並強化財政韌性。",
+        "delayed_effects": {
+          "problem_improvement": 6,
+          "fairness": 3,
+          "treasury": -25
+        },
+        "story_beat": {
+          "stage": 2,
+          "support_change": 10,
+          "message": "第 2 幕完成：試辦結果讓陳土扁的目標有了新方向。進度條終於動了，先別急著截圖慶祝。",
+          "ending": null
+        },
+        "event_rule_result": "人物主線會記下這次選擇，信任、公平與壓力將影響後續結局。",
+        "campus_reaction": "校園匿名板熱帖：群組的「收到」沒有變成大結局，支線還在更新。 校園地圖升級，終於不是只多一個群組。",
+        "settled_consequences": [
+          {
+            "origin_event": "陳土扁教授注意到宿舍晒衣場不足的問題延伸至研究生宿舍，因研究壓力繁重加上晾衣空間受擠壓，團隊成員的實驗專注力大受影響。",
+            "resident": "陳土扁",
+            "description": "不僅解決空間不足，還成為跨院實作與永續研究的新亮點。",
+            "effects": {
+              "problem_improvement": 7,
+              "fairness": 4,
+              "treasury": -18
+            }
+          }
+        ],
+        "development": "設置健康支持與諮詢中心",
+        "category": "建設",
+        "benefit": "身心支持服務與校園韌性提升",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +3",
+        "next_event": "隨著智慧節能晒衣與烘衣中心進入最後整合階段，陳土扁教授的跨院永續研究團隊準備將成果推廣至全校，但行政人力吃緊讓營運辦法難以如期公告。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "設置健康支持與諮詢中心使身心支持服務與校園韌性提升；這項決策使問題改善 +8、滿意度 +4、公平性 +3，接續浮現「隨著智慧節能晒衣與烘衣中心進入最後整合階段，陳土扁教授的跨院永續研究團隊準備將成果推廣至全校，但行政人力吃緊讓營運辦法難以如期公告。」；選擇後續回響：徹底解決電力隱患，確保研究與生活機能順暢並強化財政韌性。；第 2 幕完成：試辦結果讓陳土扁的目標有了新方向。進度條終於動了，先別急著截圖慶祝。；「陳土扁教授注意到宿舍晒衣場不足的問題延伸至研究生宿舍，因研究壓力繁重加上晾衣空間受擠壓，團隊成員的實驗專注力大受影響。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 49,
+          "problem_improvement": 100,
+          "satisfaction": 83,
+          "fairness": 85
+        }
+      },
+      {
+        "year": 2,
+        "semester": 2,
+        "event": "隨著智慧節能晒衣與烘衣中心進入最後整合階段，陳土扁教授的跨院永續研究團隊準備將成果推廣至全校，但行政人力吃緊讓營運辦法難以如期公告。",
+        "resident": "陳土扁",
+        "role": "教授",
+        "resident_trust": 71,
+        "resident_stress": 49,
+        "response": "調派行政專員支援晒衣中心管理系統上線，並提供團隊補助以建立完善制度",
+        "follow_up": "跨院永續研究與晒衣場改善圓滿收尾，大幅提升校園整體信任度。",
+        "delayed_effects": {
+          "problem_improvement": 7,
+          "fairness": 4,
+          "treasury": -15
+        },
+        "story_beat": {
+          "stage": 3,
+          "support_change": 13,
+          "message": "第 3 幕完成：陳土扁與校方一起推進了「建立跨院合作的永續研究團隊」。這條支線沒有停在群組的「收到」。",
+          "ending": "co_created"
+        },
+        "event_rule_result": "人物主線會記下這次選擇，信任、公平與壓力將影響後續結局。",
+        "campus_reaction": "校園匿名板熱帖：角色成長中，這次不是只解鎖「已讀」成就。 財政有節，校務不劫。",
+        "settled_consequences": [
+          {
+            "origin_event": "陳土扁教授在推動智慧節能晒衣與烘衣中心時，發現研究生宿舍的電力迴路老舊，若同時運作多台大功率烘衣機恐跳電，進一步影響跨院永續研究團隊的實驗進度。",
+            "resident": "陳土扁",
+            "description": "徹底解決電力隱患，確保研究與生活機能順暢並強化財政韌性。",
+            "effects": {
+              "problem_improvement": 6,
+              "fairness": 3,
+              "treasury": -25
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +9、滿意度 +5、公平性 +4",
+        "next_event": "隨著智慧節能晒衣與烘衣中心全面啟用，紅仁勳指出行政人力吃緊讓營運與預約管理辦法難以如期公告，進而引發學生在尖峰時段搶佔烘衣機的摩擦。",
+        "annual_challenge": "校園升級",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +9、滿意度 +5、公平性 +4，接續浮現「隨著智慧節能晒衣與烘衣中心全面啟用，紅仁勳指出行政人力吃緊讓營運與預約管理辦法難以如期公告，進而引發學生在尖峰時段搶佔烘衣機的摩擦。」；選擇後續回響：跨院永續研究與晒衣場改善圓滿收尾，大幅提升校園整體信任度。；第 3 幕完成：陳土扁與校方一起推進了「建立跨院合作的永續研究團隊」。這條支線沒有停在群組的「收到」。；年度挑戰「校園升級」完成，獲得 30 點基金獎勵；「陳土扁教授在推動智慧節能晒衣與烘衣中心時，發現研究生宿舍的電力迴路老舊，若同時運作多台大功率烘衣機恐跳電，進一步影響跨院永續研究團隊的實驗進度。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 50,
+          "problem_improvement": 100,
+          "satisfaction": 84,
+          "fairness": 93
+        }
+      },
+      {
+        "year": 3,
+        "semester": 1,
+        "event": "隨著智慧節能晒衣與烘衣中心全面啟用，紅仁勳指出行政人力吃緊讓營運與預約管理辦法難以如期公告，進而引發學生在尖峰時段搶佔烘衣機的摩擦。",
+        "resident": "紅仁勳",
+        "role": "行政人員",
+        "resident_trust": 46,
+        "resident_stress": 35,
+        "response": "緊急提撥經費外包預約系統維護，並聘用工讀生協助現場引導",
+        "follow_up": "有效緩解行政與現場壓力，確保晒衣與烘衣中心順利運作。",
+        "delayed_effects": {
+          "problem_improvement": 6,
+          "fairness": 2,
+          "treasury": -25
+        },
+        "story_beat": null,
+        "event_rule_result": "危機止損成功：本次改善達標，沒有追加損失。",
+        "campus_reaction": "校園匿名板熱帖：緊急會議終於不只是在聊天室打「收到」。 財政有節，校務不劫。",
+        "settled_consequences": [
+          {
+            "origin_event": "隨著智慧節能晒衣與烘衣中心進入最後整合階段，陳土扁教授的跨院永續研究團隊準備將成果推廣至全校，但行政人力吃緊讓營運辦法難以如期公告。",
+            "resident": "陳土扁",
+            "description": "跨院永續研究與晒衣場改善圓滿收尾，大幅提升校園整體信任度。",
+            "effects": {
+              "problem_improvement": 7,
+              "fairness": 4,
+              "treasury": -15
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +3",
+        "next_event": "突發意外：梅雨季突遇強風豪雨，導致新落成的智慧節能晒衣與烘衣中心部分遮雨棚架鬆脫，部分晾曬衣物淋濕，學生紛紛向校方反映設施安全性。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +8、滿意度 +4、公平性 +3，接續浮現「突發意外：梅雨季突遇強風豪雨，導致新落成的智慧節能晒衣與烘衣中心部分遮雨棚架鬆脫，部分晾曬衣物淋濕，學生紛紛向校方反映設施安全性。」；選擇後續回響：有效緩解行政與現場壓力，確保晒衣與烘衣中心順利運作。；「隨著智慧節能晒衣與烘衣中心進入最後整合階段，陳土扁教授的跨院永續研究團隊準備將成果推廣至全校，但行政人力吃緊讓營運辦法難以如期公告。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 50,
+          "problem_improvement": 100,
+          "satisfaction": 85,
+          "fairness": 99
+        }
+      },
+      {
+        "year": 3,
+        "semester": 2,
+        "event": "突發意外：梅雨季突遇強風豪雨，導致新落成的智慧節能晒衣與烘衣中心部分遮雨棚架鬆脫，部分晾曬衣物淋濕，學生紛紛向校方反映設施安全性。",
+        "resident": "蕭述一",
+        "role": "大學生",
+        "resident_trust": 50,
+        "resident_stress": 33,
+        "response": "緊急動支維修預算加固結構並增設防風防水圍網",
+        "follow_up": "迅速排除安全隱患，大幅提升學生對校園設施的信心。",
+        "delayed_effects": {
+          "problem_improvement": 5,
+          "fairness": 2,
+          "treasury": -20
+        },
+        "story_beat": null,
+        "event_rule_result": "危機止損成功：本次改善達標，沒有追加損失。",
+        "campus_reaction": "校園匿名板熱帖：消防栓今天有出場，還好不是只負責背景。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "隨著智慧節能晒衣與烘衣中心全面啟用，紅仁勳指出行政人力吃緊讓營運與預約管理辦法難以如期公告，進而引發學生在尖峰時段搶佔烘衣機的摩擦。",
+            "resident": "紅仁勳",
+            "description": "有效緩解行政與現場壓力，確保晒衣與烘衣中心順利運作。",
+            "effects": {
+              "problem_improvement": 6,
+              "fairness": 2,
+              "treasury": -25
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +7、滿意度 +4、公平性 +3",
+        "next_event": "突發意外：梅雨季突遇強風豪雨，導致新落成的智慧節能晒衣與烘衣中心部分遮雨棚架鬆脫，部分晾曬衣物淋濕，學生紛紛向校方反映設施安全性，直接影響原有的晒衣空間與使用信任。",
+        "annual_challenge": "問題突破",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +7、滿意度 +4、公平性 +3，接續浮現「突發意外：梅雨季突遇強風豪雨，導致新落成的智慧節能晒衣與烘衣中心部分遮雨棚架鬆脫，部分晾曬衣物淋濕，學生紛紛向校方反映設施安全性，直接影響原有的晒衣空間與使用信任。」；選擇後續回響：迅速排除安全隱患，大幅提升學生對校園設施的信心。；年度挑戰「問題突破」完成，獲得 30 點基金獎勵；「隨著智慧節能晒衣與烘衣中心全面啟用，紅仁勳指出行政人力吃緊讓營運與預約管理辦法難以如期公告，進而引發學生在尖峰時段搶佔烘衣機的摩擦。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 51,
+          "problem_improvement": 100,
+          "satisfaction": 86,
+          "fairness": 100
+        }
+      },
+      {
+        "year": 4,
+        "semester": 1,
+        "event": "突發意外：梅雨季突遇強風豪雨，導致新落成的智慧節能晒衣與烘衣中心部分遮雨棚架鬆脫，部分晾曬衣物淋濕，學生紛紛向校方反映設施安全性，直接影響原有的晒衣空間與使用信任。",
+        "resident": "蕭述一",
+        "role": "大學生",
+        "resident_trust": 54,
+        "resident_stress": 30,
+        "response": "投入高額經費全面更換為抗強風鋼構重型棚架，並加裝防風防水圍網",
+        "follow_up": "徹底解決晒衣場的結構隱患，確保未來風雨天學生能安心使用設施。",
+        "delayed_effects": {
+          "problem_improvement": 6,
+          "fairness": 3,
+          "treasury": -35
+        },
+        "story_beat": null,
+        "event_rule_result": "危機止損成功：本次改善達標，沒有追加損失。",
+        "campus_reaction": "校園匿名板熱帖：消防栓今天有出場，還好不是只負責背景。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "突發意外：梅雨季突遇強風豪雨，導致新落成的智慧節能晒衣與烘衣中心部分遮雨棚架鬆脫，部分晾曬衣物淋濕，學生紛紛向校方反映設施安全性。",
+            "resident": "蕭述一",
+            "description": "迅速排除安全隱患，大幅提升學生對校園設施的信心。",
+            "effects": {
+              "problem_improvement": 5,
+              "fairness": 2,
+              "treasury": -20
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +3",
+        "next_event": "隨著晒衣場棚架受損事件落幕，學生代表蕭述一與行政人員紅仁勳針對智慧晒衣與烘衣中心的日常維護與預約規範產生歧見，需透過協商平衡學生便利性與行政人力負荷。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +8、滿意度 +4、公平性 +3，接續浮現「隨著晒衣場棚架受損事件落幕，學生代表蕭述一與行政人員紅仁勳針對智慧晒衣與烘衣中心的日常維護與預約規範產生歧見，需透過協商平衡學生便利性與行政人力負荷。」；選擇後續回響：徹底解決晒衣場的結構隱患，確保未來風雨天學生能安心使用設施。；「突發意外：梅雨季突遇強風豪雨，導致新落成的智慧節能晒衣與烘衣中心部分遮雨棚架鬆脫，部分晾曬衣物淋濕，學生紛紛向校方反映設施安全性。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 49,
+          "problem_improvement": 100,
+          "satisfaction": 87,
+          "fairness": 100
+        }
+      },
+      {
+        "year": 4,
+        "semester": 2,
+        "event": "隨著晒衣場棚架受損事件落幕，學生代表蕭述一與行政人員紅仁勳針對智慧晒衣與烘衣中心的日常維護與預約規範產生歧見，需透過協商平衡學生便利性與行政人力負荷。",
+        "resident": "紅仁勳",
+        "role": "行政人員",
+        "resident_trust": 51,
+        "resident_stress": 34,
+        "response": "建立由學生自治會與行政人員共同組成的聯合管理委員會，落實自主排班與維護",
+        "follow_up": "有效分攤行政負擔並提升學生參與度，長期營運更具永續性。",
+        "delayed_effects": {
+          "problem_improvement": 5,
+          "fairness": 4,
+          "treasury": -12
+        },
+        "story_beat": null,
+        "event_rule_result": "協商取得公平共識：焦點角色信任額外 +2。",
+        "campus_reaction": "校園匿名板熱帖：協商桌上沒有秒讀不回，已經是一種進展。 財政有節，校務不劫。",
+        "settled_consequences": [
+          {
+            "origin_event": "突發意外：梅雨季突遇強風豪雨，導致新落成的智慧節能晒衣與烘衣中心部分遮雨棚架鬆脫，部分晾曬衣物淋濕，學生紛紛向校方反映設施安全性，直接影響原有的晒衣空間與使用信任。",
+            "resident": "蕭述一",
+            "description": "徹底解決晒衣場的結構隱患，確保未來風雨天學生能安心使用設施。",
+            "effects": {
+              "problem_improvement": 6,
+              "fairness": 3,
+              "treasury": -35
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +6、滿意度 +4、公平性 +5",
+        "next_event": "隨著聯合管理委員會成立，行政人員紅仁勳指出，日常維護排班與設備巡檢的行政負擔超出預期，若要落實學生自主管理，需增聘專職助理並建立數位預約稽核系統，否則晒衣場空間不足的問題恐因管理真空而再度浮現。",
+        "annual_challenge": "安心學期",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +6、滿意度 +4、公平性 +5，接續浮現「隨著聯合管理委員會成立，行政人員紅仁勳指出，日常維護排班與設備巡檢的行政負擔超出預期，若要落實學生自主管理，需增聘專職助理並建立數位預約稽核系統，否則晒衣場空間不足的問題恐因管理真空而再度浮現。」；選擇後續回響：有效分攤行政負擔並提升學生參與度，長期營運更具永續性。；年度挑戰「安心學期」完成，獲得 30 點基金獎勵；「突發意外：梅雨季突遇強風豪雨，導致新落成的智慧節能晒衣與烘衣中心部分遮雨棚架鬆脫，部分晾曬衣物淋濕，學生紛紛向校方反映設施安全性，直接影響原有的晒衣空間與使用信任。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 50,
+          "problem_improvement": 100,
+          "satisfaction": 87,
+          "fairness": 100
+        }
+      },
+      {
+        "year": 5,
+        "semester": 1,
+        "event": "隨著聯合管理委員會成立，行政人員紅仁勳指出，日常維護排班與設備巡檢的行政負擔超出預期，若要落實學生自主管理，需增聘專職助理並建立數位預約稽核系統，否則晒衣場空間不足的問題恐因管理真空而再度浮現。",
+        "resident": "紅仁勳",
+        "role": "行政人員",
+        "resident_trust": 57,
+        "resident_stress": 31,
+        "response": "投入高額經費外包數位預約稽核系統並增聘專職行政助理，確保管理流程順暢",
+        "follow_up": "大幅減輕行政負擔並確保晒衣場管理上軌道，但需注意預算消耗。",
+        "delayed_effects": {
+          "problem_improvement": 6,
+          "fairness": 3,
+          "treasury": -30
+        },
+        "story_beat": null,
+        "event_rule_result": "協商取得公平共識：焦點角色信任額外 +2。",
+        "campus_reaction": "校園匿名板熱帖：「先這樣」今天多附了一份具體後續事項。 財政有節，校務不劫。",
+        "settled_consequences": [
+          {
+            "origin_event": "隨著晒衣場棚架受損事件落幕，學生代表蕭述一與行政人員紅仁勳針對智慧晒衣與烘衣中心的日常維護與預約規範產生歧見，需透過協商平衡學生便利性與行政人力負荷。",
+            "resident": "紅仁勳",
+            "description": "有效分攤行政負擔並提升學生參與度，長期營運更具永續性。",
+            "effects": {
+              "problem_improvement": 5,
+              "fairness": 4,
+              "treasury": -12
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +3",
+        "next_event": "突發意外：適逢期中考週前夕，宿舍區突然發生配電盤局部短路，導致智慧節能晒衣與烘衣中心暫時停擺，學生晾衣需求瞬間塞爆舊有交誼廳，直接衝擊晒衣場空間不足的改善成果。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +8、滿意度 +4、公平性 +3，接續浮現「突發意外：適逢期中考週前夕，宿舍區突然發生配電盤局部短路，導致智慧節能晒衣與烘衣中心暫時停擺，學生晾衣需求瞬間塞爆舊有交誼廳，直接衝擊晒衣場空間不足的改善成果。」；選擇後續回響：大幅減輕行政負擔並確保晒衣場管理上軌道，但需注意預算消耗。；「隨著晒衣場棚架受損事件落幕，學生代表蕭述一與行政人員紅仁勳針對智慧晒衣與烘衣中心的日常維護與預約規範產生歧見，需透過協商平衡學生便利性與行政人力負荷。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 49,
+          "problem_improvement": 100,
+          "satisfaction": 88,
+          "fairness": 100
+        }
+      },
+      {
+        "year": 5,
+        "semester": 2,
+        "event": "突發意外：適逢期中考週前夕，宿舍區突然發生配電盤局部短路，導致智慧節能晒衣與烘衣中心暫時停擺，學生晾衣需求瞬間塞爆舊有交誼廳，直接衝擊晒衣場空間不足的改善成果。",
+        "resident": "蕭述一",
+        "role": "大學生",
+        "resident_trust": 59,
+        "resident_stress": 26,
+        "response": "緊急動支大筆維修預算搶修配電盤並增設臨時移動式烘衣車，全面止損",
+        "follow_up": "迅速排除突發電力危機，保障學生生活品質與專心準備期中考。",
+        "delayed_effects": {
+          "problem_improvement": 7,
+          "fairness": 3,
+          "treasury": -35
+        },
+        "story_beat": null,
+        "event_rule_result": "危機止損成功：本次改善達標，沒有追加損失。",
+        "campus_reaction": "校園匿名板熱帖：校務群組的驚嘆號依然很忙，但至少有了處理方向。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "隨著聯合管理委員會成立，行政人員紅仁勳指出，日常維護排班與設備巡檢的行政負擔超出預期，若要落實學生自主管理，需增聘專職助理並建立數位預約稽核系統，否則晒衣場空間不足的問題恐因管理真空而再度浮現。",
+            "resident": "紅仁勳",
+            "description": "大幅減輕行政負擔並確保晒衣場管理上軌道，但需注意預算消耗。",
+            "effects": {
+              "problem_improvement": 6,
+              "fairness": 3,
+              "treasury": -30
+            }
+          },
+          {
+            "origin_event": "突發意外：適逢期中考週前夕，宿舍區突然發生配電盤局部短路，導致智慧節能晒衣與烘衣中心暫時停擺，學生晾衣需求瞬間塞爆舊有交誼廳，直接衝擊晒衣場空間不足的改善成果。",
+            "resident": "蕭述一",
+            "description": "迅速排除突發電力危機，保障學生生活品質與專心準備期中考。",
+            "effects": {
+              "problem_improvement": 7,
+              "fairness": 3,
+              "treasury": -35
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +9、滿意度 +5、公平性 +4",
+        "next_event": "5年校務成果已完成",
+        "annual_challenge": "信任社群",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價，五年改革進入成果盤點；選擇後續回響：迅速排除突發電力危機，保障學生生活品質與專心準備期中考。；年度挑戰「信任社群」完成，獲得 30 點基金獎勵；「隨著聯合管理委員會成立，行政人員紅仁勳指出，日常維護排班與設備巡檢的行政負擔超出預期，若要落實學生自主管理，需增聘專職助理並建立數位預約稽核系統，否則晒衣場空間不足的問題恐因管理真空而再度浮現。」的後續影響已結算；「突發意外：適逢期中考週前夕，宿舍區突然發生配電盤局部短路，導致智慧節能晒衣與烘衣中心暫時停擺，學生晾衣需求瞬間塞爆舊有交誼廳，直接衝擊晒衣場空間不足的改善成果。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 45,
+          "problem_improvement": 100,
+          "satisfaction": 89,
+          "fairness": 100
+        }
+      }
+    ],
+    "yearly": [
+      {
+        "year": 1,
+        "satisfaction": 82,
+        "population": 10018,
+        "treasury": 762,
+        "score": 62,
+        "challenge": "財政韌性",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 2,
+        "satisfaction": 84,
+        "population": 10116,
+        "treasury": 606,
+        "score": 67,
+        "challenge": "校園升級",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 3,
+        "satisfaction": 86,
+        "population": 10214,
+        "treasury": 615,
+        "score": 68,
+        "challenge": "問題突破",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 4,
+        "satisfaction": 87,
+        "population": 10312,
+        "treasury": 604,
+        "score": 68,
+        "challenge": "安心學期",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 5,
+        "satisfaction": 89,
+        "population": 10410,
+        "treasury": 538,
+        "score": 68,
+        "challenge": "信任社群",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      }
+    ],
+    "challenges": [
+      {
+        "id": "fiscal_resilience",
+        "title": "財政韌性",
+        "description": "本年度結束時校務基金至少保有 500 點。",
+        "rule": "treasury",
+        "year": 1,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "campus_builder",
+        "title": "校園升級",
+        "description": "至少完成一項校園建設。",
+        "rule": "buildings",
+        "year": 2,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "solve_root_cause",
+        "title": "問題突破",
+        "description": "本年度結束時問題改善度達到 60。",
+        "rule": "problem",
+        "year": 3,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "healthy_semester",
+        "title": "安心學期",
+        "description": "本年度結束時教職員生平均壓力不高於 52。",
+        "rule": "stress",
+        "year": 4,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "trusted_community",
+        "title": "信任社群",
+        "description": "本年度結束時教職員生平均信任達到 58。",
+        "rule": "trust",
+        "year": 5,
+        "completed": true,
+        "reward": 30
+      }
+    ],
+    "titles": [
+      {
+        "id": "campus_favorite",
+        "name": "人氣校長",
+        "description": "教職員生滿意度達到 78。",
+        "earned_turn": 0
+      },
+      {
+        "id": "fiscal_guardian",
+        "name": "財政守門員",
+        "description": "校務基金維持在 700 點以上。",
+        "earned_turn": 0
+      },
+      {
+        "id": "problem_solver",
+        "name": "問題終結者",
+        "description": "問題改善度達到 75。",
+        "earned_turn": 1
+      },
+      {
+        "id": "equity_champion",
+        "name": "公平推手",
+        "description": "公平性達到 75。",
+        "earned_turn": 2
+      },
+      {
+        "id": "story_companion",
+        "name": "人物主線最佳拍檔",
+        "description": "完成三幕人物主線，並累積至少 18 點合作支持。",
+        "earned_turn": 4
+      },
+      {
+        "id": "challenge_collector",
+        "name": "挑戰收藏家",
+        "description": "完成至少三項年度挑戰。",
+        "earned_turn": 6
+      },
+      {
+        "id": "trusted_leader",
+        "name": "傾聽者",
+        "description": "教職員生平均信任達到 58。",
+        "earned_turn": 8
+      },
+      {
+        "id": "challenge_master",
+        "name": "年度挑戰全制霸",
+        "description": "完成全部五項年度挑戰。",
+        "earned_turn": 10
+      }
+    ],
+    "averages": {
+      "resource_stock": 60.0,
+      "satisfaction": 89.4,
+      "trust": 59.6,
+      "stress": 49.0
+    },
+    "population": {
+      "students": 9100,
+      "faculty": 880,
+      "staff": 430
+    },
+    "resources": {
+      "energy": 60,
+      "water": 72,
+      "staffing": 48
+    },
+    "buildings": {
+      "library": 0,
+      "housing": 0,
+      "wellbeing": 1
+    },
+    "building_labels": {
+      "library": "學習空間",
+      "housing": "宿舍",
+      "wellbeing": "健康支持中心"
+    },
+    "policies": {},
+    "policy_labels": {
+      "scholarships": "助學支持",
+      "workload": "簡政減負",
+      "accessibility": "無障礙與多語服務",
+      "conservation": "節能節水",
+      "training": "服務人力培訓"
+    },
+    "treasury": 538,
+    "residents": [
+      {
+        "id": "lin_muqing",
+        "name": "蕭述一",
+        "role": "大學生",
+        "group": "students",
+        "concern": "課業與生活平衡",
+        "personality": "熱心、容易替別人操心",
+        "goal": "成立讓新生安心求助的同儕社群",
+        "portrait": "portrait-lin-muqing.svg",
+        "satisfaction": 93,
+        "trust": 59,
+        "stress": 26
+      },
+      {
+        "id": "chen_yian",
+        "name": "蕭述二",
+        "role": "研究生",
+        "group": "students",
+        "concern": "研究資源與空間",
+        "personality": "安靜、做事有條理",
+        "goal": "完成研究並爭取海外交流機會",
+        "portrait": "portrait-chen-yian.svg",
+        "satisfaction": 84,
+        "trust": 50,
+        "stress": 47
+      },
+      {
+        "id": "zhou_mingzhe",
+        "name": "陳土扁",
+        "role": "教授",
+        "group": "faculty",
+        "concern": "教學與研究負荷",
+        "personality": "嚴謹、願意提攜後輩",
+        "goal": "建立跨院合作的永續研究團隊",
+        "portrait": "portrait-zhou-mingzhe.svg",
+        "satisfaction": 99,
+        "trust": 71,
+        "stress": 49
+      },
+      {
+        "id": "xu_yawen",
+        "name": "習迈乎",
+        "role": "教授",
+        "group": "faculty",
+        "concern": "研究支持與合作",
+        "personality": "好奇、擅長傾聽",
+        "goal": "設計更多學生參與的實作課程",
+        "portrait": "portrait-xu-yawen.svg",
+        "satisfaction": 89,
+        "trust": 66,
+        "stress": 71
+      },
+      {
+        "id": "wang_sihan",
+        "name": "紅仁勳",
+        "role": "行政人員",
+        "group": "staff",
+        "concern": "行政流程與人力",
+        "personality": "細心、喜歡把事情安排妥當",
+        "goal": "讓校園行政服務更簡單又友善",
+        "portrait": "portrait-wang-sihan.svg",
+        "satisfaction": 100,
+        "trust": 57,
+        "stress": 31
+      },
+      {
+        "id": "zhang_jiahao",
+        "name": "糾結倫",
+        "role": "校園服務人員",
+        "group": "staff",
+        "concern": "服務品質與工作條件",
+        "personality": "爽朗、遇到問題就想動手處理",
+        "goal": "改善校園維護工具與安全設備",
+        "portrait": "portrait-zhang-jiahao.svg",
+        "satisfaction": 79,
+        "trust": 50,
+        "stress": 47
+      },
+      {
+        "id": "li_chengen",
+        "name": "豬哥暗",
+        "role": "通勤學生",
+        "group": "students",
+        "concern": "交通與校園安全",
+        "personality": "務實、重視時間安排",
+        "goal": "組成安全通勤倡議小組",
+        "portrait": "portrait-li-chengen.svg",
+        "satisfaction": 84,
+        "trust": 58,
+        "stress": 56
+      },
+      {
+        "id": "huang_kexin",
+        "name": "李奧納多皮卡丘",
+        "role": "國際學生",
+        "group": "students",
+        "concern": "友善環境與資訊取得",
+        "personality": "勇於嘗試、喜歡認識新朋友",
+        "goal": "籌辦讓不同文化交流的校園活動",
+        "portrait": "portrait-huang-kexin.svg",
+        "satisfaction": 87,
+        "trust": 66,
+        "stress": 65
+      }
+    ],
+    "forecast": {
+      "next_year_population": 10508,
+      "next_year_satisfaction": 92,
       "risk": "目前趨勢穩定，可逐步擴大長期建設"
     }
   }

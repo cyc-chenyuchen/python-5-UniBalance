@@ -11,6 +11,7 @@
     <img class="page-illustration" src="{{ url_for('static', filename='error-illustration.svg') }}" alt="" aria-hidden="true">
   </div>
   {% if retry %}
+    <p class="error-retry-note">目前輸入與已完成的進度會保留；重試將重新處理剛才失敗的步驟。</p>
     <form action="{{ retry_url|default('/interview/retry') }}" method="post" data-game-submit data-pending-message="正在重新連線並重試，請稍候。">
       <button type="submit">重試 <span aria-hidden="true">→</span></button>
       <p class="submit-status" data-submit-status role="status" hidden></p>

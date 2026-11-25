@@ -164,7 +164,8 @@ REVIEW_RESPONSE_SCHEMA = {
 
 
 def send_request(url, headers, request_data):
-    retry_delays = (5, 12)
+    retry_delays = (5, 12, 20)
+    connection_retry_delays = retry_delays[:2]
     retryable_status_codes = {429, 500, 502, 503, 504}
     for attempt in range(len(retry_delays) + 1):
         try:
@@ -178,8 +179,8 @@ def send_request(url, headers, request_data):
             requests.exceptions.Timeout,
             requests.exceptions.ConnectionError,
         ) as error:
-            if attempt < len(retry_delays):
-                time.sleep(retry_delays[attempt])
+            if attempt < len(connection_retry_delays):
+                time.sleep(connection_retry_delays[attempt])
                 continue
             if isinstance(error, requests.exceptions.Timeout):
                 raise TimeoutError(
@@ -203,7 +204,7 @@ def send_request(url, headers, request_data):
                 continue
             raise RuntimeError(
                 f"Gemini 服務暫時無法使用（HTTP {response.status_code}），"
-                "已自動重試兩次仍失敗，請稍後再試。"
+                "已自動重試三次仍失敗，請稍後再試。"
             )
 
         try:

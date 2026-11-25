@@ -24,7 +24,7 @@
         <rect width="1000" height="620" rx="24" fill="url(#campus-map-ground)"/>
         <rect width="1000" height="620" rx="24" fill="url(#campus-map-grid)"/>
         <path class="map-park" d="M32 380c95-58 161-23 222 10 54 30 88 31 130 2 50-34 114-30 155 2 41 33 83 32 126-1 48-38 123-38 303 5v187H32Z"/>
-        <path class="map-water" d="M737 70c71-28 151-11 184 29 24 30 10 64-21 78-49 22-98 5-153 14-50 9-91-7-94-41-3-31 31-63 84-80Z"/>
+        <path class="map-water-body" d="M737 70c71-28 151-11 184 29 24 30 10 64-21 78-49 22-98 5-153 14-50 9-91-7-94-41-3-31 31-63 84-80Z"/>
 
         <g class="map-roads" aria-hidden="true">
           <path d="M53 324C220 315 286 359 414 355c132-4 184-65 281-56 95 8 135 73 252 65"/>
@@ -144,7 +144,7 @@
           <text x="322" y="98">能源</text>
           <text class="map-resource-value" x="322" y="113">{{ campus_map.resources.energy }}</text>
         </g>
-        <g class="map-resource-node map-water" data-resource-value="{{ campus_map.resources.water }}" aria-label="用水 {{ campus_map.resources.water }}">
+        <g class="map-resource-node map-water-resource" data-resource-value="{{ campus_map.resources.water }}" aria-label="用水 {{ campus_map.resources.water }}">
           <rect x="397" y="75" width="115" height="47" rx="14"/>
           <path d="M417 88c-5 9-9 13-9 18a9 9 0 0 0 18 0c0-5-4-9-9-18z"/>
           <text x="438" y="98">用水</text>
