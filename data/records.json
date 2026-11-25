@@ -7297,5 +7297,827 @@
       "next_year_satisfaction": 91,
       "risk": "目前趨勢穩定，可逐步擴大長期建設"
     }
+  },
+  {
+    "record_id": "7d14e998b837099cc50704c427f8f6ac",
+    "created_at": "2026-11-25T11:25:38.569243+00:00",
+    "scenario_id": "campus_decade",
+    "scenario_title": "校園尖峰時段人車爭道與道路擁擠",
+    "proposal": "吃飯時間校園道路有許多人跟車和腳踏車，導致道路擁擠",
+    "plan_title": "分散餐飲據點與加開接駁專車",
+    "plan_strategy": "增設校內微型餐飲並優化接駁運輸",
+    "plan_description": "在教學區周邊增設快閃餐車與無人自動販賣機，並於中午加開校園高頻接駁車分散移動人潮。",
+    "plan_reason": "不限制車輛通行，透過減少移動需求來緩解道路壓力，師生接受度高但改善幅度較為溫和。",
+    "plan_effects": {
+      "budget_remaining": -15,
+      "problem_improvement": 12,
+      "satisfaction": 8,
+      "fairness": 5
+    },
+    "initial_metrics": {
+      "budget_remaining": 48,
+      "problem_improvement": 57,
+      "satisfaction": 81,
+      "fairness": 66
+    },
+    "final_metrics": {
+      "budget_remaining": 29,
+      "problem_improvement": 100,
+      "satisfaction": 86,
+      "fairness": 100
+    },
+    "metric_labels": {
+      "budget_remaining": "財政健康",
+      "problem_improvement": "問題改善",
+      "satisfaction": "教職員生滿意度",
+      "fairness": "公平性"
+    },
+    "total_score": 65,
+    "comment": "五年校務仍有改善空間，可優先補足低分指標並維持教職員生參與。",
+    "years": 5,
+    "campus_profile": {
+      "id": "metro_commuter",
+      "name": "都會通勤校園",
+      "description": "通勤學生多，尖峰服務需求高；人力與公平性需要優先照顧。",
+      "treasury_delta": -90,
+      "population_delta": {
+        "students": 1200,
+        "faculty": 0,
+        "staff": 20
+      },
+      "resource_delta": {
+        "energy": -4,
+        "water": -3,
+        "staffing": -6
+      },
+      "metric_delta": {
+        "satisfaction": -3,
+        "fairness": -2
+      },
+      "resident_delta": {
+        "students": {
+          "stress": 6
+        }
+      }
+    },
+    "story_arc": {
+      "id": "story_wang_sihan",
+      "title": "王思涵的三學期支線",
+      "resident_id": "wang_sihan",
+      "resident_name": "王思涵",
+      "resident_role": "行政人員",
+      "group": "staff",
+      "concern": "行政流程與人力",
+      "goal": "讓校園行政服務更簡單又友善",
+      "stage": 3,
+      "next_stage": 0,
+      "support_score": 20,
+      "ending": "co_created",
+      "ending_text": "王思涵與校方一起推進了「讓校園行政服務更簡單又友善」。這條支線沒有停在群組的「收到」。",
+      "last_beat": "第 3 幕完成：王思涵與校方一起推進了「讓校園行政服務更簡單又友善」。這條支線沒有停在群組的「收到」。"
+    },
+    "history": [
+      {
+        "year": 1,
+        "semester": 1,
+        "event": "中午用餐尖峰時段，學餐周邊的主幹道湧入大量步行學生、外送機車與趕著上課的腳踏車，導致人車交織、交通嚴重打結，行政人員王思涵為此在行政會議上提出全面規劃人車分道與管制時段的迫切需求。",
+        "resident": "王思涵",
+        "role": "行政人員",
+        "resident_trust": 46,
+        "resident_stress": 35,
+        "response": "投入55萬高額經費全面建置智慧車牌辨識與時段禁行自動化柵欄，徹底解決人車爭道危機",
+        "follow_up": "自動化管制雖花費高，但能有效疏導中午道路擁擠，大幅降低行政人員與通勤族的壓力。",
+        "delayed_effects": {
+          "problem_improvement": 8,
+          "fairness": 5,
+          "treasury": -45
+        },
+        "story_beat": null,
+        "event_rule_result": "危機止損成功：本次改善達標，沒有追加損失。",
+        "campus_reaction": "校園匿名板熱帖：消防栓今天有出場，還好不是只負責背景。 有建設，才有建樹。",
+        "settled_consequences": [],
+        "development": "設置健康支持與諮詢中心",
+        "category": "建設",
+        "benefit": "身心支持服務與校園韌性提升",
+        "cause": "這項決策使問題改善 +9、滿意度 +4、公平性 +3",
+        "next_event": "王思涵依據行政新規開始推動人車分道方案時，突然遭遇校門口外送平台車輛因臨時禁入規定在尖峰時段大排長龍，堵住唯一外環道，進一步惡化了中午校園道路的擁擠狀況，讓她深感行政與現場協調的壓力倍增。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "設置健康支持與諮詢中心使身心支持服務與校園韌性提升；這項決策使問題改善 +9、滿意度 +4、公平性 +3，接續浮現「王思涵依據行政新規開始推動人車分道方案時，突然遭遇校門口外送平台車輛因臨時禁入規定在尖峰時段大排長龍，堵住唯一外環道，進一步惡化了中午校園道路的擁擠狀況，讓她深感行政與現場協調的壓力倍增。」；選擇後續回響：自動化管制雖花費高，但能有效疏導中午道路擁擠，大幅降低行政人員與通勤族的壓力。",
+        "metrics": {
+          "budget_remaining": 34,
+          "problem_improvement": 68,
+          "satisfaction": 82,
+          "fairness": 71
+        }
+      },
+      {
+        "year": 1,
+        "semester": 2,
+        "event": "王思涵依據行政新規開始推動人車分道方案時，突然遭遇校門口外送平台車輛因臨時禁入規定在尖峰時段大排長龍，堵住唯一外環道，進一步惡化了中午校園道路的擁擠狀況，讓她深感行政與現場協調的壓力倍增。",
+        "resident": "王思涵",
+        "role": "行政人員",
+        "resident_trust": 49,
+        "resident_stress": 33,
+        "response": "設立校門外送專用臨停區與步行轉運站，花費30萬改善交管與人力配置",
+        "follow_up": "設置轉運站能有效將外送車流留在校外，化解中午道路的擁擠危機。",
+        "delayed_effects": {
+          "problem_improvement": 6,
+          "fairness": 4,
+          "treasury": -25
+        },
+        "story_beat": {
+          "stage": 1,
+          "support_change": 8,
+          "message": "第 1 幕完成：王思涵願意把目標說出口。校園支線正式開啟，這次不是只在群組回「收到」。",
+          "ending": null
+        },
+        "event_rule_result": "人物主線會記下這次選擇，信任、公平與壓力將影響後續結局。",
+        "campus_reaction": "校園匿名板熱帖：主線進度條動了，角色目標沒有繼續在待辦清單裡吃灰。 財政有節，校務不劫。",
+        "settled_consequences": [
+          {
+            "origin_event": "中午用餐尖峰時段，學餐周邊的主幹道湧入大量步行學生、外送機車與趕著上課的腳踏車，導致人車交織、交通嚴重打結，行政人員王思涵為此在行政會議上提出全面規劃人車分道與管制時段的迫切需求。",
+            "resident": "王思涵",
+            "description": "自動化管制雖花費高，但能有效疏導中午道路擁擠，大幅降低行政人員與通勤族的壓力。",
+            "effects": {
+              "problem_improvement": 8,
+              "fairness": 5,
+              "treasury": -45
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +7、滿意度 +3、公平性 +3",
+        "next_event": "王思涵推動人車分道與外送轉運站後，校門口外送平台車流雖獲疏導，但部分學生步行取餐仍因轉運站距離學餐稍遠而抱怨連連，並在匿名板抗議新規不便。王思涵為此面臨行政協調與學生不滿的雙重壓力。",
+        "annual_challenge": "校園升級",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +7、滿意度 +3、公平性 +3，接續浮現「王思涵推動人車分道與外送轉運站後，校門口外送平台車流雖獲疏導，但部分學生步行取餐仍因轉運站距離學餐稍遠而抱怨連連，並在匿名板抗議新規不便。王思涵為此面臨行政協調與學生不滿的雙重壓力。」；選擇後續回響：設置轉運站能有效將外送車流留在校外，化解中午道路的擁擠危機。；第 1 幕完成：王思涵願意把目標說出口。校園支線正式開啟，這次不是只在群組回「收到」。；年度挑戰「校園升級」完成，獲得 30 點基金獎勵；「中午用餐尖峰時段，學餐周邊的主幹道湧入大量步行學生、外送機車與趕著上課的腳踏車，導致人車交織、交通嚴重打結，行政人員王思涵為此在行政會議上提出全面規劃人車分道與管制時段的迫切需求。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 33,
+          "problem_improvement": 82,
+          "satisfaction": 82,
+          "fairness": 78
+        }
+      },
+      {
+        "year": 2,
+        "semester": 1,
+        "event": "王思涵推動人車分道與外送轉運站後，校門口外送平台車流雖獲疏導，但部分學生步行取餐仍因轉運站距離學餐稍遠而抱怨連連，並在匿名板抗議新規不便。王思涵為此面臨行政協調與學生不滿的雙重壓力。",
+        "resident": "王思涵",
+        "role": "行政人員",
+        "resident_trust": 53,
+        "resident_stress": 30,
+        "response": "增設校內電動接駁車並由工讀生協助送餐到各宿舍區，花費45萬經費",
+        "follow_up": "接駁服務大幅降低學生步行取餐抱怨，也讓王思涵的行政壓力顯著減輕。",
+        "delayed_effects": {
+          "problem_improvement": 6,
+          "fairness": 4,
+          "treasury": -35
+        },
+        "story_beat": {
+          "stage": 2,
+          "support_change": 12,
+          "message": "第 2 幕完成：試辦結果讓王思涵的目標有了新方向。進度條終於動了，先別急著截圖慶祝。",
+          "ending": null
+        },
+        "event_rule_result": "人物主線會記下這次選擇，信任、公平與壓力將影響後續結局。",
+        "campus_reaction": "校園匿名板熱帖：主線進度條動了，角色目標沒有繼續在待辦清單裡吃灰。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "王思涵依據行政新規開始推動人車分道方案時，突然遭遇校門口外送平台車輛因臨時禁入規定在尖峰時段大排長龍，堵住唯一外環道，進一步惡化了中午校園道路的擁擠狀況，讓她深感行政與現場協調的壓力倍增。",
+            "resident": "王思涵",
+            "description": "設置轉運站能有效將外送車流留在校外，化解中午道路的擁擠危機。",
+            "effects": {
+              "problem_improvement": 6,
+              "fairness": 4,
+              "treasury": -25
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +5",
+        "next_event": "隨著人車分道政策進入第三階段收尾，王思涵必須針對校園主幹道在用餐尖峰時段的腳踏車亂象提出最終管理方案，以徹底根絕車輛違停與行人擦撞問題，確保校園道路長久順暢。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +8、滿意度 +4、公平性 +5，接續浮現「隨著人車分道政策進入第三階段收尾，王思涵必須針對校園主幹道在用餐尖峰時段的腳踏車亂象提出最終管理方案，以徹底根絕車輛違停與行人擦撞問題，確保校園道路長久順暢。」；選擇後續回響：接駁服務大幅降低學生步行取餐抱怨，也讓王思涵的行政壓力顯著減輕。；第 2 幕完成：試辦結果讓王思涵的目標有了新方向。進度條終於動了，先別急著截圖慶祝。；「王思涵依據行政新規開始推動人車分道方案時，突然遭遇校門口外送平台車輛因臨時禁入規定在尖峰時段大排長龍，堵住唯一外環道，進一步惡化了中午校園道路的擁擠狀況，讓她深感行政與現場協調的壓力倍增。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 31,
+          "problem_improvement": 95,
+          "satisfaction": 83,
+          "fairness": 86
+        }
+      },
+      {
+        "year": 2,
+        "semester": 2,
+        "event": "隨著人車分道政策進入第三階段收尾，王思涵必須針對校園主幹道在用餐尖峰時段的腳踏車亂象提出最終管理方案，以徹底根絕車輛違停與行人擦撞問題，確保校園道路長久順暢。",
+        "resident": "王思涵",
+        "role": "行政人員",
+        "resident_trust": 54,
+        "resident_stress": 28,
+        "response": "僅加劃地面標線並加強人工勸導，花費15萬進行輕量改善",
+        "follow_up": "成本較低但效果有限，中午道路擁擠問題在熱門時段仍偶有發生。",
+        "delayed_effects": {
+          "problem_improvement": 3,
+          "fairness": 0,
+          "treasury": -15
+        },
+        "story_beat": {
+          "stage": 3,
+          "support_change": 0,
+          "message": "第 3 幕完成：王思涵與校方一起推進了「讓校園行政服務更簡單又友善」。這條支線沒有停在群組的「收到」。",
+          "ending": "co_created"
+        },
+        "event_rule_result": "人物主線會記下這次選擇，信任、公平與壓力將影響後續結局。",
+        "campus_reaction": "校園匿名板熱帖：主線進度條動了，角色目標沒有繼續在待辦清單裡吃灰。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "王思涵推動人車分道與外送轉運站後，校門口外送平台車流雖獲疏導，但部分學生步行取餐仍因轉運站距離學餐稍遠而抱怨連連，並在匿名板抗議新規不便。王思涵為此面臨行政協調與學生不滿的雙重壓力。",
+            "resident": "王思涵",
+            "description": "接駁服務大幅降低學生步行取餐抱怨，也讓王思涵的行政壓力顯著減輕。",
+            "effects": {
+              "problem_improvement": 6,
+              "fairness": 4,
+              "treasury": -35
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +4、滿意度 +1、公平性 +0",
+        "next_event": "中午用餐尖峰時段，學餐旁主幹道的腳踏車違停與人車爭道狀況再度浮現。行政人員王思涵指出，僅靠輕量標線已無法應付龐大車潮，必須徹底整頓校園道路秩序以解決核心問題。",
+        "annual_challenge": "問題突破",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +4、滿意度 +1、公平性 +0，接續浮現「中午用餐尖峰時段，學餐旁主幹道的腳踏車違停與人車爭道狀況再度浮現。行政人員王思涵指出，僅靠輕量標線已無法應付龐大車潮，必須徹底整頓校園道路秩序以解決核心問題。」；選擇後續回響：成本較低但效果有限，中午道路擁擠問題在熱門時段仍偶有發生。；第 3 幕完成：王思涵與校方一起推進了「讓校園行政服務更簡單又友善」。這條支線沒有停在群組的「收到」。；年度挑戰「問題突破」完成，獲得 30 點基金獎勵；「王思涵推動人車分道與外送轉運站後，校門口外送平台車流雖獲疏導，但部分學生步行取餐仍因轉運站距離學餐稍遠而抱怨連連，並在匿名板抗議新規不便。王思涵為此面臨行政協調與學生不滿的雙重壓力。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 32,
+          "problem_improvement": 100,
+          "satisfaction": 83,
+          "fairness": 91
+        }
+      },
+      {
+        "year": 3,
+        "semester": 1,
+        "event": "中午用餐尖峰時段，學餐旁主幹道的腳踏車違停與人車爭道狀況再度浮現。行政人員王思涵指出，僅靠輕量標線已無法應付龐大車潮，必須徹底整頓校園道路秩序以解決核心問題。",
+        "resident": "王思涵",
+        "role": "行政人員",
+        "resident_trust": 58,
+        "resident_stress": 25,
+        "response": "投入55萬經費全面翻新主幹道，增設實體分隔廊道與自動化科技執法系統",
+        "follow_up": "高額投入能有效徹底解決中午校園道路的擁擠與人車交織問題。",
+        "delayed_effects": {
+          "problem_improvement": 7,
+          "fairness": 4,
+          "treasury": -45
+        },
+        "story_beat": null,
+        "event_rule_result": "危機止損成功：本次改善達標，沒有追加損失。",
+        "campus_reaction": "校園匿名板熱帖：校務群組的驚嘆號依然很忙，但至少有了處理方向。 節能節水，水到渠成。",
+        "settled_consequences": [
+          {
+            "origin_event": "隨著人車分道政策進入第三階段收尾，王思涵必須針對校園主幹道在用餐尖峰時段的腳踏車亂象提出最終管理方案，以徹底根絕車輛違停與行人擦撞問題，確保校園道路長久順暢。",
+            "resident": "王思涵",
+            "description": "成本較低但效果有限，中午道路擁擠問題在熱門時段仍偶有發生。",
+            "effects": {
+              "problem_improvement": 3,
+              "fairness": 0,
+              "treasury": -15
+            }
+          }
+        ],
+        "development": "培訓校園服務與支援人力",
+        "category": "資源",
+        "benefit": "服務量能提升，教職員生等待時間縮短",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +3",
+        "next_event": "通勤學生李承恩向校方反映，因中午用餐尖峰時段學餐周邊人車交織嚴重，導致他常因閃避違停腳踏車而延誤上課，要求校方正視通勤族在校內道路的通行安全與順暢度。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "培訓校園服務與支援人力使服務量能提升，教職員生等待時間縮短；這項決策使問題改善 +8、滿意度 +4、公平性 +3，接續浮現「通勤學生李承恩向校方反映，因中午用餐尖峰時段學餐周邊人車交織嚴重，導致他常因閃避違停腳踏車而延誤上課，要求校方正視通勤族在校內道路的通行安全與順暢度。」；選擇後續回響：高額投入能有效徹底解決中午校園道路的擁擠與人車交織問題。；「隨著人車分道政策進入第三階段收尾，王思涵必須針對校園主幹道在用餐尖峰時段的腳踏車亂象提出最終管理方案，以徹底根絕車輛違停與行人擦撞問題，確保校園道路長久順暢。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 24,
+          "problem_improvement": 100,
+          "satisfaction": 83,
+          "fairness": 95
+        }
+      },
+      {
+        "year": 3,
+        "semester": 2,
+        "event": "通勤學生李承恩向校方反映，因中午用餐尖峰時段學餐周邊人車交織嚴重，導致他常因閃避違停腳踏車而延誤上課，要求校方正視通勤族在校內道路的通行安全與順暢度。",
+        "resident": "李承恩",
+        "role": "通勤學生",
+        "resident_trust": 64,
+        "resident_stress": 60,
+        "response": "編列30萬增設學生專用無障礙人行步道與獨立單車道，徹底落實人車分道",
+        "follow_up": "專用道能大幅改善通勤動線，有效紓解用餐時段校園道路擁擠。",
+        "delayed_effects": {
+          "problem_improvement": 6,
+          "fairness": 5,
+          "treasury": -25
+        },
+        "story_beat": null,
+        "event_rule_result": "協商取得公平共識：焦點角色信任額外 +2。",
+        "campus_reaction": "校園匿名板熱帖：協商桌上沒有秒讀不回，已經是一種進展。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "中午用餐尖峰時段，學餐旁主幹道的腳踏車違停與人車爭道狀況再度浮現。行政人員王思涵指出，僅靠輕量標線已無法應付龐大車潮，必須徹底整頓校園道路秩序以解決核心問題。",
+            "resident": "王思涵",
+            "description": "高額投入能有效徹底解決中午校園道路的擁擠與人車交織問題。",
+            "effects": {
+              "problem_improvement": 7,
+              "fairness": 4,
+              "treasury": -45
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +6、滿意度 +4、公平性 +5",
+        "next_event": "通勤學生李承恩為落實人車分道而向校方提出倡議，指中午用餐尖峰時段學餐周邊人車交織與違停腳踏車依舊嚴重，導致通勤生常因閃避車潮而延誤上課，要求徹底改善主幹道通行安全與順暢度。",
+        "annual_challenge": "永續校園",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +6、滿意度 +4、公平性 +5，接續浮現「通勤學生李承恩為落實人車分道而向校方提出倡議，指中午用餐尖峰時段學餐周邊人車交織與違停腳踏車依舊嚴重，導致通勤生常因閃避車潮而延誤上課，要求徹底改善主幹道通行安全與順暢度。」；選擇後續回響：專用道能大幅改善通勤動線，有效紓解用餐時段校園道路擁擠。；年度挑戰「永續校園」完成，獲得 30 點基金獎勵；「中午用餐尖峰時段，學餐旁主幹道的腳踏車違停與人車爭道狀況再度浮現。行政人員王思涵指出，僅靠輕量標線已無法應付龐大車潮，必須徹底整頓校園道路秩序以解決核心問題。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 24,
+          "problem_improvement": 100,
+          "satisfaction": 84,
+          "fairness": 100
+        }
+      },
+      {
+        "year": 4,
+        "semester": 1,
+        "event": "通勤學生李承恩為落實人車分道而向校方提出倡議，指中午用餐尖峰時段學餐周邊人車交織與違停腳踏車依舊嚴重，導致通勤生常因閃避車潮而延誤上課，要求徹底改善主幹道通行安全與順暢度。",
+        "resident": "李承恩",
+        "role": "通勤學生",
+        "resident_trust": 65,
+        "resident_stress": 59,
+        "response": "花費20萬劃設簡易標線並加強中午尖峰時段的人工交通導引",
+        "follow_up": "標線與人工導引成本較低，但尖峰時段道路擁擠與違停狀況仍容易復發。",
+        "delayed_effects": {
+          "problem_improvement": 2,
+          "fairness": 0,
+          "treasury": -15
+        },
+        "story_beat": null,
+        "event_rule_result": "協商暫時維持現狀：信任沒有額外變化。",
+        "campus_reaction": "校園匿名板熱帖：「先這樣」今天多附了一份具體後續事項。 財政有節，校務不劫。",
+        "settled_consequences": [
+          {
+            "origin_event": "通勤學生李承恩向校方反映，因中午用餐尖峰時段學餐周邊人車交織嚴重，導致他常因閃避違停腳踏車而延誤上課，要求校方正視通勤族在校內道路的通行安全與順暢度。",
+            "resident": "李承恩",
+            "description": "專用道能大幅改善通勤動線，有效紓解用餐時段校園道路擁擠。",
+            "effects": {
+              "problem_improvement": 6,
+              "fairness": 5,
+              "treasury": -25
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +4、滿意度 +2、公平性 +1",
+        "next_event": "中午用餐尖峰時段，學餐旁的智慧車牌辨識與自動化柵欄突然因雷擊跳電故障，導致大量外送與腳踏車車隊在主幹道大排長龍，加劇了校園道路的擁擠狀況，讓負責設備維護的張家豪面臨龐大壓力。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +4、滿意度 +2、公平性 +1，接續浮現「中午用餐尖峰時段，學餐旁的智慧車牌辨識與自動化柵欄突然因雷擊跳電故障，導致大量外送與腳踏車車隊在主幹道大排長龍，加劇了校園道路的擁擠狀況，讓負責設備維護的張家豪面臨龐大壓力。」；選擇後續回響：標線與人工導引成本較低，但尖峰時段道路擁擠與違停狀況仍容易復發。；「通勤學生李承恩向校方反映，因中午用餐尖峰時段學餐周邊人車交織嚴重，導致他常因閃避違停腳踏車而延誤上課，要求校方正視通勤族在校內道路的通行安全與順暢度。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 23,
+          "problem_improvement": 100,
+          "satisfaction": 85,
+          "fairness": 100
+        }
+      },
+      {
+        "year": 4,
+        "semester": 2,
+        "event": "中午用餐尖峰時段，學餐旁的智慧車牌辨識與自動化柵欄突然因雷擊跳電故障，導致大量外送與腳踏車車隊在主幹道大排長龍，加劇了校園道路的擁擠狀況，讓負責設備維護的張家豪面臨龐大壓力。",
+        "resident": "張家豪",
+        "role": "校園服務人員",
+        "resident_trust": 51,
+        "resident_stress": 50,
+        "response": "花費15萬進行基礎線路搶修並由工讀生現場手動開關柵欄",
+        "follow_up": "暫時緩解當前擁擠，但設備穩定度不足可能在下次尖峰再度故障。",
+        "delayed_effects": {
+          "problem_improvement": 2,
+          "fairness": 0,
+          "treasury": -15
+        },
+        "story_beat": null,
+        "event_rule_result": "止損未達門檻：問題改善額外 -2，焦點角色壓力 +2。",
+        "campus_reaction": "校園匿名板熱帖：消防栓今天有出場，還好不是只負責背景。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "通勤學生李承恩為落實人車分道而向校方提出倡議，指中午用餐尖峰時段學餐周邊人車交織與違停腳踏車依舊嚴重，導致通勤生常因閃避車潮而延誤上課，要求徹底改善主幹道通行安全與順暢度。",
+            "resident": "李承恩",
+            "description": "標線與人工導引成本較低，但尖峰時段道路擁擠與違停狀況仍容易復發。",
+            "effects": {
+              "problem_improvement": 2,
+              "fairness": 0,
+              "treasury": -15
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +3、滿意度 +1、公平性 +0",
+        "next_event": "中午用餐尖峰時段，學餐旁的智慧車牌辨識與自動化柵欄因上次雷擊跳電維修後仍不穩定，再次發生系統當機，導致大批外送機車與單車卡在主幹道無法進出，造成嚴重的道路大打結，讓負責現場設備與排障的張家豪壓力倍增。",
+        "annual_challenge": "幸福校園",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +3、滿意度 +1、公平性 +0，接續浮現「中午用餐尖峰時段，學餐旁的智慧車牌辨識與自動化柵欄因上次雷擊跳電維修後仍不穩定，再次發生系統當機，導致大批外送機車與單車卡在主幹道無法進出，造成嚴重的道路大打結，讓負責現場設備與排障的張家豪壓力倍增。」；選擇後續回響：暫時緩解當前擁擠，但設備穩定度不足可能在下次尖峰再度故障。；年度挑戰「幸福校園」完成，獲得 30 點基金獎勵；「通勤學生李承恩為落實人車分道而向校方提出倡議，指中午用餐尖峰時段學餐周邊人車交織與違停腳踏車依舊嚴重，導致通勤生常因閃避車潮而延誤上課，要求徹底改善主幹道通行安全與順暢度。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 26,
+          "problem_improvement": 99,
+          "satisfaction": 85,
+          "fairness": 99
+        }
+      },
+      {
+        "year": 5,
+        "semester": 1,
+        "event": "中午用餐尖峰時段，學餐旁的智慧車牌辨識與自動化柵欄因上次雷擊跳電維修後仍不穩定，再次發生系統當機，導致大批外送機車與單車卡在主幹道無法進出，造成嚴重的道路大打結，讓負責現場設備與排障的張家豪壓力倍增。",
+        "resident": "張家豪",
+        "role": "校園服務人員",
+        "resident_trust": 52,
+        "resident_stress": 51,
+        "response": "花費20萬增設手動應變備用閘門並增派工讀生在尖峰時段輪班指揮",
+        "follow_up": "成本較低但依賴人工應變，未來若遇大流量仍有塞車隱患。",
+        "delayed_effects": {
+          "problem_improvement": 3,
+          "fairness": 0,
+          "treasury": -20
+        },
+        "story_beat": null,
+        "event_rule_result": "止損未達門檻：問題改善額外 -2，焦點角色壓力 +2。",
+        "campus_reaction": "校園匿名板熱帖：緊急會議終於不只是在聊天室打「收到」。 財政有節，校務不劫。",
+        "settled_consequences": [
+          {
+            "origin_event": "中午用餐尖峰時段，學餐旁的智慧車牌辨識與自動化柵欄突然因雷擊跳電故障，導致大量外送與腳踏車車隊在主幹道大排長龍，加劇了校園道路的擁擠狀況，讓負責設備維護的張家豪面臨龐大壓力。",
+            "resident": "張家豪",
+            "description": "暫時緩解當前擁擠，但設備穩定度不足可能在下次尖峰再度故障。",
+            "effects": {
+              "problem_improvement": 2,
+              "fairness": 0,
+              "treasury": -15
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +4、滿意度 +1、公平性 +0",
+        "next_event": "隨著校園道路人車分道與外送轉運站的逐步推行，國際學生黃可欣反映，許多外語標示不清與外送轉運規則不明，導致許多外籍生在中午用餐尖峰時段誤闖車道或搞錯取餐位置，加劇了學餐周邊的混亂與道路擁擠。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +4、滿意度 +1、公平性 +0，接續浮現「隨著校園道路人車分道與外送轉運站的逐步推行，國際學生黃可欣反映，許多外語標示不清與外送轉運規則不明，導致許多外籍生在中午用餐尖峰時段誤闖車道或搞錯取餐位置，加劇了學餐周邊的混亂與道路擁擠。」；選擇後續回響：成本較低但依賴人工應變，未來若遇大流量仍有塞車隱患。；「中午用餐尖峰時段，學餐旁的智慧車牌辨識與自動化柵欄突然因雷擊跳電故障，導致大量外送與腳踏車車隊在主幹道大排長龍，加劇了校園道路的擁擠狀況，讓負責設備維護的張家豪面臨龐大壓力。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 27,
+          "problem_improvement": 99,
+          "satisfaction": 85,
+          "fairness": 98
+        }
+      },
+      {
+        "year": 5,
+        "semester": 2,
+        "event": "隨著校園道路人車分道與外送轉運站的逐步推行，國際學生黃可欣反映，許多外語標示不清與外送轉運規則不明，導致許多外籍生在中午用餐尖峰時段誤闖車道或搞錯取餐位置，加劇了學餐周邊的混亂與道路擁擠。",
+        "resident": "黃可欣",
+        "role": "國際學生",
+        "resident_trust": 68,
+        "resident_stress": 71,
+        "response": "花費10萬製作多語紙本傳單並由國際志工在中午時段現場發放解說",
+        "follow_up": "短期內有助於改善資訊傳遞，但長遠來看仍需數位系統輔助。",
+        "delayed_effects": {
+          "problem_improvement": 2,
+          "fairness": 2,
+          "treasury": -10
+        },
+        "story_beat": null,
+        "event_rule_result": "機會稍縱即逝：本次未達紅利條件。",
+        "campus_reaction": "校園匿名板熱帖：下學期的自己表示：這次先把條件看清楚。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "中午用餐尖峰時段，學餐旁的智慧車牌辨識與自動化柵欄因上次雷擊跳電維修後仍不穩定，再次發生系統當機，導致大批外送機車與單車卡在主幹道無法進出，造成嚴重的道路大打結，讓負責現場設備與排障的張家豪壓力倍增。",
+            "resident": "張家豪",
+            "description": "成本較低但依賴人工應變，未來若遇大流量仍有塞車隱患。",
+            "effects": {
+              "problem_improvement": 3,
+              "fairness": 0,
+              "treasury": -20
+            }
+          },
+          {
+            "origin_event": "隨著校園道路人車分道與外送轉運站的逐步推行，國際學生黃可欣反映，許多外語標示不清與外送轉運規則不明，導致許多外籍生在中午用餐尖峰時段誤闖車道或搞錯取餐位置，加劇了學餐周邊的混亂與道路擁擠。",
+            "resident": "黃可欣",
+            "description": "短期內有助於改善資訊傳遞，但長遠來看仍需數位系統輔助。",
+            "effects": {
+              "problem_improvement": 2,
+              "fairness": 2,
+              "treasury": -10
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +3、滿意度 +2、公平性 +2",
+        "next_event": "5年校務成果已完成",
+        "annual_challenge": "公平校園",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價，五年改革進入成果盤點；選擇後續回響：短期內有助於改善資訊傳遞，但長遠來看仍需數位系統輔助。；年度挑戰「公平校園」完成，獲得 30 點基金獎勵；「中午用餐尖峰時段，學餐旁的智慧車牌辨識與自動化柵欄因上次雷擊跳電維修後仍不穩定，再次發生系統當機，導致大批外送機車與單車卡在主幹道無法進出，造成嚴重的道路大打結，讓負責現場設備與排障的張家豪壓力倍增。」的後續影響已結算；「隨著校園道路人車分道與外送轉運站的逐步推行，國際學生黃可欣反映，許多外語標示不清與外送轉運規則不明，導致許多外籍生在中午用餐尖峰時段誤闖車道或搞錯取餐位置，加劇了學餐周邊的混亂與道路擁擠。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 29,
+          "problem_improvement": 100,
+          "satisfaction": 86,
+          "fairness": 100
+        }
+      }
+    ],
+    "yearly": [
+      {
+        "year": 1,
+        "satisfaction": 82,
+        "population": 11418,
+        "treasury": 401,
+        "score": 58,
+        "challenge": "校園升級",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 2,
+        "satisfaction": 83,
+        "population": 11516,
+        "treasury": 389,
+        "score": 63,
+        "challenge": "問題突破",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 3,
+        "satisfaction": 84,
+        "population": 11614,
+        "treasury": 285,
+        "score": 64,
+        "challenge": "永續校園",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 4,
+        "satisfaction": 85,
+        "population": 11712,
+        "treasury": 318,
+        "score": 64,
+        "challenge": "幸福校園",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 5,
+        "satisfaction": 86,
+        "population": 11810,
+        "treasury": 351,
+        "score": 65,
+        "challenge": "公平校園",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      }
+    ],
+    "challenges": [
+      {
+        "id": "campus_builder",
+        "title": "校園升級",
+        "description": "至少完成一項校園建設。",
+        "rule": "buildings",
+        "year": 1,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "solve_root_cause",
+        "title": "問題突破",
+        "description": "本年度結束時問題改善度達到 60。",
+        "rule": "problem",
+        "year": 2,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "green_campus",
+        "title": "永續校園",
+        "description": "本年度結束時平均資源存量達到 60。",
+        "rule": "resources",
+        "year": 3,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "popular_campus",
+        "title": "幸福校園",
+        "description": "本年度結束時教職員生滿意度達到 70。",
+        "rule": "satisfaction",
+        "year": 4,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "fair_access",
+        "title": "公平校園",
+        "description": "本年度結束時公平性達到 68。",
+        "rule": "fairness",
+        "year": 5,
+        "completed": true,
+        "reward": 30
+      }
+    ],
+    "titles": [
+      {
+        "id": "campus_favorite",
+        "name": "人氣校長",
+        "description": "教職員生滿意度達到 78。",
+        "earned_turn": 0
+      },
+      {
+        "id": "equity_champion",
+        "name": "公平推手",
+        "description": "公平性達到 75。",
+        "earned_turn": 2
+      },
+      {
+        "id": "problem_solver",
+        "name": "問題終結者",
+        "description": "問題改善度達到 75。",
+        "earned_turn": 2
+      },
+      {
+        "id": "challenge_collector",
+        "name": "挑戰收藏家",
+        "description": "完成至少三項年度挑戰。",
+        "earned_turn": 6
+      }
+    ],
+    "population": {
+      "students": 10600,
+      "faculty": 780,
+      "staff": 430
+    },
+    "resources": {
+      "energy": 64,
+      "water": 69,
+      "staffing": 51
+    },
+    "buildings": {
+      "library": 0,
+      "housing": 0,
+      "wellbeing": 1
+    },
+    "building_labels": {
+      "library": "學習空間",
+      "housing": "宿舍",
+      "wellbeing": "健康支持中心"
+    },
+    "policies": {
+      "training": 1
+    },
+    "policy_labels": {
+      "scholarships": "助學支持",
+      "workload": "簡政減負",
+      "accessibility": "無障礙與多語服務",
+      "conservation": "節能節水",
+      "training": "服務人力培訓"
+    },
+    "treasury": 351,
+    "residents": [
+      {
+        "id": "lin_muqing",
+        "name": "林沐晴",
+        "role": "大學生",
+        "group": "students",
+        "concern": "課業與生活平衡",
+        "personality": "熱心、容易替別人操心",
+        "goal": "成立讓新生安心求助的同儕社群",
+        "portrait": "portrait-lin-muqing.svg",
+        "satisfaction": 80,
+        "trust": 42,
+        "stress": 44
+      },
+      {
+        "id": "chen_yian",
+        "name": "陳以安",
+        "role": "研究生",
+        "group": "students",
+        "concern": "研究資源與空間",
+        "personality": "安靜、做事有條理",
+        "goal": "完成研究並爭取海外交流機會",
+        "portrait": "portrait-chen-yian.svg",
+        "satisfaction": 83,
+        "trust": 50,
+        "stress": 53
+      },
+      {
+        "id": "zhou_mingzhe",
+        "name": "周明哲",
+        "role": "教授",
+        "group": "faculty",
+        "concern": "教學與研究負荷",
+        "personality": "嚴謹、願意提攜後輩",
+        "goal": "建立跨院合作的永續研究團隊",
+        "portrait": "portrait-zhou-mingzhe.svg",
+        "satisfaction": 82,
+        "trust": 58,
+        "stress": 56
+      },
+      {
+        "id": "xu_yawen",
+        "name": "許雅雯",
+        "role": "教授",
+        "group": "faculty",
+        "concern": "研究支持與合作",
+        "personality": "好奇、擅長傾聽",
+        "goal": "設計更多學生參與的實作課程",
+        "portrait": "portrait-xu-yawen.svg",
+        "satisfaction": 85,
+        "trust": 66,
+        "stress": 65
+      },
+      {
+        "id": "wang_sihan",
+        "name": "王思涵",
+        "role": "行政人員",
+        "group": "staff",
+        "concern": "行政流程與人力",
+        "personality": "細心、喜歡把事情安排妥當",
+        "goal": "讓校園行政服務更簡單又友善",
+        "portrait": "portrait-wang-sihan.svg",
+        "satisfaction": 100,
+        "trust": 58,
+        "stress": 25
+      },
+      {
+        "id": "zhang_jiahao",
+        "name": "張家豪",
+        "role": "校園服務人員",
+        "group": "staff",
+        "concern": "服務品質與工作條件",
+        "personality": "爽朗、遇到問題就想動手處理",
+        "goal": "改善校園維護工具與安全設備",
+        "portrait": "portrait-zhang-jiahao.svg",
+        "satisfaction": 82,
+        "trust": 52,
+        "stress": 51
+      },
+      {
+        "id": "li_chengen",
+        "name": "李承恩",
+        "role": "通勤學生",
+        "group": "students",
+        "concern": "交通與校園安全",
+        "personality": "務實、重視時間安排",
+        "goal": "組成安全通勤倡議小組",
+        "portrait": "portrait-li-chengen.svg",
+        "satisfaction": 87,
+        "trust": 65,
+        "stress": 59
+      },
+      {
+        "id": "huang_kexin",
+        "name": "黃可欣",
+        "role": "國際學生",
+        "group": "students",
+        "concern": "友善環境與資訊取得",
+        "personality": "勇於嘗試、喜歡認識新朋友",
+        "goal": "籌辦讓不同文化交流的校園活動",
+        "portrait": "portrait-huang-kexin.svg",
+        "satisfaction": 87,
+        "trust": 68,
+        "stress": 71
+      }
+    ],
+    "forecast": {
+      "next_year_population": 11908,
+      "next_year_satisfaction": 89,
+      "risk": "目前趨勢穩定，可逐步擴大長期建設"
+    }
   }
 ]
