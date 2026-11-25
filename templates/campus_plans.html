@@ -11,7 +11,7 @@
     </div>
     <img class="page-illustration" src="{{ url_for('static', filename='plans-illustration.svg') }}" alt="" aria-hidden="true">
   </div>
-  <p class="notice">選擇一項十年發展方向。後續事件與決策選項會參考你的問題、校務狀態及歷次選擇動態生成。</p>
+  <p class="notice">選擇一項五年發展方向。後續事件與決策選項會參考你的問題、校務狀態及歷次選擇動態生成；每年也會遇到不同校務挑戰。</p>
   <div class="grid">
     {% for plan in recommendations %}
     <article class="card plan-card">
@@ -36,7 +36,7 @@
       </div>
       <form action="/campus/plan" method="post">
         <input type="hidden" name="plan_id" value="{{ plan.plan_id }}">
-        <button type="submit">採用此十年策略 <span aria-hidden="true">→</span></button>
+        <button type="submit">採用此五年策略 <span aria-hidden="true">→</span></button>
       </form>
     </article>
     {% endfor %}

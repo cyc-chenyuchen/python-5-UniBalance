@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block page_class %}leaderboard-page{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <span class="eyebrow">五年校務經營</span>
+  <h1>校務排行榜</h1>
+  <p>依五年經營的綜合評分排序。只顯示策略名稱與成績，不公開玩家輸入的校園問題。</p>
+</section>
+<section class="card leaderboard-card">
+  {% if records %}
+  <div class="yearly-table-wrap">
+    <table class="yearly-table leaderboard-table">
+      <thead><tr><th>名次</th><th>採用策略</th><th>綜合評分</th><th>完成日期</th></tr></thead>
+      <tbody>
+        {% for record in records %}
+        <tr{% if loop.index == 1 %} class="leaderboard-first"{% endif %}>
+          <th>{{ "%02d"|format(loop.index) }}</th>
+          <td>{{ record.plan_title }}</td>
+          <td><strong>{{ record.total_score }}</strong></td>
+          <td>{{ record.date or "—" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <h2>榜單還在等第一位校長</h2>
+    <p>完成一局五年經營後，成果就會登上排行榜。</p>
+    <a class="button" href="/">開始經營</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

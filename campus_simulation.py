@@ -1,8 +1,9 @@
 from datetime import datetime, timezone
+import random
 import secrets
 
 
-YEARS = 10
+YEARS = 5
 SEMESTERS_PER_YEAR = 2
 TOTAL_TURNS = YEARS * SEMESTERS_PER_YEAR
 GROUP_PORTRAITS = {
@@ -183,6 +184,68 @@ POLICY_LABELS = {
     "conservation": "節能節水",
     "training": "服務人力培訓",
 }
+ANNUAL_CHALLENGES = (
+    {
+        "id": "fiscal_resilience",
+        "title": "財政韌性",
+        "description": "本年度結束時校務基金至少保有 500 點。",
+        "rule": "treasury",
+    },
+    {
+        "id": "fair_access",
+        "title": "公平校園",
+        "description": "本年度結束時公平性達到 68。",
+        "rule": "fairness",
+    },
+    {
+        "id": "green_campus",
+        "title": "永續校園",
+        "description": "本年度結束時平均資源存量達到 60。",
+        "rule": "resources",
+    },
+    {
+        "id": "trusted_community",
+        "title": "信任社群",
+        "description": "本年度結束時教職員生平均信任達到 58。",
+        "rule": "trust",
+    },
+    {
+        "id": "campus_builder",
+        "title": "校園升級",
+        "description": "至少完成一項校園建設。",
+        "rule": "buildings",
+    },
+    {
+        "id": "healthy_semester",
+        "title": "安心學期",
+        "description": "本年度結束時教職員生平均壓力不高於 52。",
+        "rule": "stress",
+    },
+    {
+        "id": "popular_campus",
+        "title": "幸福校園",
+        "description": "本年度結束時教職員生滿意度達到 70。",
+        "rule": "satisfaction",
+    },
+    {
+        "id": "solve_root_cause",
+        "title": "問題突破",
+        "description": "本年度結束時問題改善度達到 60。",
+        "rule": "problem",
+    },
+)
+TITLE_CATALOG = (
+    {"id": "equity_champion", "name": "公平推手", "description": "公平性達到 75。", "rule": "fairness"},
+    {"id": "campus_favorite", "name": "人氣校長", "description": "教職員生滿意度達到 78。", "rule": "satisfaction"},
+    {"id": "fiscal_guardian", "name": "財政守門員", "description": "校務基金維持在 700 點以上。", "rule": "treasury"},
+    {"id": "green_guardian", "name": "永續守護者", "description": "平均資源存量達到 70。", "rule": "resources"},
+    {"id": "master_builder", "name": "空間築夢家", "description": "累計完成三項校園建設。", "rule": "buildings"},
+    {"id": "trusted_leader", "name": "傾聽者", "description": "教職員生平均信任達到 58。", "rule": "trust"},
+    {"id": "wellbeing_guardian", "name": "安心守護者", "description": "教職員生平均壓力降至 46 以下。", "rule": "stress"},
+    {"id": "problem_solver", "name": "問題終結者", "description": "問題改善度達到 75。", "rule": "problem"},
+    {"id": "challenge_collector", "name": "挑戰收藏家", "description": "完成至少三項年度挑戰。", "rule": "challenges"},
+    {"id": "five_year_legend", "name": "五年傳奇", "description": "完成五年經營並取得 85 分以上。", "rule": "champion"},
+)
 def _bounded(value, minimum=0, maximum=100):
     return max(minimum, min(maximum, int(round(value))))
 
@@ -193,6 +256,68 @@ def _refresh_metrics(state):
         sum(satisfaction_values) / len(satisfaction_values)
     )
     state["metrics"]["budget_remaining"] = _bounded(state["treasury"] / 12)
+
+
+def _average_resident_metric(state, metric):
+    return sum(resident[metric] for resident in state["residents"]) / len(state["residents"])
+
+
+def _challenge_is_complete(state, challenge):
+    rule = challenge["rule"]
+    if rule == "treasury":
+        return state["treasury"] >= 500
+    if rule == "fairness":
+        return state["metrics"]["fairness"] >= 68
+    if rule == "resources":
+        return sum(state["resources"].values()) / len(state["resources"]) >= 60
+    if rule == "trust":
+        return _average_resident_metric(state, "trust") >= 58
+    if rule == "buildings":
+        return sum(state["buildings"].values()) >= 1
+    if rule == "stress":
+        return _average_resident_metric(state, "stress") <= 52
+    if rule == "satisfaction":
+        return state["metrics"]["satisfaction"] >= 70
+    if rule == "problem":
+        return state["metrics"]["problem_improvement"] >= 60
+    raise ValueError(f"未知的年度挑戰規則：{rule}")
+
+
+def _title_is_earned(state, rule):
+    if rule == "fairness":
+        return state["metrics"]["fairness"] >= 75
+    if rule == "satisfaction":
+        return state["metrics"]["satisfaction"] >= 78
+    if rule == "treasury":
+        return state["treasury"] >= 700
+    if rule == "resources":
+        return sum(state["resources"].values()) / len(state["resources"]) >= 70
+    if rule == "buildings":
+        return sum(state["buildings"].values()) >= 3
+    if rule == "trust":
+        return _average_resident_metric(state, "trust") >= 58
+    if rule == "stress":
+        return _average_resident_metric(state, "stress") <= 46
+    if rule == "problem":
+        return state["metrics"]["problem_improvement"] >= 75
+    if rule == "challenges":
+        return sum(challenge["completed"] for challenge in state["challenges"]) >= 3
+    if rule == "champion":
+        return state["finished"] and calculate_campaign_score(state) >= 85
+    return False
+
+
+def _award_available_titles(state):
+    earned_ids = {title["id"] for title in state["titles"]}
+    for title in TITLE_CATALOG:
+        if title["id"] in earned_ids or not _title_is_earned(state, title["rule"]):
+            continue
+        state["titles"].append({
+            "id": title["id"],
+            "name": title["name"],
+            "description": title["description"],
+            "earned_turn": state["turn"],
+        })
 
 
 def _materialize_event(state, raw_event, turn):
@@ -249,6 +374,7 @@ def new_campaign(concern, event_deck, plan, scenario_title, seed=None):
         raise ValueError("請先選擇一項 AI 校務方案。")
     if seed is None:
         seed = secrets.randbits(64)
+    challenge_deck = random.Random(seed).sample(ANNUAL_CHALLENGES, YEARS)
     state = {
         "seed": seed,
         "concern": concern,
@@ -271,6 +397,11 @@ def new_campaign(concern, event_deck, plan, scenario_title, seed=None):
         "history": [],
         "yearly": [],
         "finished": False,
+        "challenges": [
+            dict(challenge, year=year, completed=False, reward=30)
+            for year, challenge in enumerate(challenge_deck, start=1)
+        ],
+        "titles": [],
         "selected_plan": dict(plan),
         "scenario_title": scenario_title,
         "event_queue": list(event_deck[1:]),
@@ -285,6 +416,7 @@ def new_campaign(concern, event_deck, plan, scenario_title, seed=None):
             state["metrics"][name] = _bounded(state["metrics"][name] + effect)
     state["current_event"] = _materialize_event(state, event_deck[0], 0)
     _refresh_metrics(state)
+    _award_available_titles(state)
     return state
 
 
@@ -307,6 +439,7 @@ def available_developments(state):
 def campaign_context(state):
     turn = state["turn"]
     return {
+        "years": YEARS,
         "year": turn // SEMESTERS_PER_YEAR + 1,
         "semester": turn % SEMESTERS_PER_YEAR + 1,
         "turn_number": turn + 1,
@@ -327,6 +460,13 @@ def campaign_context(state):
         "residents": state["residents"],
         "history": state["history"],
         "yearly": state["yearly"],
+        "current_challenge": state["challenges"][turn // SEMESTERS_PER_YEAR],
+        "challenges": state["challenges"],
+        "completed_challenge_count": sum(
+            challenge["completed"] for challenge in state["challenges"]
+        ),
+        "titles": state["titles"],
+        "title_catalog": TITLE_CATALOG,
         "forecast": forecast(state),
     }
 
@@ -339,7 +479,7 @@ def _apply_effects(state, effects):
 
 def validate_campaign_choice(state, action_id, development_id):
     if state["finished"] or state["turn"] >= TOTAL_TURNS:
-        raise ValueError("這場十年經營已經結束。")
+        raise ValueError(f"這場 {YEARS} 年經營已經結束。")
     event = state["current_event"]
     action = next((item for item in event["actions"] if item["action_id"] == action_id), None)
     if action is None:
@@ -402,6 +542,8 @@ def advance_campaign(state, action_id, development_id, next_events=None):
     _refresh_metrics(state)
     state["turn"] += 1
     year = (state["turn"] - 1) // SEMESTERS_PER_YEAR + 1
+    annual_challenge = None
+    challenge_reward = 0
 
     if state["turn"] % SEMESTERS_PER_YEAR == 0:
         satisfaction = state["metrics"]["satisfaction"]
@@ -409,12 +551,22 @@ def advance_campaign(state, action_id, development_id, next_events=None):
         state["population"]["students"] = max(0, state["population"]["students"] + student_delta)
         state["population"]["faculty"] = max(0, state["population"]["faculty"] + (12 if satisfaction >= 65 else -8))
         state["population"]["staff"] = max(0, state["population"]["staff"] + (6 if state["resources"]["staffing"] >= 40 else -5))
+        challenge = state["challenges"][year - 1]
+        challenge["completed"] = _challenge_is_complete(state, challenge)
+        annual_challenge = challenge
+        if challenge["completed"]:
+            challenge_reward = challenge["reward"]
+            state["treasury"] = min(2000, state["treasury"] + challenge_reward)
+            _refresh_metrics(state)
         state["yearly"].append({
             "year": year,
             "satisfaction": state["metrics"]["satisfaction"],
             "population": sum(state["population"].values()),
             "treasury": state["treasury"],
             "score": calculate_campaign_score(state),
+            "challenge": challenge["title"],
+            "challenge_completed": challenge["completed"],
+            "challenge_reward": challenge_reward,
         })
 
     next_event = None
@@ -427,6 +579,21 @@ def advance_campaign(state, action_id, development_id, next_events=None):
         else:
             next_raw_event = state["event_queue"].pop(0)
         next_event = _materialize_event(state, next_raw_event, state["turn"])
+
+    _award_available_titles(state)
+    if next_event:
+        butterfly = (
+            f"{development['title']}使{development['benefit']}；"
+            f"{action['cause']}，接續浮現「{next_event['event']}」"
+        )
+    else:
+        butterfly = f"{development['title']}使{development['benefit']}，五年改革進入成果盤點"
+    if annual_challenge:
+        challenge_status = "完成" if annual_challenge["completed"] else "未完成"
+        butterfly += (
+            f"；年度挑戰「{annual_challenge['title']}」{challenge_status}"
+            + (f"，獲得 {challenge_reward} 點基金獎勵" if challenge_reward else "")
+        )
 
     outcome = {
         "year": year,
@@ -441,12 +608,11 @@ def advance_campaign(state, action_id, development_id, next_events=None):
         "category": development["category"],
         "benefit": development["benefit"],
         "cause": action["cause"],
-        "next_event": next_event["event"] if next_event else "十年校務成果已完成",
-        "butterfly": (
-            f"{development['title']}使{development['benefit']}；"
-            f"{action['cause']}，接續浮現「{next_event['event']}」"
-            if next_event else f"{development['title']}使{development['benefit']}，十年改革進入成果盤點"
-        ),
+        "next_event": next_event["event"] if next_event else f"{YEARS}年校務成果已完成",
+        "annual_challenge": annual_challenge["title"] if annual_challenge else None,
+        "challenge_completed": annual_challenge["completed"] if annual_challenge else None,
+        "challenge_reward": challenge_reward,
+        "butterfly": butterfly,
         "metrics": dict(state["metrics"]),
     }
     state["history"].append(outcome)
@@ -514,12 +680,14 @@ def make_campaign_record(state):
         },
         "total_score": score,
         "comment": (
-            "十年校務兼顧了教職員生需求、財政韌性與長期發展。"
-            if score >= 70 else "十年校務仍有改善空間，可優先補足低分指標並維持教職員生參與。"
+            "五年校務兼顧了教職員生需求、財政韌性與長期發展。"
+            if score >= 70 else "五年校務仍有改善空間，可優先補足低分指標並維持教職員生參與。"
         ),
         "years": YEARS,
         "history": state["history"],
         "yearly": state["yearly"],
+        "challenges": state["challenges"],
+        "titles": state["titles"],
         "population": dict(state["population"]),
         "resources": dict(state["resources"]),
         "buildings": dict(state["buildings"]),

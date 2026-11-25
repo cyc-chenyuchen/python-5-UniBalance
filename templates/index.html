@@ -2,22 +2,22 @@
 {% block content %}
 <section class="hero home-hero">
   <div class="hero-copy">
-    <span class="eyebrow">十年校園經營模擬</span>
-    <h1>從一個校園問題，<br>經營大學的下一個十年</h1>
-    <p>提出一個校園問題，讓 AI 依據你的議題規劃策略，並在十年經營中持續生成相關事件與新挑戰。</p>
+    <span class="eyebrow">五年校園經營模擬</span>
+    <h1>從一個校園問題，<br>經營大學的下一個五年</h1>
+    <p>提出一個校園問題，讓 AI 依據你的議題規劃策略，在五年經營中生成事件、年度挑戰與稱號收藏。</p>
   </div>
   <img class="hero-illustration" src="{{ url_for('static', filename='campus-illustration.svg') }}" alt="" aria-hidden="true">
 </section>
 <div class="lobby-grid">
-  <section class="card mission-card" id="decade-campaign">
+  <section class="card mission-card" id="five-year-campaign">
     <div class="mission-heading">
       <span class="mission-symbol" aria-hidden="true">01</span>
       <div>
-        <p class="step">單一問題入口 · 20 學期 · 10 年</p>
+        <p class="step">單一問題入口 · 10 學期 · 5 年</p>
         <h2>開始校務經營</h2>
       </div>
     </div>
-    <p>你只需輸入一次問題；AI 會產生相關策略與延伸事件，後續決策將持續影響校務發展。</p>
+    <p>你只需輸入一次問題；AI 會產生相關策略與延伸事件。每年還有不同挑戰，完成後可獲得基金獎勵並解鎖稱號。</p>
     <div class="notice privacy-note">為保障隱私，請勿輸入姓名、電話、學號或其他個人資料。</div>
     <form action="/campus/start" method="post" data-game-submit data-pending-message="正在分析問題並生成 AI 校務方案，請稍候。">
       <label for="proposal">你想解決的校園問題 <span class="step">1～300 字</span></label>
@@ -25,18 +25,21 @@
       <div class="lobby-actions">
         <button type="submit">AI 分析並開始經營 <span aria-hidden="true">→</span></button>
         <a class="button button-secondary" href="/records">瀏覽歷史任務</a>
+        <a class="button button-secondary" href="/titles">稱號收藏</a>
+        <a class="button button-secondary" href="/leaderboard">校務排行榜</a>
       </div>
       <p class="submit-status" data-submit-status role="status" hidden></p>
     </form>
   </section>
   <aside class="card mission-guide">
     <p class="eyebrow">任務流程</p>
-    <h2>從問題展開十年模擬</h2>
+    <h2>五年校務挑戰</h2>
     <ol class="mission-steps">
       <li><span>01</span><div><strong>AI 方案</strong><small>依照輸入問題提供校務策略</small></div></li>
       <li><span>02</span><div><strong>動態事件</strong><small>每學期處理連鎖與突發議題</small></div></li>
-      <li><span>03</span><div><strong>十年經營</strong><small>管理建設、財政、資源與政策</small></div></li>
+      <li><span>03</span><div><strong>五年經營</strong><small>完成年度挑戰，經營建設、財政與教職員生關係</small></div></li>
     </ol>
+    <p class="guide-note">每局會抽取不同年度挑戰；累積稱號並與歷次五年校務成果比較。</p>
     <p class="guide-note">AI 事件及效果為遊戲模擬內容，不代表真實校務建議或預測。</p>
   </aside>
 </div>

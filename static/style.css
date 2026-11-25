@@ -534,7 +534,7 @@ button:hover, .button:hover {
 .campaign-score span { color: var(--color-muted); font-size: 11px; }
 .campaign-dashboard { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(260px, .75fr); align-items: start; gap: 18px; }
 .campaign-indicators, .campaign-event, .campaign-residents { grid-column: 1; }
-.campaign-forecast, .campaign-history { grid-column: 2; }
+.campaign-challenge, .campaign-forecast, .campaign-history, .campaign-awards { grid-column: 2; }
 .campaign-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .campaign-section-heading h2 { margin: 10px 0 0; }
 .campaign-section-heading > strong, .campaign-period { color: var(--color-primary-dark); font-size: 13px; }
@@ -561,9 +561,16 @@ button:hover, .button:hover {
 .campaign-option small { color: var(--color-muted); font-size: 12px; font-weight: 500; }
 .campaign-option em { margin-right: 5px; padding: 3px 7px; border-radius: 7px; background: var(--color-mint); color: var(--color-primary-dark); font-size: 11px; font-style: normal; }
 .campaign-form .notice { margin: 0 0 17px; }
-.campaign-forecast > .step, .campaign-history > .step { margin-bottom: 12px; }
-.campaign-forecast h2, .campaign-history h2 { margin-bottom: 13px; }
-.campaign-forecast .notice { margin-bottom: 0; }
+.campaign-challenge > .step, .campaign-forecast > .step, .campaign-history > .step, .campaign-awards > .step { margin-bottom: 12px; }
+.campaign-challenge h2, .campaign-forecast h2, .campaign-history h2, .campaign-awards h2 { margin-bottom: 13px; }
+.campaign-challenge .notice, .campaign-forecast .notice { margin-bottom: 0; }
+.campaign-awards > p { color: var(--color-muted); }
+.title-badge-list { display: grid; gap: 8px; margin: 0 0 12px; padding: 0; list-style: none; }
+.title-badge-list li { display: grid; gap: 3px; padding: 10px 12px; border: 1px solid var(--color-border); border-radius: 12px; background: #fbfaf7; }
+.title-badge-list strong { color: var(--color-primary-dark); font-size: 13px; }
+.title-badge-list small { color: var(--color-muted); font-size: 12px; }
+.text-link { color: var(--color-primary-dark); font-size: 13px; font-weight: 700; text-decoration: none; }
+.text-link:hover { text-decoration: underline; }
 .resident-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
 .resident-card { display: grid; grid-template-columns: 62px minmax(0, 1fr); align-items: center; gap: 4px 10px; min-width: 0; padding: 12px; border: 1px solid var(--color-border); border-radius: 12px; background: #fbfaf7; }
 .resident-portrait { grid-column: 1; grid-row: 1 / span 7; width: 62px; height: 70px; border-radius: 14px; background: #f2eee5; object-fit: cover; }
@@ -586,14 +593,26 @@ button:hover, .button:hover {
 .yearly-table th, .yearly-table td { padding: 10px 12px; border-bottom: 1px solid var(--color-border); text-align: left; white-space: nowrap; }
 .yearly-table thead { background: var(--color-surface-soft); }
 .yearly-table th { color: var(--color-text); }
+.title-collection-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.title-collection-card { display: grid; grid-template-columns: 58px minmax(0, 1fr); align-items: center; gap: 14px; }
+.title-collection-card .step { margin-bottom: 5px; }
+.title-collection-card h2 { margin: 0 0 6px; font-size: 19px; }
+.title-collection-card p:last-child { margin-bottom: 0; color: var(--color-muted); font-size: 13px; }
+.title-collection-card.is-locked { opacity: .68; }
+.title-emblem { display: grid; width: 52px; height: 52px; place-items: center; border: 2px solid var(--color-olive-line); border-radius: 50%; background: var(--color-mint); color: var(--color-primary-dark); font-size: 13px; font-weight: 800; }
+.is-locked .title-emblem { background: var(--color-surface-soft); color: var(--color-muted); }
+.collection-progress { color: var(--color-primary-dark); font-size: 14px; font-weight: 750; }
+.leaderboard-first { background: #faf6e9; }
+.leaderboard-table tbody th { color: var(--color-primary-dark); font-variant-numeric: tabular-nums; }
 .decade-action-list { max-height: 790px; overflow-y: auto; padding-right: 5px; }
 .decade-action-list li { display: grid; gap: 4px; }
 .decade-action-list p { margin: 4px 0 0; font-size: 13px; }
 
 @media (max-width: 760px) {
+  .title-collection-grid { grid-template-columns: minmax(0, 1fr); }
   .decade-entry { grid-template-columns: minmax(0, 1fr); gap: 18px; }
   .campaign-dashboard { grid-template-columns: minmax(0, 1fr); }
-  .campaign-indicators, .campaign-event, .campaign-residents, .campaign-forecast, .campaign-history { grid-column: 1; }
+  .campaign-indicators, .campaign-event, .campaign-residents, .campaign-challenge, .campaign-forecast, .campaign-history, .campaign-awards { grid-column: 1; }
 }
 
 @media (max-width: 430px) {

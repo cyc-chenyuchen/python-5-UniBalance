@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block page_class %}collection-page{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <span class="eyebrow">校園經營收藏</span>
+  <h1>稱號圖鑑</h1>
+  <p>在不同五年任期中嘗試不同策略，收集所有校務稱號。</p>
+  <p class="collection-progress">已解鎖 {{ unlocked_count }} / {{ titles|length }}</p>
+</section>
+<section class="title-collection-grid">
+  {% for title in titles %}
+  <article class="card title-collection-card{% if title.unlocked %} is-unlocked{% else %} is-locked{% endif %}">
+    <span class="title-emblem" aria-hidden="true">{% if title.unlocked %}OK{% else %}??{% endif %}</span>
+    <div>
+      <p class="step">{% if title.unlocked %}已解鎖 · 收集 {{ title.earned_runs }} 次{% else %}尚未解鎖{% endif %}</p>
+      <h2>{% if title.unlocked %}{{ title.name }}{% else %}神秘稱號{% endif %}</h2>
+      <p>{{ title.description }}</p>
+    </div>
+  </article>
+  {% endfor %}
+</section>
+<div class="result-actions">
+  <a class="button button-secondary" href="/leaderboard">查看五年排行榜</a>
+  <a class="button" href="/">開始新一局</a>
+</div>
+{% endblock %}

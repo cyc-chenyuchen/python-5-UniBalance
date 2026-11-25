@@ -362,7 +362,7 @@ def recommend_campaign_plans(proposal, game_config):
         return _demo_campaign_plans(proposal)
     system_prompt = (
         "你是大學長期校務策略顧問。依照玩家提出的單一校園問題，提供兩個有差異、"
-        "可執行且明確針對該問題的十年策略。若提案不是校園生活、設施、服務或制度問題，"
+        "可執行且明確針對該問題的五年策略。若提案不是校園生活、設施、服務或制度問題，"
         "回傳 supported=false 及空 recommendations。策略效果是遊戲假設，必須遵守輸入的"
         "effect_ranges，數值必須是整數。兩個方案不可只是改寫標題，需呈現不同取捨。"
         "只回傳符合 schema 的 JSON，不加 Markdown 或其他說明。"
@@ -507,6 +507,7 @@ def generate_campaign_events(
         "為該角色寫具體事件與第一人稱 resident_quote；有足夠角色時，避免同批重複指定同一人。"
         "若 opening=true，第一個事件要直接具體化玩家提出的問題，其餘事件要合理延伸；"
         "之後的批次要參考前因後果，兼有蝴蝶效應、跨校園系統的衍生問題與合理的新突發事件。"
+        "若目前有年度挑戰或已解鎖稱號，後續事件應自然反映玩家追求的目標和已取得的成果。"
         "event 最多 160 字、resident_quote 最多 120 字、resident_concern 最多 80 字、"
         "每個 action text 最多 80 字。"
         "避免重複近期事件，不要使用固定關卡順序。讓受影響對象在學生、教職員、行政人員間變化。"

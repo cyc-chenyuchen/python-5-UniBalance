@@ -12,7 +12,9 @@ from ai_service import (
 )
 from campus_simulation import (
     SEMESTERS_PER_YEAR,
+    TITLE_CATALOG,
     TOTAL_TURNS,
+    YEARS,
     advance_campaign,
     campaign_context,
     make_campaign_record,
@@ -402,6 +404,61 @@ def records():
     return render_template("records.html", records=load_records())
 
 
+@app.route("/titles")
+def titles():
+    earned_by_id = {}
+    for record in load_records():
+        if not isinstance(record, dict) or record.get("scenario_id") != "campus_decade":
+            continue
+        record_titles = record.get("titles", [])
+        if not isinstance(record_titles, list):
+            continue
+        for title in record_titles:
+            if isinstance(title, dict) and isinstance(title.get("id"), str):
+                earned_by_id.setdefault(title["id"], []).append(title)
+
+    collection = []
+    for title in TITLE_CATALOG:
+        collection.append({
+            "id": title["id"],
+            "name": title["name"],
+            "description": title["description"],
+            "unlocked": title["id"] in earned_by_id,
+            "earned_runs": len(earned_by_id.get(title["id"], [])),
+        })
+    return render_template(
+        "titles.html",
+        titles=collection,
+        unlocked_count=sum(title["unlocked"] for title in collection),
+    )
+
+
+@app.route("/leaderboard")
+def leaderboard():
+    candidates = []
+    for record in load_records():
+        if (
+            not isinstance(record, dict)
+            or record.get("scenario_id") != "campus_decade"
+            or record.get("years") != YEARS
+            or isinstance(record.get("total_score"), bool)
+            or not isinstance(record.get("total_score"), int)
+        ):
+            continue
+        created_at = record.get("created_at")
+        candidates.append({
+            "plan_title": record.get("plan_title") if isinstance(record.get("plan_title"), str) else "校務經營",
+            "total_score": record["total_score"],
+            "date": created_at[:10] if isinstance(created_at, str) else "",
+            "created_at": created_at if isinstance(created_at, str) else "",
+        })
+    candidates.sort(
+        key=lambda record: (record["total_score"], record["created_at"]),
+        reverse=True,
+    )
+    return render_template("leaderboard.html", records=candidates[:10])
+
+
 @app.route("/records/<record_id>")
 def record_detail(record_id):
     record = next(
@@ -620,6 +677,13 @@ def _process_campaign_decision(game, action_id, development_id):
                     "buildings": dict(campaign["buildings"]),
                     "policies": dict(campaign["policies"]),
                     "characters": resident_profiles(campaign["residents"]),
+                    "current_challenge": campaign["challenges"][
+                        campaign["turn"] // SEMESTERS_PER_YEAR
+                    ],
+                    "completed_challenge_count": sum(
+                        item["completed"] for item in campaign["challenges"]
+                    ),
+                    "titles": list(campaign["titles"]),
                 },
                 next_decision={
                     "current_issue": campaign["current_event"]["event"],

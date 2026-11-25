@@ -4,7 +4,7 @@
 <section class="card decade-results">
   <div class="visual-heading result-visual-heading">
     <div class="visual-copy">
-      <p class="step">十年校務總結 · 20 學期已完成</p>
+      <p class="step">{{ record.years }} 年校務總結 · {{ record.history|length }} 個學期已完成</p>
       <h1>{{ record.scenario_title }}</h1>
       <p>起始議題：{{ record.proposal }}</p>
     </div>
@@ -13,7 +13,7 @@
   <p class="notice">{{ record.comment }}</p>
 
   <section class="result-section">
-    <h2>十年後的校園</h2>
+    <h2>{{ record.years }} 年後的校園</h2>
     <div class="metrics">
       {% for name, value in record.final_metrics.items() %}
       <div data-metric="{{ name }}" data-value="{{ value }}"><strong>{{ record.metric_labels[name] }}</strong><span>{{ value }}</span></div>
@@ -28,18 +28,33 @@
   </section>
 
   <section class="result-section">
-    <h2>十年人口與滿意度變化</h2>
+    <h2>{{ record.years }} 年人口與滿意度變化</h2>
     <div class="yearly-table-wrap">
       <table class="yearly-table">
-        <thead><tr><th>學年</th><th>校園人口</th><th>教職員生滿意度</th><th>校務基金</th><th>當年評分</th></tr></thead>
+          <thead><tr><th>學年</th><th>校園人口</th><th>教職員生滿意度</th><th>校務基金</th><th>年度挑戰</th><th>當年評分</th></tr></thead>
         <tbody>
           {% for year in record.yearly %}
-          <tr><th>第 {{ year.year }} 年</th><td>{{ year.population }}</td><td>{{ year.satisfaction }} / 100</td><td>{{ year.treasury }}</td><td>{{ year.score }}</td></tr>
+            <tr><th>第 {{ year.year }} 年</th><td>{{ year.population }}</td><td>{{ year.satisfaction }} / 100</td><td>{{ year.treasury }}</td><td>{% if year.challenge is defined %}{{ year.challenge }} · {{ "完成" if year.challenge_completed else "未完成" }}{% else %}—{% endif %}</td><td>{{ year.score }}</td></tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
   </section>
+
+  {% if record.titles is defined %}
+  <section class="result-section">
+    <h2>本局稱號收藏 · {{ record.titles|length }} 枚</h2>
+    {% if record.titles %}
+    <ul class="title-badge-list result-title-list">
+      {% for title in record.titles %}
+      <li><strong>{{ title.name }}</strong><small>{{ title.description }}</small></li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>這次還沒有解鎖稱號；換個策略再來挑戰圖鑑吧！</p>
+    {% endif %}
+  </section>
+  {% endif %}
 
   <section class="result-section">
     <h2>教職員生心聲</h2>
@@ -51,7 +66,7 @@
         <strong>{{ resident.name }} <small>{{ resident.role }}</small></strong>
         <span>{{ resident.concern }}</span>
         <div class="resident-meter" role="meter" aria-label="{{ resident.name }}滿意度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ resident.satisfaction }}"><i style="width: {{ resident.satisfaction }}%"></i></div>
-        <small>十年後滿意度 {{ resident.satisfaction }}</small>
+        <small>{{ record.years }} 年後滿意度 {{ resident.satisfaction }}</small>
         <small>{{ resident.personality }} · 目標：{{ resident.goal }}</small>
         <small>信任 {{ resident.trust }} · 壓力 {{ resident.stress }}</small>
       </article>
@@ -81,7 +96,9 @@
   </section>
   <div class="result-actions">
     <a class="button button-secondary" href="/records">查看歷史任務</a>
-    <a class="button" href="/">開始新的十年經營</a>
+    <a class="button button-secondary" href="/titles">稱號收藏</a>
+    <a class="button button-secondary" href="/leaderboard">排行榜</a>
+    <a class="button" href="/">開始新的五年經營</a>
   </div>
 </section>
 {% endblock %}

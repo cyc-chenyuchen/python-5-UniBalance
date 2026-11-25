@@ -19,7 +19,13 @@ from ai_service import (
     send_request,
 )
 from app import GAMES, app
-from campus_simulation import advance_campaign, new_campaign, resident_profiles
+from campus_simulation import (
+    TOTAL_TURNS,
+    YEARS,
+    advance_campaign,
+    new_campaign,
+    resident_profiles,
+)
 from simulation import apply_effects, calculate_total_score, make_comment, run_round_choice
 
 
@@ -648,7 +654,7 @@ class CampusCampaignTests(unittest.TestCase):
         with self.client.session_transaction() as session:
             session.clear()
 
-    def _new_test_campaign(self):
+    def _new_test_campaign(self, seed=7):
         game_config = {
             "metric_labels": {
                 "budget_remaining": "剩餘預算",
@@ -680,7 +686,7 @@ class CampusCampaignTests(unittest.TestCase):
             event_deck,
             plans["recommendations"][0],
             plans["scenario_title"],
-            seed=7,
+            seed=seed,
         )
 
     def test_homepage_has_one_problem_input(self):
@@ -688,7 +694,7 @@ class CampusCampaignTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.get_data(as_text=True).count("<textarea"), 1)
 
-    def test_ten_year_campaign_runs_forty_turns_and_saves_decade_report(self):
+    def test_five_year_campaign_runs_ten_turns_and_saves_report(self):
         with patch("app.save_record") as save_record:
             response = self.client.post(
                 "/campus/start",
@@ -710,7 +716,7 @@ class CampusCampaignTests(unittest.TestCase):
             with self.client.session_transaction() as session:
                 flow_id = session["flow_id"]
 
-            for turn in range(20):
+            for turn in range(TOTAL_TURNS):
                 campaign = GAMES[flow_id]["campaign"]
                 response = self.client.post(
                     "/campus/choose",
@@ -726,14 +732,76 @@ class CampusCampaignTests(unittest.TestCase):
                 elif turn == 1:
                     self.assertIn("第 2 年第 1 學期".encode("utf-8"), response.data)
 
-        self.assertIn("十年校務總結".encode("utf-8"), response.data)
-        self.assertIn("20 個連鎖事件".encode("utf-8"), response.data)
-        self.assertIn("第 10 年".encode("utf-8"), response.data)
+        self.assertIn("5 年校務總結".encode("utf-8"), response.data)
+        self.assertIn("10 個連鎖事件".encode("utf-8"), response.data)
+        self.assertIn("第 5 年".encode("utf-8"), response.data)
         self.assertEqual(save_record.call_count, 1)
         campaign = GAMES[flow_id]["campaign"]
         self.assertTrue(campaign["finished"])
-        self.assertEqual(len(campaign["history"]), 20)
-        self.assertEqual(len(campaign["yearly"]), 10)
+        self.assertEqual(len(campaign["history"]), TOTAL_TURNS)
+        self.assertEqual(len(campaign["yearly"]), YEARS)
+
+    def test_each_play_gets_five_unique_annual_challenges(self):
+        first = self._new_test_campaign()
+        second = self._new_test_campaign(seed=8)
+        first_challenges = [item["id"] for item in first["challenges"]]
+        second_challenges = [item["id"] for item in second["challenges"]]
+
+        self.assertEqual(len(first_challenges), YEARS)
+        self.assertEqual(len(set(first_challenges)), YEARS)
+        self.assertNotEqual(first_challenges, second_challenges)
+        self.assertEqual(first["challenges"][0]["reward"], 30)
+
+    def test_completing_annual_challenge_grants_reward_and_titles(self):
+        campaign = self._new_test_campaign()
+        campaign["turn"] = 1
+        campaign["treasury"] = 1500
+        campaign["metrics"]["fairness"] = 95
+        campaign["metrics"]["problem_improvement"] = 95
+        campaign["resources"] = {"energy": 90, "water": 90, "staffing": 90}
+        campaign["buildings"]["library"] = 1
+        for resident in campaign["residents"]:
+            resident["satisfaction"] = 90
+            resident["trust"] = 90
+            resident["stress"] = 10
+        action = campaign["current_event"]["actions"][0]
+
+        advance_campaign(campaign, action["action_id"], "audit")
+
+        year_one = campaign["yearly"][0]
+        self.assertTrue(year_one["challenge_completed"])
+        self.assertEqual(year_one["challenge_reward"], 30)
+        self.assertGreaterEqual(year_one["treasury"], 1500)
+        self.assertIn("equity_champion", {title["id"] for title in campaign["titles"]})
+
+    def test_title_collection_and_five_year_leaderboard_routes(self):
+        records = [
+            {
+                "scenario_id": "campus_decade",
+                "years": YEARS,
+                "total_score": 91,
+                "plan_title": "永續校園方案",
+                "created_at": "2026-11-25T10:00:00+00:00",
+                "titles": [{"id": "equity_champion", "name": "公平推手", "description": "公平性達到 75。"}],
+            },
+            {
+                "scenario_id": "campus_decade",
+                "years": 10,
+                "total_score": 99,
+                "plan_title": "舊制長期方案",
+                "created_at": "2025-01-01T10:00:00+00:00",
+            },
+        ]
+        with patch("app.load_records", return_value=records):
+            collection = self.client.get("/titles")
+            leaderboard = self.client.get("/leaderboard")
+
+        self.assertEqual(collection.status_code, 200)
+        self.assertIn("公平推手".encode("utf-8"), collection.data)
+        self.assertIn("神秘稱號".encode("utf-8"), collection.data)
+        self.assertEqual(leaderboard.status_code, 200)
+        self.assertIn("永續校園方案".encode("utf-8"), leaderboard.data)
+        self.assertNotIn("舊制長期方案".encode("utf-8"), leaderboard.data)
 
     def test_each_character_has_a_unique_portrait_and_personal_profile(self):
         campaign = self._new_test_campaign()

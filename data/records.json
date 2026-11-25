@@ -1779,5 +1779,574 @@
       "next_year_satisfaction": 98,
       "risk": "財政與資源緩衝偏低，建議先投資韌性"
     }
+  },
+  {
+    "record_id": "815a8d820e915b5bd8e29728eb1e02d9",
+    "created_at": "2026-11-25T06:11:45.321387+00:00",
+    "scenario_id": "campus_decade",
+    "scenario_title": "校園保健室據點不足問題",
+    "proposal": "保健室只有一間在圖書館裡，如果在距離很遠的地方受傷，要走很遠才能抵達。",
+    "plan_title": "設置衛星保健站網",
+    "plan_strategy": "分散據點增設急救箱",
+    "plan_description": "在各教學大樓與宿舍區設立小型衛星保健站，配置基本急救物資與值班護理人員。",
+    "plan_reason": "能大幅縮短偏遠學院學生的就醫距離，提升急難應變速度，解決路途遙遠的問題。",
+    "plan_effects": {
+      "budget_remaining": -15,
+      "problem_improvement": 18,
+      "satisfaction": 8,
+      "fairness": 6
+    },
+    "initial_metrics": {
+      "budget_remaining": 71,
+      "problem_improvement": 45,
+      "satisfaction": 70,
+      "fairness": 63
+    },
+    "final_metrics": {
+      "budget_remaining": 35,
+      "problem_improvement": 100,
+      "satisfaction": 91,
+      "fairness": 100
+    },
+    "metric_labels": {
+      "budget_remaining": "財政健康",
+      "problem_improvement": "問題改善",
+      "satisfaction": "教職員生滿意度",
+      "fairness": "公平性"
+    },
+    "total_score": 69,
+    "comment": "五年校務仍有改善空間，可優先補足低分指標並維持教職員生參與。",
+    "years": 5,
+    "history": [
+      {
+        "year": 1,
+        "semester": 1,
+        "event": "保健室僅設於圖書館內，偏遠學院學生受傷時求助不易，引發校園安全與急救死角的討論。",
+        "resident": "林沐晴",
+        "role": "大學生",
+        "resident_trust": 46,
+        "resident_stress": 36,
+        "response": "投入資金於各棟大樓增設簡易急救箱與AED設備，並由志工定期巡檢。",
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +6、滿意度 +4、公平性 +3",
+        "next_event": "圖書館保健室周邊人流增加，導致圖書館自修安靜環境受到干擾，研究生與讀者紛紛反映困擾。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +6、滿意度 +4、公平性 +3，接續浮現「圖書館保健室周邊人流增加，導致圖書館自修安靜環境受到干擾，研究生與讀者紛紛反映困擾。」",
+        "metrics": {
+          "budget_remaining": 57,
+          "problem_improvement": 68,
+          "satisfaction": 82,
+          "fairness": 71
+        }
+      },
+      {
+        "year": 1,
+        "semester": 2,
+        "event": "圖書館保健室周邊人流增加，導致圖書館自修安靜環境受到干擾，研究生與讀者紛紛反映困擾。",
+        "resident": "周明哲",
+        "role": "教授",
+        "resident_trust": 61,
+        "resident_stress": 54,
+        "response": "重新規劃圖書館動線，以隔音屏障將急救區與自修區徹底獨立隔離。",
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +5、滿意度 +3、公平性 +2",
+        "next_event": "圖書館保健室周邊頻繁的求診人流與救護聲響，已嚴重干擾研究生與讀者準備考試的安靜自修環境。",
+        "annual_challenge": "信任社群",
+        "challenge_completed": false,
+        "challenge_reward": 0,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +5、滿意度 +3、公平性 +2，接續浮現「圖書館保健室周邊頻繁的求診人流與救護聲響，已嚴重干擾研究生與讀者準備考試的安靜自修環境。」；年度挑戰「信任社群」未完成",
+        "metrics": {
+          "budget_remaining": 58,
+          "problem_improvement": 72,
+          "satisfaction": 82,
+          "fairness": 72
+        }
+      },
+      {
+        "year": 2,
+        "semester": 1,
+        "event": "圖書館保健室周邊頻繁的求診人流與救護聲響，已嚴重干擾研究生與讀者準備考試的安靜自修環境。",
+        "resident": "陳以安",
+        "role": "研究生",
+        "resident_trust": 53,
+        "resident_stress": 45,
+        "response": "加裝高規格隔音玻璃與吸音屏障，將保健室區域徹底物理隔離",
+        "development": "擴建學習與研究空間",
+        "category": "建設",
+        "benefit": "校園學習空間與研究容量提升",
+        "cause": "這項決策使問題改善 +7、滿意度 +4、公平性 +2",
+        "next_event": "圖書館空間調整牽動了行政單位與館員的日常業務負擔，行政人員反映人力調配已面臨極限。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "擴建學習與研究空間使校園學習空間與研究容量提升；這項決策使問題改善 +7、滿意度 +4、公平性 +2，接續浮現「圖書館空間調整牽動了行政單位與館員的日常業務負擔，行政人員反映人力調配已面臨極限。」",
+        "metrics": {
+          "budget_remaining": 44,
+          "problem_improvement": 81,
+          "satisfaction": 83,
+          "fairness": 75
+        }
+      },
+      {
+        "year": 2,
+        "semester": 2,
+        "event": "圖書館空間調整牽動了行政單位與館員的日常業務負擔，行政人員反映人力調配已面臨極限。",
+        "resident": "王思涵",
+        "role": "行政人員",
+        "resident_trust": 46,
+        "resident_stress": 35,
+        "response": "增聘專職行政助理與導引志工，分擔圖書館與醫療站的管理工作",
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +8、滿意度 +5、公平性 +4",
+        "next_event": "圖書館空間調整牽動了行政單位與館員的日常業務負擔，行政人員反映人力調配已面臨極限。",
+        "annual_challenge": "永續校園",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +8、滿意度 +5、公平性 +4，接續浮現「圖書館空間調整牽動了行政單位與館員的日常業務負擔，行政人員反映人力調配已面臨極限。」；年度挑戰「永續校園」完成，獲得 30 點基金獎勵",
+        "metrics": {
+          "budget_remaining": 46,
+          "problem_improvement": 88,
+          "satisfaction": 84,
+          "fairness": 78
+        }
+      },
+      {
+        "year": 3,
+        "semester": 1,
+        "event": "圖書館空間調整牽動了行政單位與館員的日常業務負擔，行政人員反映人力調配已面臨極限。",
+        "resident": "王思涵",
+        "role": "行政人員",
+        "resident_trust": 50,
+        "resident_stress": 32,
+        "response": "增聘專職行政助理與導引志工，分擔圖書館與醫療站的管理工作",
+        "development": "培訓校園服務與支援人力",
+        "category": "資源",
+        "benefit": "服務量能提升，教職員生等待時間縮短",
+        "cause": "這項決策使問題改善 +7、滿意度 +4、公平性 +3",
+        "next_event": "隨著行政人力與空間的調整，校園內各棟大樓的資源分配也受到關注，特別是資源較少的偏遠學院學生開始要求更完善的日常支持。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "培訓校園服務與支援人力使服務量能提升，教職員生等待時間縮短；這項決策使問題改善 +7、滿意度 +4、公平性 +3，接續浮現「隨著行政人力與空間的調整，校園內各棟大樓的資源分配也受到關注，特別是資源較少的偏遠學院學生開始要求更完善的日常支持。」",
+        "metrics": {
+          "budget_remaining": 40,
+          "problem_improvement": 97,
+          "satisfaction": 85,
+          "fairness": 82
+        }
+      },
+      {
+        "year": 3,
+        "semester": 2,
+        "event": "隨著行政人力與空間的調整，校園內各棟大樓的資源分配也受到關注，特別是資源較少的偏遠學院學生開始要求更完善的日常支持。",
+        "resident": "林沐晴",
+        "role": "大學生",
+        "resident_trust": 51,
+        "resident_stress": 34,
+        "response": "規劃在各教學大樓增設小型綜合服務站，平衡全校資源",
+        "development": "盤點採購與合約，回收閒置預算",
+        "category": "財政",
+        "benefit": "財務透明度提升並釋出可運用預算",
+        "cause": "這項決策使問題改善 +9、滿意度 +5、公平性 +5",
+        "next_event": "偏遠學院學生發起連署，要求在各遠距大樓設立常設性的微型生活與醫療支援站，以解決長期以來資源分配不均的問題。",
+        "annual_challenge": "問題突破",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "盤點採購與合約，回收閒置預算使財務透明度提升並釋出可運用預算；這項決策使問題改善 +9、滿意度 +5、公平性 +5，接續浮現「偏遠學院學生發起連署，要求在各遠距大樓設立常設性的微型生活與醫療支援站，以解決長期以來資源分配不均的問題。」；年度挑戰「問題突破」完成，獲得 30 點基金獎勵",
+        "metrics": {
+          "budget_remaining": 42,
+          "problem_improvement": 100,
+          "satisfaction": 86,
+          "fairness": 88
+        }
+      },
+      {
+        "year": 4,
+        "semester": 1,
+        "event": "偏遠學院學生發起連署，要求在各遠距大樓設立常設性的微型生活與醫療支援站，以解決長期以來資源分配不均的問題。",
+        "resident": "李承恩",
+        "role": "通勤學生",
+        "resident_trust": 62,
+        "resident_stress": 53,
+        "response": "投入資金於偏遠大樓增設微型支援站，提供基本急救與日常諮詢",
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +5",
+        "next_event": "微型服務站與機動巡查的規劃引發教職員擔憂，教授與行政人員擔心額外的支援任務會加重教學與行政負擔。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +8、滿意度 +4、公平性 +5，接續浮現「微型服務站與機動巡查的規劃引發教職員擔憂，教授與行政人員擔心額外的支援任務會加重教學與行政負擔。」",
+        "metrics": {
+          "budget_remaining": 42,
+          "problem_improvement": 99,
+          "satisfaction": 87,
+          "fairness": 92
+        }
+      },
+      {
+        "year": 4,
+        "semester": 2,
+        "event": "微型服務站與機動巡查的規劃引發教職員擔憂，教授與行政人員擔心額外的支援任務會加重教學與行政負擔。",
+        "resident": "許雅雯",
+        "role": "教授",
+        "resident_trust": 70,
+        "resident_stress": 61,
+        "response": "提撥專款聘用校園安全與行政專職人員，不增加現有教職員負擔",
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +7、滿意度 +5、公平性 +4",
+        "next_event": "微型服務站與機動巡查的規劃引發教職員擔憂，教授與行政人員擔心額外的支援任務會加重教學與行政負擔。",
+        "annual_challenge": "安心學期",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +7、滿意度 +5、公平性 +4，接續浮現「微型服務站與機動巡查的規劃引發教職員擔憂，教授與行政人員擔心額外的支援任務會加重教學與行政負擔。」；年度挑戰「安心學期」完成，獲得 30 點基金獎勵",
+        "metrics": {
+          "budget_remaining": 44,
+          "problem_improvement": 99,
+          "satisfaction": 88,
+          "fairness": 95
+        }
+      },
+      {
+        "year": 5,
+        "semester": 1,
+        "event": "微型服務站與機動巡查的規劃引發教職員擔憂，教授與行政人員擔心額外的支援任務會加重教學與行政負擔。",
+        "resident": "周明哲",
+        "role": "教授",
+        "resident_trust": 65,
+        "resident_stress": 51,
+        "response": "設立專職管理中心並外包維護，完全不讓教授與行政人員負擔額外工作",
+        "development": "培訓校園服務與支援人力",
+        "category": "資源",
+        "benefit": "服務量能提升，教職員生等待時間縮短",
+        "cause": "這項決策使問題改善 +6、滿意度 +4、公平性 +3",
+        "next_event": "隨著微型支援站逐步建立，校園內各棟大樓的用電與水資源消耗顯著增加，後勤維護成本面臨考驗。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "培訓校園服務與支援人力使服務量能提升，教職員生等待時間縮短；這項決策使問題改善 +6、滿意度 +4、公平性 +3，接續浮現「隨著微型支援站逐步建立，校園內各棟大樓的用電與水資源消耗顯著增加，後勤維護成本面臨考驗。」",
+        "metrics": {
+          "budget_remaining": 39,
+          "problem_improvement": 100,
+          "satisfaction": 89,
+          "fairness": 99
+        }
+      },
+      {
+        "year": 5,
+        "semester": 2,
+        "event": "隨著微型支援站逐步建立，校園內各棟大樓的用電與水資源消耗顯著增加，後勤維護成本面臨考驗。",
+        "resident": "張家豪",
+        "role": "校園服務人員",
+        "resident_trust": 54,
+        "resident_stress": 45,
+        "response": "全面升級微型站的節能設備並增配太陽能板，降低長期水電開銷",
+        "development": "培訓校園服務與支援人力",
+        "category": "資源",
+        "benefit": "服務量能提升，教職員生等待時間縮短",
+        "cause": "這項決策使問題改善 +8、滿意度 +5、公平性 +4",
+        "next_event": "5年校務成果已完成",
+        "annual_challenge": "校園升級",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "培訓校園服務與支援人力使服務量能提升，教職員生等待時間縮短，五年改革進入成果盤點；年度挑戰「校園升級」完成，獲得 30 點基金獎勵",
+        "metrics": {
+          "budget_remaining": 35,
+          "problem_improvement": 100,
+          "satisfaction": 91,
+          "fairness": 100
+        }
+      }
+    ],
+    "yearly": [
+      {
+        "year": 1,
+        "satisfaction": 82,
+        "population": 10198,
+        "treasury": 699,
+        "score": 58,
+        "challenge": "信任社群",
+        "challenge_completed": false,
+        "challenge_reward": 0
+      },
+      {
+        "year": 2,
+        "satisfaction": 84,
+        "population": 10296,
+        "treasury": 553,
+        "score": 62,
+        "challenge": "永續校園",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 3,
+        "satisfaction": 86,
+        "population": 10394,
+        "treasury": 508,
+        "score": 66,
+        "challenge": "問題突破",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 4,
+        "satisfaction": 88,
+        "population": 10492,
+        "treasury": 534,
+        "score": 68,
+        "challenge": "安心學期",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 5,
+        "satisfaction": 91,
+        "population": 10590,
+        "treasury": 421,
+        "score": 69,
+        "challenge": "校園升級",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      }
+    ],
+    "challenges": [
+      {
+        "id": "trusted_community",
+        "title": "信任社群",
+        "description": "本年度結束時教職員生平均信任達到 58。",
+        "rule": "trust",
+        "year": 1,
+        "completed": false,
+        "reward": 30
+      },
+      {
+        "id": "green_campus",
+        "title": "永續校園",
+        "description": "本年度結束時平均資源存量達到 60。",
+        "rule": "resources",
+        "year": 2,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "solve_root_cause",
+        "title": "問題突破",
+        "description": "本年度結束時問題改善度達到 60。",
+        "rule": "problem",
+        "year": 3,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "healthy_semester",
+        "title": "安心學期",
+        "description": "本年度結束時教職員生平均壓力不高於 52。",
+        "rule": "stress",
+        "year": 4,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "campus_builder",
+        "title": "校園升級",
+        "description": "至少完成一項校園建設。",
+        "rule": "buildings",
+        "year": 5,
+        "completed": true,
+        "reward": 30
+      }
+    ],
+    "titles": [
+      {
+        "id": "campus_favorite",
+        "name": "人氣校長",
+        "description": "教職員生滿意度達到 78。",
+        "earned_turn": 0
+      },
+      {
+        "id": "equity_champion",
+        "name": "公平推手",
+        "description": "公平性達到 75。",
+        "earned_turn": 3
+      },
+      {
+        "id": "problem_solver",
+        "name": "問題終結者",
+        "description": "問題改善度達到 75。",
+        "earned_turn": 3
+      },
+      {
+        "id": "challenge_collector",
+        "name": "挑戰收藏家",
+        "description": "完成至少三項年度挑戰。",
+        "earned_turn": 8
+      },
+      {
+        "id": "green_guardian",
+        "name": "永續守護者",
+        "description": "平均資源存量達到 70。",
+        "earned_turn": 9
+      },
+      {
+        "id": "trusted_leader",
+        "name": "傾聽者",
+        "description": "教職員生平均信任達到 58。",
+        "earned_turn": 9
+      }
+    ],
+    "population": {
+      "students": 9400,
+      "faculty": 780,
+      "staff": 410
+    },
+    "resources": {
+      "energy": 68,
+      "water": 72,
+      "staffing": 85
+    },
+    "buildings": {
+      "library": 1,
+      "housing": 0,
+      "wellbeing": 0
+    },
+    "building_labels": {
+      "library": "學習空間",
+      "housing": "宿舍",
+      "wellbeing": "健康支持中心"
+    },
+    "policies": {
+      "training": 3
+    },
+    "policy_labels": {
+      "scholarships": "助學支持",
+      "workload": "簡政減負",
+      "accessibility": "無障礙與多語服務",
+      "conservation": "節能節水",
+      "training": "服務人力培訓"
+    },
+    "treasury": 421,
+    "residents": [
+      {
+        "id": "lin_muqing",
+        "name": "林沐晴",
+        "role": "大學生",
+        "group": "students",
+        "concern": "課業與生活平衡",
+        "personality": "熱心、容易替別人操心",
+        "goal": "成立讓新生安心求助的同儕社群",
+        "portrait": "portrait-lin-muqing.svg",
+        "satisfaction": 90,
+        "trust": 51,
+        "stress": 34
+      },
+      {
+        "id": "chen_yian",
+        "name": "陳以安",
+        "role": "研究生",
+        "group": "students",
+        "concern": "研究資源與空間",
+        "personality": "安靜、做事有條理",
+        "goal": "完成研究並爭取海外交流機會",
+        "portrait": "portrait-chen-yian.svg",
+        "satisfaction": 90,
+        "trust": 53,
+        "stress": 45
+      },
+      {
+        "id": "zhou_mingzhe",
+        "name": "周明哲",
+        "role": "教授",
+        "group": "faculty",
+        "concern": "教學與研究負荷",
+        "personality": "嚴謹、願意提攜後輩",
+        "goal": "建立跨院合作的永續研究團隊",
+        "portrait": "portrait-zhou-mingzhe.svg",
+        "satisfaction": 91,
+        "trust": 65,
+        "stress": 51
+      },
+      {
+        "id": "xu_yawen",
+        "name": "許雅雯",
+        "role": "教授",
+        "group": "faculty",
+        "concern": "研究支持與合作",
+        "personality": "好奇、擅長傾聽",
+        "goal": "設計更多學生參與的實作課程",
+        "portrait": "portrait-xu-yawen.svg",
+        "satisfaction": 92,
+        "trust": 70,
+        "stress": 61
+      },
+      {
+        "id": "wang_sihan",
+        "name": "王思涵",
+        "role": "行政人員",
+        "group": "staff",
+        "concern": "行政流程與人力",
+        "personality": "細心、喜歡把事情安排妥當",
+        "goal": "讓校園行政服務更簡單又友善",
+        "portrait": "portrait-wang-sihan.svg",
+        "satisfaction": 99,
+        "trust": 50,
+        "stress": 32
+      },
+      {
+        "id": "zhang_jiahao",
+        "name": "張家豪",
+        "role": "校園服務人員",
+        "group": "staff",
+        "concern": "服務品質與工作條件",
+        "personality": "爽朗、遇到問題就想動手處理",
+        "goal": "改善校園維護工具與安全設備",
+        "portrait": "portrait-zhang-jiahao.svg",
+        "satisfaction": 84,
+        "trust": 54,
+        "stress": 45
+      },
+      {
+        "id": "li_chengen",
+        "name": "李承恩",
+        "role": "通勤學生",
+        "group": "students",
+        "concern": "交通與校園安全",
+        "personality": "務實、重視時間安排",
+        "goal": "組成安全通勤倡議小組",
+        "portrait": "portrait-li-chengen.svg",
+        "satisfaction": 90,
+        "trust": 62,
+        "stress": 53
+      },
+      {
+        "id": "huang_kexin",
+        "name": "黃可欣",
+        "role": "國際學生",
+        "group": "students",
+        "concern": "友善環境與資訊取得",
+        "personality": "勇於嘗試、喜歡認識新朋友",
+        "goal": "籌辦讓不同文化交流的校園活動",
+        "portrait": "portrait-huang-kexin.svg",
+        "satisfaction": 90,
+        "trust": 66,
+        "stress": 65
+      }
+    ],
+    "forecast": {
+      "next_year_population": 10688,
+      "next_year_satisfaction": 94,
+      "risk": "目前趨勢穩定，可逐步擴大長期建設"
+    }
   }
 ]
