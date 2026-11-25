@@ -1,47 +1,70 @@
 {% extends "base.html" %}
-{% block page_class %}plans-page{% endblock %}
 {% block content %}
-<section>
-  <div class="page-heading visual-heading">
-    <div class="visual-copy">
-      <span class="eyebrow">{% if demo_mode %}離線示範方案{% else %}AI 校務方案{% endif %}</span>
+<section class="strategy-selection">
+  <header class="strategy-intro game-panel">
+    <div>
+      <p class="game-kicker">FIVE-YEAR MASTER PLAN</p>
+      <span class="eyebrow">{% if demo_mode %}離線示範策略{% else %}AI 校務策略提案{% endif %}</span>
       <h1>{{ scenario_title }}</h1>
-      <p>起始問題：{{ proposal }}</p>
-      <div class="notice campus-profile-note"><strong>本局開局：{{ campus_profile.name }}</strong><br>{{ campus_profile.description }}</div>
-      <div class="notice campus-profile-note"><strong>本局人物主線：{{ story_arc.title }}</strong><br>{{ story_arc.resident_name }}希望{{ story_arc.goal }}；你的選擇會影響故事結局。</div>
-      <div class="phase-complete"><span aria-hidden="true">✓</span>{% if demo_mode %}示範內容依問題整理，並準備{% else %}AI 已依問題整理方案，並準備{% endif %} {{ event_count }} 個起始與延伸事件。</div>
+      <p class="strategy-proposal"><strong>本局議題</strong> {{ proposal }}</p>
+      <p class="strategy-setting"><strong>校園背景｜{{ campus_profile.name }}</strong> · {{ campus_profile.description }}</p>
+      <p class="strategy-setting"><strong>人物主線｜{{ story_arc.title }}</strong> · {{ story_arc.resident_name }}希望{{ story_arc.goal }}</p>
+      <div class="phase-complete"><span aria-hidden="true">✓</span>已準備 {{ event_count }} 個起始事件 · 每學期將依決策延伸</div>
     </div>
-    <img class="page-illustration" src="{{ url_for('static', filename='plans-illustration.svg') }}" alt="" aria-hidden="true">
+    <div class="strategy-intro-seal" aria-hidden="true"><span>5</span><small>YEAR<br>TERM</small></div>
+  </header>
+
+  <div class="strategy-briefing">
+    <div><p class="game-kicker">CHOOSE YOUR DIRECTION</p><h2>為校園選擇五年發展方向</h2></div>
+    <p>兩項策略及其效果由 AI 依本局問題產生。比較即時效果與代價，再決定任期的優先順序。</p>
   </div>
-  <p class="notice">選擇一項五年發展方向。後續事件與決策選項會參考你的問題、校務狀態及歷次選擇動態生成；每年也會遇到不同校務挑戰。</p>
-  <div class="grid">
+
+  <div class="strategy-grid">
     {% for plan in recommendations %}
-    <article class="card plan-card">
+    <article class="card plan-card game-panel strategy-card strategy-card-{{ loop.index }}">
+      <div class="strategy-card-art" aria-hidden="true">
+        {% if loop.first %}
+        <svg viewBox="0 0 220 130"><path d="M22 104h176M42 104V59l32-18 33 18v45m3 0V48l33-22 34 22v56"/><path d="M54 68h15v14H54zm31 0h15v14H85zm38-5h17v18h-17zm33-8h17v18h-17zM89 104V86h20v18"/></svg>
+        {% else %}
+        <svg viewBox="0 0 220 130"><circle cx="107" cy="65" r="44"/><circle cx="107" cy="65" r="27"/><path d="M107 13v19m0 66v19M55 65H36m123 0h25M70 28l13 13m48 48 13 13m0-74-13 13m-48 48L70 102"/><path d="m107 47 7 18-7 18-7-18z"/></svg>
+        {% endif %}
+        <span>STRATEGY {{ "%02d"|format(loop.index) }}</span>
+      </div>
       <div class="plan-card-top">
-        <span class="plan-index">{% if demo_mode %}示範方案{% else %}AI 建議方案{% endif %} {{ "%02d"|format(loop.index) }}</span>
+        <span class="plan-index">{% if demo_mode %}離線示範{% else %}五年校務提案{% endif %}</span>
         <span class="strategy-tag">{{ plan.strategy }}</span>
       </div>
-      <h2>{{ plan.title }}</h2>
+      <h3 class="strategy-card-title">{{ plan.title }}</h3>
       <p class="plan-description">{{ plan.description }}</p>
-      <div class="recommendation-note"><strong>推薦理由</strong><p>{{ plan.reason }}</p></div>
-      <div class="effect-list" aria-label="方案起始效果">
-        {% for name, value in plan.effects.items() %}
-        <div class="effect-row">
-          <span class="effect-label">{{ {"budget_remaining": "財政", "problem_improvement": "問題改善", "satisfaction": "滿意度", "fairness": "公平性"}.get(name, name) }}</span>
-          <span class="effect-track" aria-hidden="true">
-            <span class="effect-axis"></span>
-            <span class="effect-fill {% if value >= 0 %}is-positive{% else %}is-negative{% endif %}" style="--effect-width: {{ [value|abs * 5, 100]|min }}%"></span>
-          </span>
-          <strong class="effect-value {% if value >= 0 %}is-positive{% else %}is-negative{% endif %}">{{ "%+d"|format(value) }}</strong>
+      <div class="recommendation-note"><strong>策略理由</strong><p>{{ plan.reason }}</p></div>
+
+      <section class="strategy-effects" aria-label="此策略的實際效果">
+        <div class="strategy-effects-heading"><strong>預期指標變化</strong><span>遊戲假設</span></div>
+        <div class="effect-list">
+          {% for name, value in plan.effects.items() %}
+          <div class="effect-row">
+            <span class="effect-label">{{ {"budget_remaining": "財政", "problem_improvement": "問題改善", "satisfaction": "滿意度", "fairness": "公平性"}.get(name, name) }}</span>
+            <span class="effect-track" aria-hidden="true"><span class="effect-axis"></span><span class="effect-fill {% if value >= 0 %}is-positive{% else %}is-negative{% endif %}" style="--effect-width: {{ [value|abs * 5, 100]|min }}%"></span></span>
+            <strong class="effect-value {% if value > 0 %}is-positive{% elif value < 0 %}is-negative{% else %}is-neutral{% endif %}">{{ "%+d"|format(value) }}</strong>
+          </div>
+          {% endfor %}
         </div>
-        {% endfor %}
+      </section>
+
+      <div class="strategy-tradeoff">
+        <strong>本策略取捨</strong>
+        <p>
+          正向效果：{% for name, value in plan.effects.items() if value > 0 %}{{ {"budget_remaining": "財政", "problem_improvement": "問題改善", "satisfaction": "滿意度", "fairness": "公平性"}.get(name, name) }} {{ "%+d"|format(value) }}{% if not loop.last %}、{% endif %}{% else %}沒有正向指標效果{% endfor %}
+          ；代價：{% for name, value in plan.effects.items() if value < 0 %}{{ {"budget_remaining": "財政", "problem_improvement": "問題改善", "satisfaction": "滿意度", "fairness": "公平性"}.get(name, name) }} {{ "%+d"|format(value) }}{% if not loop.last %}、{% endif %}{% else %}沒有負向指標效果{% endfor %}
+        </p>
       </div>
-      <form action="/campus/plan" method="post">
+      <form action="/campus/plan" method="post" data-game-submit data-pending-message="正在建立五年校園經營，請稍候。">
         <input type="hidden" name="plan_id" value="{{ plan.plan_id }}">
-        <button type="submit">採用此五年策略 <span aria-hidden="true">→</span></button>
+        <button class="strategy-choose-button" type="submit">採用此五年策略 <span aria-hidden="true">→</span></button>
       </form>
     </article>
     {% endfor %}
   </div>
+  <p class="strategy-disclaimer">策略效果、事件與評分只用於遊戲模擬，不代表真實政策預測。選擇後，原有後端規則會負責計算所有遊戲狀態。</p>
 </section>
 {% endblock %}

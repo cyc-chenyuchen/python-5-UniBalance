@@ -3,20 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>校園改革模擬平台</title>
+  <title>UniBalance · 校園經營模擬</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='game-overhaul.css') }}">
 </head>
 <body class="{% block page_class %}home-page{% endblock %}">
   <header class="site-header">
     <a class="brand" href="/">
       <span class="brand-mark" aria-hidden="true">U</span>
-      <span>校園改革模擬平台</span>
+      <span>UniBalance <small>校園經營模擬</small></span>
     </a>
     <nav class="site-nav" aria-label="主要導覽">
       <a href="/">校務經營</a>
-      <a href="/records">歷史結果</a>
-      <a href="/titles">稱號收藏</a>
+      <a href="/records">任務紀錄</a>
+      <a href="/titles">稱號圖鑑</a>
       <a href="/leaderboard">排行榜</a>
+      <a href="/characters">角色</a>
     </nav>
     {% if demo_mode %}<div class="demo-badge">離線示範模式</div>{% endif %}
   </header>
@@ -25,5 +27,6 @@
   </main>
   <footer class="site-footer">讓每個校園觀察，都成為更好改變的起點。</footer>
   <script src="{{ url_for('static', filename='game-ui.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='campus-game.js') }}" defer></script>
 </body>
 </html>

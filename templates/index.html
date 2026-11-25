@@ -1,47 +1,85 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="hero home-hero">
-  <div class="hero-copy">
-    <span class="eyebrow">五年校園經營模擬</span>
-    <h1>從一個校園問題，<br>經營大學的下一個五年</h1>
-    <p>提出一個校園問題，讓 AI 依據你的議題規劃策略，在五年經營中生成事件、年度挑戰與稱號收藏。</p>
+<section class="game-lobby-hero" aria-labelledby="lobby-title">
+  <div class="lobby-copy">
+    <p class="game-kicker">CAMPUS MANAGEMENT SIMULATION</p>
+    <h1 id="lobby-title">UniBalance</h1>
+    <p class="lobby-subtitle">把校園的一個問題，經營成一所更好的大學。</p>
+    <p class="lobby-description">選擇五年策略，在有限基金中平衡建設、資源與不同校園成員的需要。每個決策都會寫進你的校務年表。</p>
+    <div class="lobby-facts" aria-label="遊戲規模">
+      <span><strong>05</strong> 年經營</span>
+      <span><strong>10</strong> 個學期</span>
+      <span><strong>20</strong> 種稱號</span>
+    </div>
+    <div class="lobby-actions">
+      <a class="button lobby-start-button" href="#new-campaign">開始新遊戲 <span aria-hidden="true">→</span></a>
+      <a class="button button-secondary" href="/records">任務紀錄</a>
+    </div>
   </div>
-  <img class="hero-illustration" src="{{ url_for('static', filename='campus-illustration.svg') }}" alt="" aria-hidden="true">
+  <div class="lobby-scene">
+    <div class="scene-sun" aria-hidden="true"></div>
+    <img src="{{ url_for('static', filename='campus-illustration.svg') }}" alt="" aria-hidden="true">
+    <span class="scene-caption">A CAMPUS, SHAPED BY YOUR CHOICES</span>
+    <span class="scene-stamp" aria-hidden="true">校務<br>模擬</span>
+  </div>
+  <div class="lobby-promo-ribbon">
+    <span class="promo-dot" aria-hidden="true"></span>
+    <span>一所大學，五年時間，無數種經營選擇</span>
+    <span class="promo-seal">學期制經營</span>
+  </div>
 </section>
-<div class="lobby-grid">
-  <section class="card mission-card" id="five-year-campaign">
+
+<section class="lobby-feature-row" aria-label="遊戲特色">
+  <article class="lobby-feature">
+    <span class="feature-index">01</span>
+    <div><h2>選擇經營方向</h2><p>比較兩個依校園議題生成的五年策略。</p></div>
+  </article>
+  <article class="lobby-feature">
+    <span class="feature-index">02</span>
+    <div><h2>面對每學期事件</h2><p>聆聽角色處境，在即時決策與長期影響間取捨。</p></div>
+  </article>
+  <article class="lobby-feature">
+    <span class="feature-index">03</span>
+    <div><h2>打造校園未來</h2><p>管理基金、建設、政策與資源，完成年度挑戰。</p></div>
+  </article>
+</section>
+
+<div class="lobby-game-grid">
+  <section class="card mission-card game-panel" id="new-campaign">
     <div class="mission-heading">
-      <span class="mission-symbol" aria-hidden="true">01</span>
+      <span class="mission-symbol game-seal" aria-hidden="true">UB</span>
       <div>
-        <p class="step">單一問題入口 · 10 學期 · 5 年</p>
-        <h2>開始校務經營</h2>
+        <p class="game-kicker">NEW CAMPAIGN · 10 SEMESTERS</p>
+        <h2>建立你的校務任期</h2>
       </div>
     </div>
-    <p>你只需輸入一次問題；AI 會產生相關策略與延伸事件。每年還有不同挑戰，完成後可獲得基金獎勵並解鎖稱號。</p>
-    <div class="notice privacy-note">為保障隱私，請勿輸入姓名、電話、學號或其他個人資料。</div>
-    <form action="/campus/start" method="post" data-game-submit data-pending-message="正在分析問題並生成 AI 校務方案，請稍候。">
-      <label for="proposal">你想解決的校園問題 <span class="step">1～300 字</span></label>
+    <p>從你觀察到的校園問題開始。AI 將為此議題提出策略，接著由你帶領五年經營。</p>
+    <div class="notice privacy-note">請勿輸入姓名、電話、學號或其他個人資料。遊戲結果僅為模擬，不代表真實政策預測。</div>
+    <form action="/campus/start" method="post" data-game-submit data-pending-message="正在準備校務策略與校園事件，請稍候。">
+      <label for="proposal">本任期優先處理的校園問題 <span class="step">1～300 字</span></label>
       <textarea id="proposal" name="proposal" maxlength="300" required placeholder="例如：圖書館尖峰時段座位不足，許多學生找不到座位。"></textarea>
-      <div class="lobby-actions">
-        <button type="submit">AI 分析並開始經營 <span aria-hidden="true">→</span></button>
-        <a class="button button-secondary" href="/records">瀏覽歷史任務</a>
-        <a class="button button-secondary" href="/titles">稱號收藏</a>
-        <a class="button button-secondary" href="/leaderboard">校務排行榜</a>
-        <a class="button button-secondary" href="/characters">認識校園角色</a>
+      <div class="lobby-submit-row">
+        <button type="submit">開始校務任期 <span aria-hidden="true">→</span></button>
+        <span class="submit-status" data-submit-status role="status" hidden></span>
       </div>
-      <p class="submit-status" data-submit-status role="status" hidden></p>
     </form>
   </section>
-  <aside class="card mission-guide">
-    <p class="eyebrow">任務流程</p>
-    <h2>五年校務挑戰</h2>
+
+  <aside class="card mission-guide game-panel">
+    <p class="game-kicker">HOW TO PLAY</p>
+    <h2>你的五年任期</h2>
     <ol class="mission-steps">
-      <li><span>01</span><div><strong>AI 方案</strong><small>依照輸入問題提供校務策略</small></div></li>
-      <li><span>02</span><div><strong>動態事件</strong><small>每學期處理連鎖與突發議題</small></div></li>
-      <li><span>03</span><div><strong>五年經營</strong><small>完成年度挑戰，經營建設、財政與教職員生關係</small></div></li>
+      <li><span>01</span><div><strong>制定策略</strong><small>從兩個校務方向中選擇一項</small></div></li>
+      <li><span>02</span><div><strong>處理學期事件</strong><small>回應角色議題並選擇一項校務措施</small></div></li>
+      <li><span>03</span><div><strong>結算校務成果</strong><small>完成年度挑戰，查看五年決策年表</small></div></li>
     </ol>
-    <p class="guide-note">每局會抽取不同年度挑戰；累積稱號並與歷次五年校務成果比較。</p>
-    <p class="guide-note">AI 事件及效果為遊戲模擬內容，不代表真實校務建議或預測。</p>
+    <p class="guide-note">每局有不同校園背景、人物主線與年度挑戰。策略效果是遊戲假設，並非真實政策預測。</p>
+    <nav class="lobby-library" aria-label="遊戲圖鑑與紀錄">
+      <a href="/titles"><span aria-hidden="true">✦</span>稱號圖鑑</a>
+      <a href="/leaderboard"><span aria-hidden="true">↗</span>校務排行榜</a>
+      <a href="/characters"><span aria-hidden="true">♧</span>校園角色</a>
+      <a href="/records"><span aria-hidden="true">▤</span>歷史任務</a>
+    </nav>
   </aside>
 </div>
 {% endblock %}

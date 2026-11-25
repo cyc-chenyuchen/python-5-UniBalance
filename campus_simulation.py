@@ -472,6 +472,110 @@ def calculate_campaign_averages(resources, residents):
     }
 
 
+def campus_map_context(state):
+    buildings = state.get("buildings", {})
+    resources = state.get("resources", {})
+    policies = state.get("policies", {})
+    history = state.get("history", [])
+    residents = state.get("residents", [])
+    active_policies = [
+        {"name": POLICY_LABELS[key], "level": level}
+        for key, level in policies.items()
+        if key in POLICY_LABELS and level > 0
+    ]
+    development_by_building = {
+        item["building"]: item
+        for item in DEVELOPMENTS
+        if item.get("building")
+    }
+    live_campaign = "turn" in state
+    available_ids = {
+        item["id"] for item in available_developments(state)
+    } if live_campaign else set()
+    facilities = {}
+
+    for building_id, label in BUILDING_LABELS.items():
+        level = buildings.get(building_id, 0)
+        development = development_by_building[building_id]
+        completed = [
+            f"第 {item.get('year', '?')} 年第 {item.get('semester', '?')} 學期"
+            for item in history
+            if item.get("development") == development["title"]
+        ]
+        if level >= 3:
+            next_step = "已達目前可建設的最高等級。"
+        else:
+            availability = (
+                "目前可選"
+                if live_campaign and development["id"] in available_ids
+                else (
+                    "本局結果不提供下一步選擇"
+                    if not live_campaign
+                    else "目前未列入可選措施"
+                )
+            )
+            next_step = (
+                f"升至 Lv.{level + 1}：{development['title']}；"
+                f"{development['benefit']}（{availability}）。"
+            )
+        facilities[building_id] = {
+            "name": label,
+            "level": level,
+            "status": (
+                "尚未建設" if level == 0
+                else "已達最高等級" if level >= 3
+                else f"已建設 · 第 {level} 級"
+            ),
+            "description": development["benefit"],
+            "next_step": next_step,
+            "completed": completed[-3:],
+        }
+
+    event = state.get("current_event")
+    issue = None
+    if isinstance(event, dict):
+        resident = event.get("resident", {})
+        issue = {
+            "label": "本學期議題",
+            "event": event.get("event", ""),
+            "resident": resident.get("name", ""),
+            "concern": event.get("resident_concern", resident.get("concern", "")),
+        }
+    elif history:
+        last_event = history[-1]
+        resident = next(
+            (
+                item for item in residents
+                if item.get("name") == last_event.get("resident")
+            ),
+            {},
+        )
+        issue = {
+            "label": "最後一學期議題",
+            "event": last_event.get("event", ""),
+            "resident": last_event.get("resident", ""),
+            "concern": resident.get("concern", ""),
+        }
+
+    resource_average = (
+        sum(resources.values()) / len(resources) if resources else 0
+    )
+    return {
+        "facilities": facilities,
+        "resources": dict(resources),
+        "resource_labels": RESOURCE_LABELS,
+        "resource_average": round(resource_average, 1),
+        "resource_status": (
+            "資源需要關注" if resource_average < 35
+            else "資源尚有改善空間" if resource_average < 60
+            else "資源狀態穩定"
+        ),
+        "policies": active_policies,
+        "issue": issue,
+        "live_campaign": live_campaign,
+    }
+
+
 def _challenge_is_complete(state, challenge):
     rule = challenge["rule"]
     if rule == "treasury":
@@ -713,7 +817,17 @@ def available_developments(state):
 def campaign_context(state):
     turn = state["turn"]
     residents = state["residents"]
+    history = state["history"]
     story_arc = dict(state["story_arc"])
+    previous_metrics = (
+        history[-2]["metrics"]
+        if len(history) > 1
+        else state["initial_metrics"]
+    )
+    last_metric_changes = {
+        name: state["metrics"][name] - previous_metrics[name]
+        for name in state["metrics"]
+    } if history else {}
     if story_arc["stage"] == 0:
         story_arc["support_label"] = "故事即將展開"
     elif story_arc["support_score"] >= 18:
@@ -738,6 +852,7 @@ def campaign_context(state):
         "treasury": state["treasury"],
         "population": dict(state["population"]),
         "resources": dict(state["resources"]),
+        "campus_map": campus_map_context(state),
         "resource_labels": RESOURCE_LABELS,
         "buildings": dict(state["buildings"]),
         "building_labels": BUILDING_LABELS,
@@ -745,7 +860,9 @@ def campaign_context(state):
         "policy_labels": POLICY_LABELS,
         "developments": available_developments(state),
         "residents": residents,
-        "history": state["history"],
+        "history": history,
+        "last_outcome": history[-1] if history else None,
+        "last_metric_changes": last_metric_changes,
         "yearly": state["yearly"],
         "current_challenge": state["challenges"][turn // SEMESTERS_PER_YEAR],
         "challenges": state["challenges"],

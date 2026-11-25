@@ -1,0 +1,195 @@
+<section class="campus-map-card game-panel" aria-labelledby="campus-map-title">
+  <div class="game-panel-heading">
+    <div>
+      <p class="game-kicker">CAMPUS OVERVIEW</p>
+      <h2 id="campus-map-title">我的校園</h2>
+    </div>
+    <span class="map-live-tag"><i aria-hidden="true"></i> {{ "即時校務狀態" if campus_map.live_campaign else "五年結算狀態" }}</span>
+  </div>
+
+  <div class="campus-map-layout">
+    <div class="campus-map-frame" data-resource-state="{{ 'low' if campus_map.resource_average < 35 else 'high' if campus_map.resource_average >= 70 else 'steady' }}">
+      <svg class="interactive-campus-map" viewBox="0 0 1000 620" role="group" aria-labelledby="campus-map-svg-title campus-map-svg-description">
+        <title id="campus-map-svg-title">UniBalance 校園經營地圖</title>
+        <desc id="campus-map-svg-description">可選取圖書館學習空間、宿舍及健康支持中心查看實際建設等級。教學大樓、活動中心、操場與綠地為場景插畫，不代表可升級設施。</desc>
+        <defs>
+          <pattern id="campus-map-grid" width="34" height="34" patternUnits="userSpaceOnUse">
+            <path d="M34 0H0V34" fill="none" stroke="#766f5f" stroke-opacity=".055" stroke-width="1"/>
+          </pattern>
+          <linearGradient id="campus-map-ground" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0" stop-color="#f2eee3"/>
+            <stop offset="1" stop-color="#e8e5d7"/>
+          </linearGradient>
+        </defs>
+        <rect width="1000" height="620" rx="24" fill="url(#campus-map-ground)"/>
+        <rect width="1000" height="620" rx="24" fill="url(#campus-map-grid)"/>
+        <path class="map-park" d="M32 380c95-58 161-23 222 10 54 30 88 31 130 2 50-34 114-30 155 2 41 33 83 32 126-1 48-38 123-38 303 5v187H32Z"/>
+        <path class="map-water" d="M737 70c71-28 151-11 184 29 24 30 10 64-21 78-49 22-98 5-153 14-50 9-91-7-94-41-3-31 31-63 84-80Z"/>
+
+        <g class="map-roads" aria-hidden="true">
+          <path d="M53 324C220 315 286 359 414 355c132-4 184-65 281-56 95 8 135 73 252 65"/>
+          <path d="M485 44c-20 101 26 148 15 235-9 68-56 97-40 167 9 40 49 73 43 130"/>
+          <path d="M135 130c97 58 124 105 145 179m454 125c-6-58 24-105 79-145"/>
+        </g>
+        <g class="map-path-markings" aria-hidden="true">
+          <path d="M53 324C220 315 286 359 414 355c132-4 184-65 281-56 95 8 135 73 252 65"/>
+          <path d="M485 44c-20 101 26 148 15 235-9 68-56 97-40 167 9 40 49 73 43 130"/>
+        </g>
+
+        <g class="map-decorative" aria-hidden="true">
+          <g class="map-building-silhouette" transform="translate(82 82)">
+            <rect x="0" y="23" width="176" height="104" rx="8"/>
+            <path d="M-9 24 88 0l98 24"/>
+            <path class="map-building-windows" d="M20 46h24v23H20zm43 0h24v23H63zm43 0h24v23h-24zm43 0h16v23h-16zM20 83h24v25H20zm43 0h24v25H63zm43 0h24v25h-24zm43 0h16v25h-16z"/>
+            <text x="88" y="151" text-anchor="middle">教學大樓</text>
+          </g>
+          <g class="map-building-silhouette" transform="translate(707 121)">
+            <rect x="0" y="19" width="155" height="88" rx="8"/>
+            <path d="M-7 20 77 0l85 20"/>
+            <path class="map-building-windows" d="M18 42h20v19H18zm38 0h20v19H56zm38 0h20v19H94zm38 0h9v19h-9zM18 73h20v20H18zm38 0h20v20H56zm38 0h20v20H94zm38 0h9v20h-9z"/>
+            <text x="77" y="132" text-anchor="middle">活動中心</text>
+          </g>
+          <g class="map-field" transform="translate(735 414)">
+            <rect width="201" height="121" rx="48"/>
+            <rect x="12" y="12" width="177" height="97" rx="39"/>
+            <path d="M100 13v95M56 13v23a21 21 0 0 0 0 42v31m88-96v23a21 21 0 0 1 0 42v31"/>
+            <circle cx="100" cy="61" r="20"/>
+            <text x="100" y="147" text-anchor="middle">操場</text>
+          </g>
+          <g class="map-rest-area" transform="translate(92 459)">
+            <path d="M0 22h90M45 22v31m-24 0h48m-44 0-9 20m45-20 9 20"/>
+            <circle cx="18" cy="3" r="15"/><circle cx="72" cy="0" r="17"/>
+            <text x="45" y="97" text-anchor="middle">休憩綠地</text>
+          </g>
+          <g class="map-tree" aria-hidden="true">
+            <circle cx="301" cy="117" r="20"/><circle cx="326" cy="116" r="16"/><path d="M314 131v20"/>
+            <circle cx="630" cy="345" r="21"/><circle cx="655" cy="343" r="16"/><path d="M642 359v18"/>
+            <circle cx="190" cy="403" r="17"/><circle cx="211" cy="402" r="14"/><path d="M201 416v18"/>
+            <circle cx="897" cy="306" r="20"/><circle cx="921" cy="303" r="16"/><path d="M909 319v19"/>
+            <circle cx="386" cy="502" r="16"/><circle cx="406" cy="501" r="13"/><path d="M396 514v16"/>
+          </g>
+          <g class="map-walkers">
+            <circle cx="380" cy="342" r="5"/><path d="m380 348-3 15m3-10-8 7m8-7 8 5m-11 5-5 9m8-9 6 9"/>
+            <circle cx="560" cy="409" r="5"/><path d="m560 415-3 15m3-10-8 7m8-7 8 5m-11 5-5 9m8-9 6 9"/>
+          </g>
+        </g>
+
+        {% set library = campus_map.facilities.library %}
+        <g class="map-facility is-selected" data-facility-id="library" data-facility-name="{{ library.name }}" data-facility-level="{{ library.level }}" data-facility-status="{{ library.status }}" data-facility-description="{{ library.description }}" data-facility-next="{{ library.next_step }}" data-facility-completed="{{ library.completed|join('、') if library.completed else '本局尚未完成此項建設。' }}" data-facility-policies="{{ campus_map.policies|map(attribute='name')|join('、') if campus_map.policies else '目前尚無已推動政策。' }}" data-facility-issue="{{ campus_map.issue.event ~ ' · ' ~ campus_map.issue.resident ~ '：' ~ campus_map.issue.concern if campus_map.issue else '目前沒有進行中的事件。' }}" role="button" tabindex="0" aria-pressed="true" aria-label="{{ library.name }}，第 {{ library.level }} 級，{{ library.status }}">
+          <rect class="map-hit-area" x="270" y="170" width="232" height="157" rx="17"/>
+          <path class="map-facility-shadow" d="M292 214h184v94H292z"/>
+          <path class="map-facility-roof" d="m281 211 102-39 103 39"/>
+          <rect class="map-facility-wall" x="292" y="211" width="184" height="97" rx="5"/>
+          <rect class="map-facility-door" x="368" y="266" width="29" height="42" rx="3"/>
+          <g class="map-level-markers" aria-hidden="true">
+            <rect class="{% if library.level >= 1 %}is-active{% endif %}" x="310" y="227" width="28" height="24" rx="4"/>
+            <rect class="{% if library.level >= 1 %}is-active{% endif %}" x="350" y="227" width="28" height="24" rx="4"/>
+            <rect class="{% if library.level >= 2 %}is-active{% endif %}" x="390" y="227" width="28" height="24" rx="4"/>
+            <rect class="{% if library.level >= 2 %}is-active{% endif %}" x="430" y="227" width="28" height="24" rx="4"/>
+            <rect class="{% if library.level >= 3 %}is-active{% endif %}" x="310" y="263" width="28" height="24" rx="4"/>
+            <rect class="{% if library.level >= 3 %}is-active{% endif %}" x="430" y="263" width="28" height="24" rx="4"/>
+          </g>
+          <rect class="map-name-plate" x="297" y="315" width="174" height="31" rx="12"/>
+          <text class="map-facility-label" x="384" y="336" text-anchor="middle">圖書館／學習空間</text>
+          <text class="map-level-label" x="384" y="193" text-anchor="middle">LV. {{ library.level }} / 3</text>
+        </g>
+
+        {% set housing = campus_map.facilities.housing %}
+        <g class="map-facility" data-facility-id="housing" data-facility-name="{{ housing.name }}" data-facility-level="{{ housing.level }}" data-facility-status="{{ housing.status }}" data-facility-description="{{ housing.description }}" data-facility-next="{{ housing.next_step }}" data-facility-completed="{{ housing.completed|join('、') if housing.completed else '本局尚未完成此項建設。' }}" data-facility-policies="{{ campus_map.policies|map(attribute='name')|join('、') if campus_map.policies else '目前尚無已推動政策。' }}" data-facility-issue="{{ campus_map.issue.event ~ ' · ' ~ campus_map.issue.resident ~ '：' ~ campus_map.issue.concern if campus_map.issue else '目前沒有進行中的事件。' }}" role="button" tabindex="0" aria-pressed="false" aria-label="{{ housing.name }}，第 {{ housing.level }} 級，{{ housing.status }}">
+          <rect class="map-hit-area" x="558" y="127" width="164" height="189" rx="17"/>
+          <path class="map-facility-shadow" d="M576 169h127v128H576z"/>
+          <path class="map-facility-roof" d="m567 170 72-36 73 36"/>
+          <rect class="map-facility-wall" x="576" y="170" width="127" height="127" rx="5"/>
+          <g class="map-level-markers" aria-hidden="true">
+            <rect class="{% if housing.level >= 1 %}is-active{% endif %}" x="592" y="186" width="24" height="23" rx="4"/>
+            <rect class="{% if housing.level >= 1 %}is-active{% endif %}" x="627" y="186" width="24" height="23" rx="4"/>
+            <rect class="{% if housing.level >= 2 %}is-active{% endif %}" x="662" y="186" width="24" height="23" rx="4"/>
+            <rect class="{% if housing.level >= 2 %}is-active{% endif %}" x="592" y="220" width="24" height="23" rx="4"/>
+            <rect class="{% if housing.level >= 2 %}is-active{% endif %}" x="627" y="220" width="24" height="23" rx="4"/>
+            <rect class="{% if housing.level >= 3 %}is-active{% endif %}" x="662" y="220" width="24" height="23" rx="4"/>
+            <rect class="{% if housing.level >= 3 %}is-active{% endif %}" x="592" y="254" width="24" height="23" rx="4"/>
+            <rect class="{% if housing.level >= 3 %}is-active{% endif %}" x="662" y="254" width="24" height="23" rx="4"/>
+          </g>
+          <rect class="map-facility-door" x="630" y="259" width="22" height="38" rx="3"/>
+          <rect class="map-name-plate" x="573" y="303" width="133" height="30" rx="12"/>
+          <text class="map-facility-label" x="639" y="324" text-anchor="middle">宿舍</text>
+          <text class="map-level-label" x="639" y="152" text-anchor="middle">LV. {{ housing.level }} / 3</text>
+        </g>
+
+        {% set wellbeing = campus_map.facilities.wellbeing %}
+        <g class="map-facility" data-facility-id="wellbeing" data-facility-name="{{ wellbeing.name }}" data-facility-level="{{ wellbeing.level }}" data-facility-status="{{ wellbeing.status }}" data-facility-description="{{ wellbeing.description }}" data-facility-next="{{ wellbeing.next_step }}" data-facility-completed="{{ wellbeing.completed|join('、') if wellbeing.completed else '本局尚未完成此項建設。' }}" data-facility-policies="{{ campus_map.policies|map(attribute='name')|join('、') if campus_map.policies else '目前尚無已推動政策。' }}" data-facility-issue="{{ campus_map.issue.event ~ ' · ' ~ campus_map.issue.resident ~ '：' ~ campus_map.issue.concern if campus_map.issue else '目前沒有進行中的事件。' }}" role="button" tabindex="0" aria-pressed="false" aria-label="{{ wellbeing.name }}，第 {{ wellbeing.level }} 級，{{ wellbeing.status }}">
+          <rect class="map-hit-area" x="410" y="403" width="220" height="139" rx="17"/>
+          <path class="map-facility-shadow" d="M434 440h171v82H434z"/>
+          <path class="map-facility-roof" d="m425 441 94-35 95 35"/>
+          <rect class="map-facility-wall" x="434" y="441" width="171" height="81" rx="5"/>
+          <rect class="map-facility-door" x="507" y="482" width="26" height="40" rx="3"/>
+          <rect class="map-clinic-mark" x="506" y="450" width="28" height="8" rx="3"/>
+          <rect class="map-clinic-mark" x="516" y="440" width="8" height="28" rx="3"/>
+          <g class="map-level-markers" aria-hidden="true">
+            <rect class="{% if wellbeing.level >= 1 %}is-active{% endif %}" x="449" y="455" width="23" height="17" rx="4"/>
+            <rect class="{% if wellbeing.level >= 1 %}is-active{% endif %}" x="479" y="455" width="18" height="17" rx="4"/>
+            <rect class="{% if wellbeing.level >= 2 %}is-active{% endif %}" x="545" y="455" width="18" height="17" rx="4"/>
+            <rect class="{% if wellbeing.level >= 2 %}is-active{% endif %}" x="570" y="455" width="20" height="17" rx="4"/>
+            <rect class="{% if wellbeing.level >= 3 %}is-active{% endif %}" x="449" y="483" width="23" height="17" rx="4"/>
+            <rect class="{% if wellbeing.level >= 3 %}is-active{% endif %}" x="570" y="483" width="20" height="17" rx="4"/>
+          </g>
+          <rect class="map-name-plate" x="431" y="522" width="177" height="30" rx="12"/>
+          <text class="map-facility-label" x="519" y="543" text-anchor="middle">健康支持中心</text>
+          <text class="map-level-label" x="519" y="425" text-anchor="middle">LV. {{ wellbeing.level }} / 3</text>
+        </g>
+
+        <g class="map-resource-node map-energy" data-resource-value="{{ campus_map.resources.energy }}" aria-label="能源 {{ campus_map.resources.energy }}">
+          <rect x="278" y="75" width="115" height="47" rx="14"/>
+          <path d="m300 91-8 15h10l-3 10 14-17h-10l4-8z"/>
+          <text x="322" y="98">能源</text>
+          <text class="map-resource-value" x="322" y="113">{{ campus_map.resources.energy }}</text>
+        </g>
+        <g class="map-resource-node map-water" data-resource-value="{{ campus_map.resources.water }}" aria-label="用水 {{ campus_map.resources.water }}">
+          <rect x="397" y="75" width="115" height="47" rx="14"/>
+          <path d="M417 88c-5 9-9 13-9 18a9 9 0 0 0 18 0c0-5-4-9-9-18z"/>
+          <text x="438" y="98">用水</text>
+          <text class="map-resource-value" x="438" y="113">{{ campus_map.resources.water }}</text>
+        </g>
+        <g class="map-resource-node map-staffing" data-resource-value="{{ campus_map.resources.staffing }}" aria-label="人力 {{ campus_map.resources.staffing }}">
+          <rect x="516" y="75" width="119" height="47" rx="14"/>
+          <circle cx="538" cy="93" r="6"/><path d="M527 112c1-10 5-14 11-14s10 4 11 14"/>
+          <text x="555" y="98">人力</text>
+          <text class="map-resource-value" x="555" y="113">{{ campus_map.resources.staffing }}</text>
+        </g>
+        <g class="map-north" aria-hidden="true">
+          <circle cx="940" cy="52" r="20"/><path d="m940 35 6 17-6 17-6-17z"/>
+          <text x="940" y="82" text-anchor="middle">N</text>
+        </g>
+      </svg>
+    </div>
+
+    <aside class="map-inspector" id="map-inspector" aria-live="polite">
+      <p class="game-kicker">FACILITY REPORT</p>
+      <h3 data-map-info-name>{{ library.name }}</h3>
+      <div class="map-level-readout">
+        <strong data-map-info-level>LV. {{ library.level }} / 3</strong>
+        <span data-map-info-status>{{ library.status }}</span>
+      </div>
+      <p data-map-info-description>{{ library.description }}</p>
+      <dl class="map-info-list">
+        <div><dt>下一步</dt><dd data-map-info-next>{{ library.next_step }}</dd></div>
+        <div><dt>本局已完成</dt><dd data-map-info-completed>{{ library.completed|join('、') if library.completed else '本局尚未完成此項建設。' }}</dd></div>
+        <div><dt>全校政策</dt><dd data-map-info-policies>{{ campus_map.policies|map(attribute='name')|join('、') if campus_map.policies else '目前尚無已推動政策。' }}</dd></div>
+        <div><dt>{{ campus_map.issue.label if campus_map.issue else '校園議題' }}</dt><dd data-map-info-issue>{{ campus_map.issue.event if campus_map.issue else '目前沒有進行中的事件。' }}</dd></div>
+      </dl>
+      <p class="map-data-note">可互動設施只呈現目前遊戲有追蹤等級的建設；其他建築與綠地是校園場景插畫。</p>
+    </aside>
+  </div>
+
+  <div class="map-resource-strip" aria-label="校園資源存量">
+    {% for name, value in campus_map.resources.items() %}
+    <div class="map-resource-card" data-resource-name="{{ name }}" data-resource-level="{{ value }}">
+      <span class="resource-symbol" aria-hidden="true">{% if name == 'energy' %}⚡{% elif name == 'water' %}◒{% else %}✳{% endif %}</span>
+      <span><strong>{{ campus_map.resource_labels[name] }}</strong><small>{{ campus_map.resource_status }}</small></span>
+      <b><span class="resource-count">{{ value }}</span><small> / 100</small></b>
+      <i class="resource-meter" style="--resource-value: {{ value }}%"><span></span></i>
+    </div>
+    {% endfor %}
+  </div>
+  <p class="map-caption">場景插畫不代表額外的可升級設施數值。政策為全校狀態，不會被假設為特定建築的專屬政策。</p>
+</section>

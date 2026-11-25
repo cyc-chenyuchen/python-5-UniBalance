@@ -29,6 +29,7 @@ from campus_simulation import (
     _resolve_event_rule,
     _title_is_earned,
     advance_campaign,
+    campus_map_context,
     campus_profile_for_seed,
     make_campaign_record,
     new_campaign,
@@ -971,6 +972,7 @@ class CampusCampaignTests(unittest.TestCase):
     def test_campus_dashboard_shows_current_average_values(self):
         campaign = self._new_test_campaign()
         campaign["resources"] = {"energy": 61, "water": 72, "staffing": 68}
+        campaign["buildings"]["library"] = 2
         for index, resident in enumerate(campaign["residents"]):
             resident["satisfaction"] = 51 + index
             resident["trust"] = 41 + index
@@ -987,10 +989,12 @@ class CampusCampaignTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         for value in ("67.0", "54.5", "44.5", "34.5"):
             self.assertIn(value, page)
-        self.assertIn("能源、用水、人力平均", page)
-        self.assertIn("8 位教職員生平均", page)
-        self.assertLess(page.index('class="card campaign-indicators"'), page.index('class="card campaign-event"'))
-        self.assertLess(page.index('class="card campaign-event"'), page.index('class="card campaign-challenge"'))
+        self.assertIn("平均資源存量", page)
+        self.assertIn("平均滿意度／信任度／壓力值", page)
+        self.assertIn('class="interactive-campus-map"', page)
+        self.assertIn('data-facility-id="library"', page)
+        self.assertIn('data-facility-level="2"', page)
+        self.assertLess(page.index('class="campus-map-card game-panel"'), page.index('class="event-command game-panel"'))
 
     def test_campaign_result_shows_final_average_values(self):
         campaign = self._new_test_campaign()
@@ -1014,6 +1018,45 @@ class CampusCampaignTests(unittest.TestCase):
             self.assertIn(value, page)
         for label in ("平均資源存量", "平均滿意度", "平均信任度", "平均壓力值"):
             self.assertIn(label, page)
+        self.assertIn('class="interactive-campus-map"', page)
+
+    def test_map_context_keeps_legacy_records_explicit_about_missing_options(self):
+        context = campus_map_context({
+            "buildings": {},
+            "resources": {},
+            "policies": {},
+            "history": [],
+            "residents": [],
+        })
+
+        self.assertEqual(context["facilities"]["library"]["level"], 0)
+        self.assertIn(
+            "本局結果不提供下一步選擇",
+            context["facilities"]["library"]["next_step"],
+        )
+
+    def test_records_archive_shows_new_details_and_keeps_legacy_records(self):
+        campaign = self._new_test_campaign()
+        current_record = make_campaign_record(campaign)
+        current_record["titles"] = [{
+            "name": "共融校園",
+            "description": "公平性達到目標。",
+            "earned_turn": 4,
+        }]
+        legacy_record = {
+            "scenario_title": "舊版校園任務",
+            "plan_title": "舊版方案",
+            "total_score": 72,
+        }
+
+        with patch("app.load_records", return_value=[current_record, legacy_record]):
+            response = self.client.get("/records")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("舊版校園任務".encode("utf-8"), response.data)
+        self.assertIn("五年校務任期".encode("utf-8"), response.data)
+        self.assertIn("教職員生滿意度".encode("utf-8"), response.data)
+        self.assertIn("共融校園".encode("utf-8"), response.data)
 
     def test_title_catalog_has_twenty_titles_with_reachable_conditions(self):
         self.assertEqual(len(TITLE_CATALOG), 20)
@@ -1061,12 +1104,13 @@ class CampusCampaignTests(unittest.TestCase):
         uncompleted = campaign["challenges"][1]
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn("本局完成的年度挑戰".encode("utf-8"), response.data)
-        self.assertIn(f"1 / {YEARS} 項".encode("utf-8"), response.data)
+        self.assertIn("年度挑戰".encode("utf-8"), response.data)
+        self.assertIn(f"1 / {YEARS} 完成".encode("utf-8"), response.data)
         self.assertIn(completed["title"].encode("utf-8"), response.data)
-        self.assertNotIn(uncompleted["title"].encode("utf-8"), response.data)
+        self.assertIn(uncompleted["title"].encode("utf-8"), response.data)
+        self.assertIn("未完成".encode("utf-8"), response.data)
         self.assertIn(
-            f"校務基金 +{completed['reward']} 點".encode("utf-8"),
+            f"基金 +{completed['reward']}".encode("utf-8"),
             response.data,
         )
 
@@ -1098,17 +1142,18 @@ class CampusCampaignTests(unittest.TestCase):
             )
             self.assertEqual(response.status_code, 200)
             self.assertIn("圖書館尖峰時段座位不足".encode("utf-8"), response.data)
-            self.assertIn("示範方案".encode("utf-8"), response.data)
-            self.assertIn("本局人物主線".encode("utf-8"), response.data)
+            self.assertIn("離線示範策略".encode("utf-8"), response.data)
+            self.assertIn("人物主線".encode("utf-8"), response.data)
             response = self.client.post(
                 "/campus/plan",
                 data={"plan_id": "plan_1"},
                 follow_redirects=True,
             )
             self.assertEqual(response.status_code, 200)
-            self.assertIn("第 1 年第 1 學期".encode("utf-8"), response.data)
+            self.assertIn("第 1 年".encode("utf-8"), response.data)
+            self.assertIn("第 1 學期".encode("utf-8"), response.data)
             self.assertIn('class="event-portrait"'.encode("utf-8"), response.data)
-            self.assertIn("個人目標".encode("utf-8"), response.data)
+            self.assertIn("目標：".encode("utf-8"), response.data)
             self.assertIn("本類特殊規則".encode("utf-8"), response.data)
             with self.client.session_transaction() as session:
                 flow_id = session["flow_id"]
@@ -1125,13 +1170,13 @@ class CampusCampaignTests(unittest.TestCase):
                 )
                 self.assertEqual(response.status_code, 200)
                 if turn == 0:
-                    self.assertIn("第 1 年第 2 學期".encode("utf-8"), response.data)
-                    self.assertIn("校園匿名板熱帖".encode("utf-8"), response.data)
+                    self.assertIn('data-campaign-turn="2"'.encode("utf-8"), response.data)
+                    self.assertIn("你的決策已影響校園".encode("utf-8"), response.data)
                 elif turn == 1:
-                    self.assertIn("第 2 年第 1 學期".encode("utf-8"), response.data)
+                    self.assertIn('data-campaign-turn="3"'.encode("utf-8"), response.data)
 
-        self.assertIn("5 年校務總結".encode("utf-8"), response.data)
-        self.assertIn("10 個連鎖事件".encode("utf-8"), response.data)
+        self.assertIn("五年後的校園".encode("utf-8"), response.data)
+        self.assertIn("十學期決策年表".encode("utf-8"), response.data)
         self.assertIn("第 5 年".encode("utf-8"), response.data)
         self.assertEqual(save_record.call_count, 1)
         campaign = GAMES[flow_id]["campaign"]
@@ -1468,7 +1513,7 @@ class CampusCampaignTests(unittest.TestCase):
             data={"proposal": "圖書館尖峰座位不足"},
             follow_redirects=True,
         )
-        self.assertIn("示範方案".encode("utf-8"), response.data)
+        self.assertIn("離線示範策略".encode("utf-8"), response.data)
         response = self.client.post(
             "/campus/plan",
             data={"plan_id": "plan_1"},

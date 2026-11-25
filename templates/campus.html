@@ -1,171 +1,280 @@
 {% extends "base.html" %}
 {% block page_class %}campus-page{% endblock %}
 {% block content %}
-<section class="campaign-heading card">
-  <div>
-    <p class="step">五年校園經營 · 第 {{ year }} 年第 {{ semester }} 學期</p>
-    <h1>把一個問題，經營成一所更好的大學</h1>
-    <p>第 {{ turn_number }} / {{ total_turns }} 學期 · 每學期處理教職員生議題，再做一項校務投資。</p>
-    <p>目前策略：<strong>{{ selected_plan.title }}</strong> · {{ selected_plan.strategy }}</p>
-    <p>本局開局：<strong>{{ campus_profile.name }}</strong> · {{ campus_profile.description }}</p>
-  </div>
-  <div class="campaign-score"><strong>{{ metrics.satisfaction }}</strong><span>教職員生滿意度</span></div>
-  <div class="campaign-progress progress-track" role="progressbar" aria-label="五年經營進度" aria-valuemin="0" aria-valuemax="{{ total_turns }}" aria-valuenow="{{ turn_number - 1 }}" style="--progress: {{ progress }}%"><span></span></div>
-</section>
+<div class="campaign-play" data-campaign-turn="{{ turn_number }}" data-campaign-total="{{ total_turns }}">
+  <header class="campaign-hud game-panel">
+    <div class="campaign-hud-title">
+      <p class="game-kicker">UNIBALANCE · CAMPUS MANAGER</p>
+      <h1>校務經營</h1>
+      <p>{{ selected_plan.title }} <span>／</span> {{ selected_plan.strategy }}</p>
+    </div>
+    <div class="campaign-calendar">
+      <span class="calendar-year">第 <strong>{{ year }}</strong> 年</span>
+      <span class="calendar-semester">第 {{ semester }} 學期</span>
+    </div>
+    <div class="campaign-budget">
+      <span class="resource-symbol" aria-hidden="true">◈</span>
+      <span><small>校務基金</small><strong><span data-treasury-value="{{ treasury }}">{{ treasury }}</span><small> 點</small></strong></span>
+    </div>
+    <div class="campaign-progress-wrap">
+      <div class="progress-label"><span>五年任期進度</span><strong>{{ turn_number - 1 }} / {{ total_turns }}</strong></div>
+      <div class="game-progress-track" role="progressbar" aria-label="五年經營進度" aria-valuemin="0" aria-valuemax="{{ total_turns }}" aria-valuenow="{{ turn_number - 1 }}" style="--progress: {{ progress }}%"><span></span></div>
+    </div>
+  </header>
 
-<div class="campaign-dashboard">
-  <section class="card campaign-indicators">
-    <div class="campaign-section-heading"><div><p class="step">財政與教職員生</p><h2>校務儀表板</h2></div><strong>校務基金 {{ treasury }} 點</strong></div>
-    <div class="metrics">
-      <div><strong>財政健康</strong><span>{{ metrics.budget_remaining }}</span></div>
-      <div><strong>問題改善</strong><span>{{ metrics.problem_improvement }}</span></div>
-      <div><strong>教職員生滿意度</strong><span>{{ metrics.satisfaction }}</span></div>
-      <div><strong>公平性</strong><span>{{ metrics.fairness }}</span></div>
-    </div>
-    <div class="campaign-facts">
-      <div><strong>人口模擬</strong><span>學生 {{ population.students }} · 教職員 {{ population.faculty }} · 行政 {{ population.staff }}</span></div>
-      <div><strong>資源存量</strong><span>{% for name, value in resources.items() %}{{ resource_labels[name] }} {{ value }}{% if not loop.last %} · {% endif %}{% endfor %}</span></div>
-      <div><strong>校園建設</strong><span>{% for name, value in buildings.items() %}{{ building_labels[name] }} Lv.{{ value }}{% if not loop.last %} · {% endif %}{% endfor %}</span></div>
-      <div><strong>現行政策</strong><span>{% if policies.values()|sum > 0 %}{% for name, level in policies.items() if level > 0 %}{{ policy_labels[name] }} Lv.{{ level }}{% if not loop.last %} · {% endif %}{% endfor %}{% else %}尚未制定{% endif %}</span></div>
-    </div>
-    <section class="campaign-averages" aria-labelledby="average-heading">
-      <div class="campaign-section-heading"><div><p class="step">即時統計</p><h3 id="average-heading">校園狀態平均值</h3></div><span>依目前模擬資料計算</span></div>
-      <div class="average-grid">
-        <div class="average-card"><strong>平均資源存量</strong><span>{{ "%.1f"|format(averages.resource_stock) }}<small> / 100</small></span><small>能源、用水、人力平均</small></div>
-        <div class="average-card"><strong>平均滿意度</strong><span>{{ "%.1f"|format(averages.satisfaction) }}<small> / 100</small></span><small>{{ residents|length }} 位教職員生平均</small></div>
-        <div class="average-card"><strong>平均信任度</strong><span>{{ "%.1f"|format(averages.trust) }}<small> / 100</small></span><small>{{ residents|length }} 位教職員生平均</small></div>
-        <div class="average-card"><strong>平均壓力值</strong><span>{{ "%.1f"|format(averages.stress) }}<small> / 100</small></span><small>{{ residents|length }} 位教職員生平均</small></div>
+  {% if last_outcome %}
+  <section class="turn-settlement game-panel" aria-labelledby="turn-settlement-heading">
+    <div class="settlement-stamp" aria-hidden="true">✓</div>
+    <div class="settlement-main">
+      <p class="game-kicker">PREVIOUS SEMESTER · 第 {{ last_outcome.year }} 年第 {{ last_outcome.semester }} 學期結算</p>
+      <h2 id="turn-settlement-heading">你的決策已影響校園</h2>
+      <p><strong>{{ last_outcome.resident }} · {{ last_outcome.role }}</strong> 回應「{{ last_outcome.event }}」時，採取「{{ last_outcome.response }}」；校務措施為「{{ last_outcome.development }}」。</p>
+      <p class="settlement-follow-up">{{ last_outcome.butterfly }}</p>
+      {% if last_outcome.settled_consequences %}
+      <div class="settled-effects">
+        {% for consequence in last_outcome.settled_consequences %}
+        <span>已結算後續：{{ consequence.description }} · 改善 {{ "%+d"|format(consequence.effects.problem_improvement) }} · 公平 {{ "%+d"|format(consequence.effects.fairness) }} · 基金 {{ "%+d"|format(consequence.effects.treasury) }}</span>
+        {% endfor %}
       </div>
-    </section>
-  </section>
-
-  <section class="card campaign-event">
-    <div class="campaign-section-heading">
-      <div><p class="step"><span class="event-format-badge event-format-{{ event.event_type }}">{{ event.event_type_label }}</span>{% if event.story_stage %} <span class="event-format-badge event-format-character_story">{{ event.story_stage_label }}</span>{% endif %} · {{ event.title }} · {{ event.group_label }}焦點</p><h2>{{ event.event }}</h2></div>
-      <span class="campaign-period">第 {{ year }} 年 · 第 {{ semester }} 學期</span>
+      {% endif %}
     </div>
-    <p class="event-format-hint">{{ event.event_type_hint }}</p>
-    <p class="event-format-rule"><strong>本類特殊規則：</strong>{{ event.event_type_rule }}</p>
+    <div class="settlement-metrics">
+      {% for name, value in last_outcome.metrics.items() %}
+      {% set change = last_metric_changes.get(name, 0) %}
+      <div><span>{{ metric_labels[name] }}</span><strong>{{ value }}</strong><small class="{% if change > 0 %}is-positive{% elif change < 0 %}is-negative{% else %}is-neutral{% endif %}">{{ "%+d"|format(change) }} 本學期</small></div>
+      {% endfor %}
+    </div>
+    {% if last_outcome.annual_challenge %}
+    <p class="settlement-challenge">年度挑戰「{{ last_outcome.annual_challenge }}」{{ "完成" if last_outcome.challenge_completed else "未完成" }}{% if last_outcome.challenge_reward %} · 校務基金 +{{ last_outcome.challenge_reward }}{% endif %}</p>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  <div class="campaign-command-layout">
+    {% include "_campus_map.html" %}
+
+    <aside class="management-sidebar">
+      <section class="game-panel metric-console">
+        <div class="game-panel-heading">
+          <div><p class="game-kicker">CAMPUS VITALS</p><h2>校務指標</h2></div>
+          <span class="panel-note">目前狀態</span>
+        </div>
+        <div class="metric-orb-grid">
+          {% for name, value in metrics.items() %}
+          <article class="metric-orb-card" data-metric="{{ name }}" data-value="{{ value }}">
+            <div class="metric-orb" style="--metric-value: {{ value }}"><span>{{ value }}</span></div>
+            <strong>{{ metric_labels[name] }}</strong>
+            {% set change = last_metric_changes.get(name, 0) %}
+            <small class="{% if change > 0 %}is-positive{% elif change < 0 %}is-negative{% else %}is-neutral{% endif %}">{{ "%+d"|format(change) }} 最近一學期</small>
+          </article>
+          {% endfor %}
+        </div>
+        <div class="management-facts">
+          <div><span>校園人口</span><strong>學生 {{ population.students }} · 教職員 {{ population.faculty }} · 行政 {{ population.staff }}</strong></div>
+          <div><span>平均資源存量</span><strong>{{ "%.1f"|format(averages.resource_stock) }} / 100</strong></div>
+          <div><span>平均滿意度／信任度／壓力值</span><strong>{{ "%.1f"|format(averages.satisfaction) }} / {{ "%.1f"|format(averages.trust) }} / {{ "%.1f"|format(averages.stress) }}</strong></div>
+        </div>
+      </section>
+
+      <section class="game-panel annual-quest-card">
+        <div class="quest-heading"><span class="quest-icon" aria-hidden="true">✦</span><div><p class="game-kicker">YEAR {{ year }} · ANNUAL QUEST</p><h2>{{ current_challenge.title }}</h2></div></div>
+        <p>{{ current_challenge.description }}</p>
+        <div class="quest-reward"><span>完成獎勵</span><strong>＋{{ current_challenge.reward }} 點基金</strong></div>
+        <div class="challenge-track" aria-label="年度挑戰進度"><span style="--challenge-progress: {{ 100 if current_challenge.completed else 0 }}%"></span></div>
+        <small>{{ "已完成" if current_challenge.completed else "年度結算時檢查條件" }} · 已完成 {{ completed_challenge_count }} / {{ years }} 項</small>
+      </section>
+
+      <section class="game-panel story-quest-card">
+        <div class="quest-heading"><span class="quest-icon story-quest-icon" aria-hidden="true">♡</span><div><p class="game-kicker">CHARACTER QUEST · {{ story_arc.stage }} / 3</p><h2>{{ story_arc.title }}</h2></div></div>
+        <div class="story-quest-person">
+          {% set story_resident = (residents|selectattr("id", "equalto", story_arc.resident_id)|list|first) %}
+          {% if story_resident %}
+          <img src="{{ url_for('static', filename=story_resident.portrait) }}" alt="" aria-hidden="true">
+          {% endif %}
+          <div><strong>{{ story_arc.resident_name }} · {{ story_arc.resident_role }}</strong><span>{{ story_arc.goal }}</span></div>
+        </div>
+        <div class="story-chapter-track" role="progressbar" aria-label="人物主線進度" aria-valuemin="0" aria-valuemax="3" aria-valuenow="{{ story_arc.stage }}"><span style="--story-progress: {{ story_arc.stage * 100 // 3 }}%"></span></div>
+        <p class="story-support-state">{{ story_arc.support_label }}{% if story_arc.support_score %} · 合作支持 {{ story_arc.support_score }}{% endif %}</p>
+        {% if story_arc.ending_text %}<p class="story-ending-note">{{ story_arc.ending_text }}</p>{% elif story_arc.last_beat %}<p class="story-ending-note">{{ story_arc.last_beat }}</p>{% else %}<p class="story-ending-note">支持、壓力與公平取捨將影響第三幕結局。</p>{% endif %}
+      </section>
+    </aside>
+  </div>
+
+  <section class="event-command game-panel" aria-labelledby="event-heading">
+    <header class="event-command-heading">
+      <div>
+        <p class="game-kicker">TURN {{ turn_number }} · EVENT & DECISION</p>
+        <div class="event-type-row">
+          <span class="event-format-badge event-format-{{ event.event_type }}">{{ event.event_type_label }}</span>
+          {% if event.story_stage %}<span class="event-format-badge event-format-character_story">{{ event.story_stage_label }}</span>{% endif %}
+          <span>{{ event.title }} · {{ event.group_label }}焦點</span>
+        </div>
+        <h2 id="event-heading">{{ event.event }}</h2>
+        <p class="event-format-hint">{{ event.event_type_hint }}</p>
+      </div>
+      <span class="semester-token">第 {{ year }} 年<br><strong>第 {{ semester }} 學期</strong></span>
+    </header>
+    <p class="event-format-rule"><strong>本類特殊規則</strong> {{ event.event_type_rule }}</p>
+
+    <div class="event-character game-dialogue">
+      <img class="event-portrait" src="{{ url_for('static', filename=event.resident.portrait) }}" alt="{{ event.resident.name }}的角色立繪">
+      <div class="character-dialogue-copy">
+        <p class="character-role-label">{{ event.resident.role }} · {{ event.resident.concern }}</p>
+        <strong>{{ event.resident.name }}</strong>
+        <blockquote>{{ event.quote }}</blockquote>
+        <p class="event-profile">{{ event.resident.personality }} · 目標：{{ event.resident.goal }}</p>
+        <span class="event-bond">信任 {{ event.resident.trust }} · 壓力 {{ event.resident.stress }}</span>
+      </div>
+    </div>
+
     {% if pending_consequences %}
-    <div class="consequence-queue">
-      <strong>即將回響的決策</strong>
+    <aside class="consequence-queue">
+      <strong>⏳ 即將回響的決策</strong>
       {% for consequence in pending_consequences %}
       <p>{{ consequence.turns_left }} 學期後：{{ consequence.resident }} · {{ consequence.description }}</p>
       {% endfor %}
-    </div>
+    </aside>
     {% endif %}
-    <div class="event-character">
-      <img class="event-portrait" src="{{ url_for('static', filename=event.resident.portrait) }}" alt="" aria-hidden="true">
-      <div>
-        <strong>{{ event.resident.name }} · {{ event.resident.role }}</strong>
-        <blockquote>{{ event.quote }}</blockquote>
-        <p class="event-profile">{{ event.resident.personality }} · 個人目標：{{ event.resident.goal }}</p>
-        <small class="event-bond">信任 {{ event.resident.trust }} · 壓力 {{ event.resident.stress }}</small>
-      </div>
-    </div>
-    <form action="/campus/choose" method="post" class="campaign-form">
-      <fieldset>
-        <legend>一、如何回應教職員生問題？</legend>
-        <div class="campaign-options">
+
+    <form action="/campus/choose" method="post" class="campaign-form game-decision-form" data-game-submit data-pending-message="正在結算本學期決策並更新校園，請稍候。">
+      <fieldset class="decision-fieldset">
+        <legend><span class="decision-step">01</span><span><strong>回應校園事件</strong><small>選擇一項角色回應 · 即時與延遲效果均依後端結算</small></span></legend>
+        <div class="campaign-options event-choice-grid">
           {% for action in event.actions %}
-          <label class="campaign-option">
+          <label class="campaign-option action-choice-card">
             <input type="radio" name="action_id" value="{{ action.action_id }}" required>
-            <span><strong>{{ action.text }}</strong><small>即時支出 {{ action.cost }} 點 · 問題改善 {{ "%+d"|format(action.effects.problem_improvement) }} · 滿意度 {{ "%+d"|format(action.effects.satisfaction) }} · 公平 {{ "%+d"|format(action.effects.fairness) }} · 對{{ event.resident.name }}信任 {{ "%+d"|format(action.resident_effects.trust) }} · 壓力 {{ "%+d"|format(action.resident_effects.stress) }}</small><small class="option-fallout">稍後影響：{{ action.follow_up }}（改善 {{ "%+d"|format(action.delayed_effects.problem_improvement) }} · 公平 {{ "%+d"|format(action.delayed_effects.fairness) }} · 基金 {{ "%+d"|format(action.delayed_effects.treasury) }}）</small></span>
+            <span class="choice-number">{{ "%02d"|format(loop.index) }}</span>
+            <span class="choice-copy">
+              <strong>{{ action.text }}</strong>
+              <span class="choice-effects">
+                <span class="cost-chip">基金 −{{ action.cost }}</span>
+                <span>改善 {{ "%+d"|format(action.effects.problem_improvement) }}</span>
+                <span>滿意 {{ "%+d"|format(action.effects.satisfaction) }}</span>
+                <span>公平 {{ "%+d"|format(action.effects.fairness) }}</span>
+                <span>信任 {{ "%+d"|format(action.resident_effects.trust) }}</span>
+                <span>壓力 {{ "%+d"|format(action.resident_effects.stress) }}</span>
+              </span>
+              <small class="option-fallout">稍後：{{ action.follow_up }}</small>
+              <small class="option-fallout">延遲效果 · 改善 {{ "%+d"|format(action.delayed_effects.problem_improvement) }} · 公平 {{ "%+d"|format(action.delayed_effects.fairness) }} · 基金 {{ "%+d"|format(action.delayed_effects.treasury) }}</small>
+            </span>
+            <span class="choice-check" aria-hidden="true">✓</span>
           </label>
           {% endfor %}
         </div>
       </fieldset>
-      <fieldset>
-        <legend>二、選擇一項建設、政策或資源措施</legend>
-        <div class="campaign-options campaign-development-options">
-          {% for item in developments %}
-          <label class="campaign-option">
-            <input type="radio" name="development_id" value="{{ item.id }}" required>
-            <span><strong><em>{{ item.category }}</em> {{ item.title }} <small>支出 {{ item.cost }} 點{% if item.get("treasury_gain") %} · 回收 {{ item.treasury_gain }} 點{% endif %}</small></strong><small>{{ item.benefit }}</small></span>
-          </label>
-          {% endfor %}
+
+      <fieldset class="decision-fieldset development-fieldset">
+        <legend><span class="decision-step">02</span><span><strong>配置一項校務措施</strong><small>從目前基金可負擔且尚可執行的選項中擇一</small></span></legend>
+        {% for category in ["建設", "政策", "資源", "財政"] %}
+        {% set category_developments = developments|selectattr("category", "equalto", category)|list %}
+        {% if category_developments %}
+        <div class="development-category">
+          <h3><span class="development-category-mark" aria-hidden="true">{% if category == "建設" %}⌂{% elif category == "政策" %}▤{% elif category == "資源" %}◌{% else %}◈{% endif %}</span>{{ category }}</h3>
+          <div class="development-choice-grid">
+            {% for item in category_developments %}
+            <label class="campaign-option development-choice-card">
+              <input type="radio" name="development_id" value="{{ item.id }}" required>
+              <span class="development-choice-copy">
+                <span class="development-card-top"><em>{{ item.category }}</em><strong>基金 −{{ item.cost }}{% if item.get("treasury_gain") %} · 回收 +{{ item.treasury_gain }}{% endif %}</strong></span>
+                <strong>{{ item.title }}</strong>
+                <small>{{ item.benefit }}</small>
+                {% if item.get("building") %}
+                <small class="development-level">目前 Lv.{{ buildings[item.building] }} → Lv.{{ buildings[item.building] + 1 }}</small>
+                {% elif item.get("policy") %}
+                <small class="development-level">目前政策 Lv.{{ policies.get(item.policy, 0) }} → Lv.{{ policies.get(item.policy, 0) + 1 }}</small>
+                {% endif %}
+                <span class="development-effects">
+                  {% for name, value in item.effects.items() %}
+                  <small>{{ {"problem_improvement": "改善", "satisfaction": "滿意", "fairness": "公平"}.get(name, name) }} {{ "%+d"|format(value) }}</small>
+                  {% endfor %}
+                  {% for name, value in item.resources.items() %}
+                  <small>{{ resource_labels[name] }} {{ "%+d"|format(value) }}</small>
+                  {% endfor %}
+                </span>
+              </span>
+              <span class="choice-check" aria-hidden="true">✓</span>
+            </label>
+            {% endfor %}
+          </div>
         </div>
+        {% endif %}
+        {% endfor %}
       </fieldset>
-      <p class="notice">每個決策都會改變財政、教職員生狀況、資源與下一季事件；財政不足時，請善用盤點或暫緩支出。</p>
-      <button type="submit">執行本學期決策 <span aria-hidden="true">→</span></button>
+
+      <div class="decision-submit-bar">
+        <p>每學期需同時選擇一項事件回應與一項校務措施；基金不足時請考慮財政措施。</p>
+        <button type="submit">執行本學期決策 <span aria-hidden="true">→</span></button>
+      </div>
+      <p class="submit-status" data-submit-status role="status" hidden></p>
     </form>
   </section>
 
-  <aside class="card campaign-challenge">
-    <p class="step">第 {{ year }} 年年度挑戰 · 已完成 {{ completed_challenge_count }} / {{ years }}</p>
-    <h2>{{ current_challenge.title }}</h2>
-    <p>{{ current_challenge.description }}</p>
-    <p class="notice">完成可獲得 {{ current_challenge.reward }} 點校務基金；每局挑戰順序不同。</p>
-  </aside>
+  <section class="campaign-world-grid">
+    <section class="game-panel residents-panel">
+      <div class="game-panel-heading"><div><p class="game-kicker">CAMPUS COMMUNITY</p><h2>校園居民</h2></div><span class="panel-note">{{ residents|length }} 位角色</span></div>
+      <div class="resident-grid">
+        {% for resident in residents %}
+        <article class="resident-card npc-card">
+          <img class="resident-portrait" src="{{ url_for('static', filename=resident.portrait) }}" alt="" aria-hidden="true" loading="lazy">
+          <strong>{{ resident.name }} <small>{{ resident.role }}</small></strong>
+          <span>{{ resident.concern }}</span>
+          <div class="resident-meter" role="meter" aria-label="{{ resident.name }}滿意度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ resident.satisfaction }}"><i style="width: {{ resident.satisfaction }}%"></i></div>
+          <small>滿意度 {{ resident.satisfaction }} · 信任 {{ resident.trust }} · 壓力 {{ resident.stress }}</small>
+          <small>{{ resident.personality }} · 目標：{{ resident.goal }}</small>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
 
-  <aside class="card campaign-story">
-    <p class="step">本局人物主線 · 第 {{ story_arc.stage }} / 3 幕</p>
-    <h2>{{ story_arc.title }}</h2>
-    <p><strong>{{ story_arc.resident_name }} · {{ story_arc.resident_role }}</strong></p>
-    <p>目標：{{ story_arc.goal }}</p>
-    <p>合作狀態：<strong>{{ story_arc.support_label }}</strong></p>
-    <div class="story-progress-track" role="progressbar" aria-label="人物主線進度" aria-valuemin="0" aria-valuemax="3" aria-valuenow="{{ story_arc.stage }}" style="--story-progress: {{ story_arc.stage * 100 // 3 }}%"><span></span></div>
-    {% if story_arc.ending_text %}
-    <p class="notice">{{ story_arc.ending_text }}</p>
-    {% elif story_arc.last_beat %}
-    <p class="notice">{{ story_arc.last_beat }}</p>
-    {% else %}
-    <p class="notice">三幕故事會在校務事件中逐步展開；支持、壓力與公平取捨都會影響結局。</p>
-    {% endif %}
-  </aside>
+    <aside class="game-panel campus-forecast-panel">
+      <p class="game-kicker">NEXT YEAR OUTLOOK</p>
+      <h2>校園展望</h2>
+      <div class="forecast-value"><span>預估校園人口</span><strong>{{ forecast.next_year_population }}</strong></div>
+      <div class="forecast-value"><span>預估滿意度</span><strong>{{ forecast.next_year_satisfaction }} <small>/ 100</small></strong></div>
+      <p class="forecast-risk">{{ forecast.risk }}</p>
+      <div class="global-policy-list">
+        <strong>全校政策</strong>
+        {% set active_policies = policies|dictsort %}
+        {% for name, level in active_policies if level > 0 %}
+        <span>{{ policy_labels[name] }} · Lv.{{ level }}</span>
+        {% else %}
+        <span>尚未推動政策</span>
+        {% endfor %}
+      </div>
+      <div class="campus-building-levels">
+        <strong>已追蹤建設</strong>
+        {% for name, level in buildings.items() %}
+        <span>{{ building_labels[name] }} · Lv.{{ level }} / 3</span>
+        {% endfor %}
+      </div>
+    </aside>
 
-  <section class="card campaign-residents">
-    <div class="campaign-section-heading"><div><p class="step">教職員生模擬</p><h2>八位教職員生的近況</h2></div></div>
-    <div class="resident-grid">
-      {% for resident in residents %}
-      <article class="resident-card">
-        <img class="resident-portrait" src="{{ url_for('static', filename=resident.portrait) }}" alt="" aria-hidden="true" loading="lazy">
-        <strong>{{ resident.name }} <small>{{ resident.role }}</small></strong>
-        <span>{{ resident.concern }}</span>
-        <div class="resident-meter" role="meter" aria-label="{{ resident.name }}滿意度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ resident.satisfaction }}"><i style="width: {{ resident.satisfaction }}%"></i></div>
-        <small>滿意度 {{ resident.satisfaction }}</small>
-        <small>{{ resident.personality }} · 目標：{{ resident.goal }}</small>
-        <small>信任 {{ resident.trust }} · 壓力 {{ resident.stress }}</small>
-      </article>
-      {% endfor %}
-    </div>
+    <aside class="game-panel decision-chronicle-panel">
+      <div class="game-panel-heading"><div><p class="game-kicker">CAMPUS CHRONICLE</p><h2>決策連鎖</h2></div><span class="panel-note">{{ history|length }} / {{ total_turns }}</span></div>
+      {% if history %}
+      <ol class="butterfly-list">
+        {% for item in history[-5:]|reverse %}
+        <li><small>第 {{ item.year }} 年第 {{ item.semester }} 學期 · {{ item.resident }}</small><strong>{{ item.development }} · {{ item.response }}</strong><span>{{ item.butterfly }}</span><small class="event-rule-result">{{ item.event_rule_result }}</small></li>
+        {% endfor %}
+      </ol>
+      {% else %}
+      <p>你的第一項決策將開啟校園發展年表。</p>
+      {% endif %}
+    </aside>
+
+    <aside class="game-panel award-case-panel">
+      <div class="game-panel-heading"><div><p class="game-kicker">ACHIEVEMENTS</p><h2>本局稱號</h2></div><span class="panel-note">{{ titles|length }} / {{ title_catalog|length }}</span></div>
+      {% if titles %}
+      <ul class="title-badge-list">
+        {% for title in titles %}
+        <li><span class="badge-emblem" aria-hidden="true">✦</span><span><strong>{{ title.name }}</strong><small>{{ title.description }}</small></span></li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>累積校務成果，解鎖第一枚任期徽章。</p>
+      {% endif %}
+      <a class="text-link" href="/titles">開啟稱號圖鑑 →</a>
+    </aside>
   </section>
-
-  <aside class="card campaign-forecast">
-    <p class="step">未來模擬</p>
-    <h2>下一年度展望</h2>
-    <p>預估校園人口：<strong>{{ forecast.next_year_population }}</strong></p>
-    <p>預估教職員生滿意度：<strong>{{ forecast.next_year_satisfaction }} / 100</strong></p>
-    <p class="notice">{{ forecast.risk }}</p>
-  </aside>
-
-  <aside class="card campaign-history">
-    <p class="step">蝴蝶效應引擎</p>
-    <h2>最近的決策連鎖</h2>
-    {% if history %}
-    <ol class="butterfly-list">
-      {% for item in history[-4:]|reverse %}
-      <li><small>第 {{ item.year }} 年第 {{ item.semester }} 學期 · {{ item.resident }} · 信任 {{ item.resident_trust }} · 壓力 {{ item.resident_stress }}</small><span>{{ item.butterfly }}</span><small class="event-rule-result">{{ item.event_rule_result }}</small><small class="campus-reaction">{{ item.campus_reaction }}</small></li>
-      {% endfor %}
-    </ol>
-    {% else %}
-    <p>第一個決策將為後續事件建立起點。</p>
-    {% endif %}
-  </aside>
-
-  <aside class="card campaign-awards">
-    <p class="step">稱號收藏 · {{ titles|length }} / {{ title_catalog|length }}</p>
-    <h2>已解鎖稱號</h2>
-    {% if titles %}
-    <ul class="title-badge-list">
-      {% for title in titles %}
-      <li><strong>{{ title.name }}</strong><small>{{ title.description }}</small></li>
-      {% endfor %}
-    </ul>
-    {% else %}
-    <p>完成目標來解鎖第一枚稱號！</p>
-    {% endif %}
-    <a class="text-link" href="/titles">前往稱號圖鑑 →</a>
-  </aside>
 </div>
 {% endblock %}

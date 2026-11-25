@@ -15,9 +15,29 @@
     <div class="grid">
       {% for record in records|reverse %}
         <article class="card record-card">
-          <div class="record-card-top"><span class="record-type">校園改革任務</span><span class="record-score">{{ record.total_score or "未記錄" }}<small>總分</small></span></div>
+          <div class="record-card-top">
+            <span class="record-type">{% if record.scenario_id == "campus_decade" %}五年校務任期{% else %}舊版校園任務{% endif %}</span>
+            <span class="record-score">{{ record.get("total_score") or "未記錄" }}<small>總分</small></span>
+          </div>
           <h2>{{ record.scenario_title or "舊版紀錄" }}</h2>
+          {% if record.get("proposal") %}<p class="record-scenario">{{ record.proposal }}</p>{% endif %}
           <div class="record-plan"><span>採用策略</span><strong>{{ record.plan_title or "未記錄" }}</strong></div>
+          <div class="record-meta">
+            <span>完成時間</span>
+            {% set created_at = record.get("created_at") %}
+            <strong>{% if created_at is string %}{{ created_at[:10] }}{% else %}未記錄{% endif %}</strong>
+          </div>
+          {% if record.get("final_metrics") is mapping %}
+          {% set metric_labels = record.get("metric_labels") or {} %}
+          <dl class="record-metrics">
+            {% for name, value in record.final_metrics.items() %}
+            <div><dt>{{ metric_labels.get(name, name) }}</dt><dd>{{ value }}</dd></div>
+            {% endfor %}
+          </dl>
+          {% endif %}
+          {% if record.get("titles") %}
+          <div class="record-earned-titles"><span>本局稱號</span><strong>{% for title in record.titles %}{{ title.name }}{% if not loop.last %}、{% endif %}{% endfor %}</strong></div>
+          {% endif %}
           {% if record.record_id %}
             <a class="button" href="/records/{{ record.record_id }}">開啟成果報告 <span aria-hidden="true">→</span></a>
           {% endif %}

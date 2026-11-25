@@ -20,6 +20,7 @@ from campus_simulation import (
     advance_campaign,
     calculate_campaign_averages,
     campus_profile_for_seed,
+    campus_map_context,
     campaign_context,
     make_campaign_record,
     new_campaign,
@@ -480,7 +481,11 @@ def record_detail(record_id):
         return render_template("error.html", title="找不到紀錄", message="此紀錄沒有新格式識別碼或已不存在。"), 404
     if record.get("scenario_id") == "campus_decade":
         _ensure_campaign_averages(record)
-        return render_template("campus_result.html", record=record)
+        return render_template(
+            "campus_result.html",
+            record=record,
+            campus_map=campus_map_context(record),
+        )
     return render_template("result.html", record=record)
 
 
@@ -652,7 +657,9 @@ def campus():
         return redirect("/")
     if campaign["finished"]:
         return redirect("/campus/result")
-    return render_template("campus.html", **campaign_context(campaign))
+    context = campaign_context(campaign)
+    context["metric_labels"] = load_menu()["metric_labels"]
+    return render_template("campus.html", **context)
 
 
 @app.route("/campus/choose", methods=["POST"])
@@ -787,7 +794,11 @@ def campus_result():
     if not record:
         return redirect("/")
     _ensure_campaign_averages(record)
-    return render_template("campus_result.html", record=record)
+    return render_template(
+        "campus_result.html",
+        record=record,
+        campus_map=campus_map_context(record),
+    )
 
 
 def _ensure_campaign_averages(record):

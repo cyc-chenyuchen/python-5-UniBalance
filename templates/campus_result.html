@@ -1,153 +1,155 @@
 {% extends "base.html" %}
 {% block page_class %}campus-result-page{% endblock %}
 {% block content %}
-<section class="card decade-results">
-  <div class="visual-heading result-visual-heading">
-    <div class="visual-copy">
-      <p class="step">{{ record.years }} 年校務總結 · {{ record.history|length }} 個學期已完成</p>
+<div class="campaign-results">
+  <section class="result-banner game-panel">
+    <div class="result-banner-copy">
+      <p class="game-kicker">FIVE-YEAR TERM COMPLETE · {{ record.history|length }} SEMESTERS</p>
+      <span class="result-ribbon">校務成果結算</span>
       <h1>{{ record.scenario_title }}</h1>
-      <p>起始議題：{{ record.proposal }}</p>
-      <p>本局開局：{{ record.campus_profile.name }} · {{ record.campus_profile.description }}</p>
+      <p><strong>起始議題</strong> {{ record.proposal }}</p>
+      <p class="result-profile"><strong>{{ record.campus_profile.name }}</strong> · {{ record.campus_profile.description }}</p>
     </div>
-    <div class="campaign-score campaign-final-score"><strong>{{ record.total_score }}</strong><span>綜合評分</span></div>
-  </div>
-  <p class="notice">{{ record.comment }}</p>
+    <div class="result-medal" aria-label="綜合評分 {{ record.total_score }} 分">
+      <span>任期總評</span>
+      <strong data-count-up="{{ record.total_score }}" data-count-start="0">{{ record.total_score }}</strong>
+      <small>／ 100</small>
+    </div>
+    <div class="result-summary-note"><span aria-hidden="true">✦</span>{{ record.comment }}</div>
+  </section>
+
   {% if record.story_arc is defined %}
-  <section class="result-section">
-    <h2>本局人物主線 · {{ record.story_arc.title }}</h2>
-    <p>{{ record.story_arc.resident_name }}的目標：{{ record.story_arc.goal }}</p>
-    <p class="notice">{{ record.story_arc.ending_text or record.story_arc.last_beat or "人物故事尚未收束。" }}</p>
+  <section class="story-ending-banner game-panel">
+    {% set result_story_resident = (record.residents|selectattr("id", "equalto", record.story_arc.resident_id)|list|first) %}
+    {% if result_story_resident %}<img src="{{ url_for('static', filename=result_story_resident.portrait) }}" alt="" aria-hidden="true">{% endif %}
+    <div><p class="game-kicker">CHARACTER QUEST · FINAL CHAPTER</p><h2>{{ record.story_arc.title }}</h2><p><strong>{{ record.story_arc.resident_name }}</strong>的目標：{{ record.story_arc.goal }}</p><p>{{ record.story_arc.ending_text or record.story_arc.last_beat or "人物故事尚未收束。" }}</p></div>
+    <span class="ending-seal">{{ {"co_created": "共同完成", "fragile_progress": "取得進展", "stalled": "仍待努力"}.get(record.story_arc.ending, "故事結局") }}</span>
   </section>
   {% endif %}
 
-  <section class="result-section">
-    <h2>{{ record.years }} 年後的校園</h2>
-    <div class="metrics">
+  <section class="result-scoreboard game-panel">
+    <div class="game-panel-heading"><div><p class="game-kicker">FINAL CAMPUS STATUS</p><h2>五年後的校園</h2></div><span class="panel-note">模擬結算 · 非真實校務評估</span></div>
+    <div class="final-metric-grid">
       {% for name, value in record.final_metrics.items() %}
-      <div data-metric="{{ name }}" data-value="{{ value }}"><strong>{{ record.metric_labels[name] }}</strong><span>{{ value }}</span></div>
+      {% set start_value = record.initial_metrics.get(name, value) %}
+      <article class="final-metric-card">
+        <div class="final-metric-orb" style="--metric-value: {{ value }}"><span>{{ value }}</span></div>
+        <strong>{{ record.metric_labels[name] }}</strong>
+        <small class="{% if value > start_value %}is-positive{% elif value < start_value %}is-negative{% else %}is-neutral{% endif %}">起始 {{ start_value }} · 變化 {{ "%+d"|format(value - start_value) }}</small>
+      </article>
       {% endfor %}
     </div>
-    <div class="campaign-facts result-facts">
-      <div><strong>校務基金</strong><span>{{ record.treasury }} 點</span></div>
-      <div><strong>校園總人口</strong><span>{{ record.population.students }} 位學生 · {{ record.population.faculty }} 位教職員 · {{ record.population.staff }} 位行政與服務人員</span></div>
-      <div><strong>校園建設</strong><span>{% for name, level in record.buildings.items() %}{{ record.building_labels[name] }} Lv.{{ level }}{% if not loop.last %} · {% endif %}{% endfor %}</span></div>
-      <div><strong>政策成果</strong><span>{% set active_policies = record.policies|dictsort %}{% for name, level in active_policies if level > 0 %}{{ record.policy_labels[name] }} Lv.{{ level }}{% if not loop.last %} · {% endif %}{% else %}尚未制定{% endfor %}</span></div>
+    <div class="final-campus-ledger">
+      <div><span>校務基金</span><strong>{{ record.treasury }} 點</strong></div>
+      <div><span>校園人口</span><strong>{{ record.population.students }} 學生 · {{ record.population.faculty }} 教職員 · {{ record.population.staff }} 行政與服務</strong></div>
+      <div><span>已建設項目</span><strong>{% for name, level in record.buildings.items() %}{{ record.building_labels[name] }} Lv.{{ level }}{% if not loop.last %} · {% endif %}{% endfor %}</strong></div>
+      <div><span>全校政策</span><strong>{% set active_policies = record.policies|dictsort %}{% for name, level in active_policies if level > 0 %}{{ record.policy_labels[name] }} Lv.{{ level }}{% if not loop.last %} · {% endif %}{% else %}尚未制定{% endfor %}</strong></div>
     </div>
     {% if record.averages is defined %}
-    <section class="campaign-averages result-averages" aria-labelledby="result-average-heading">
-      <div class="campaign-section-heading">
-        <div><p class="step">最終統計</p><h3 id="result-average-heading">校園狀態平均值</h3></div>
-        <span>依本局最終模擬資料計算</span>
-      </div>
-      <div class="average-grid">
-        <div class="average-card"><strong>平均資源存量</strong><span>{{ "%.1f"|format(record.averages.resource_stock) }}<small> / 100</small></span><small>能源、用水、人力平均</small></div>
-        <div class="average-card"><strong>平均滿意度</strong><span>{{ "%.1f"|format(record.averages.satisfaction) }}<small> / 100</small></span><small>{{ record.residents|length }} 位教職員生平均</small></div>
-        <div class="average-card"><strong>平均信任度</strong><span>{{ "%.1f"|format(record.averages.trust) }}<small> / 100</small></span><small>{{ record.residents|length }} 位教職員生平均</small></div>
-        <div class="average-card"><strong>平均壓力值</strong><span>{{ "%.1f"|format(record.averages.stress) }}<small> / 100</small></span><small>{{ record.residents|length }} 位教職員生平均</small></div>
+    <section class="final-average-section" aria-labelledby="final-average-heading">
+      <div class="game-panel-heading"><div><p class="game-kicker">TERM AVERAGES</p><h3 id="final-average-heading">校園狀態平均值</h3></div><span class="panel-note">依本局最終模擬資料計算</span></div>
+      <div class="final-average-grid">
+        <article><span>平均資源存量</span><strong>{{ "%.1f"|format(record.averages.resource_stock) }}<small> / 100</small></strong><small>能源、用水、人力</small></article>
+        <article><span>平均滿意度</span><strong>{{ "%.1f"|format(record.averages.satisfaction) }}<small> / 100</small></strong><small>{{ record.residents|length }} 位教職員生</small></article>
+        <article><span>平均信任度</span><strong>{{ "%.1f"|format(record.averages.trust) }}<small> / 100</small></strong><small>{{ record.residents|length }} 位教職員生</small></article>
+        <article><span>平均壓力值</span><strong>{{ "%.1f"|format(record.averages.stress) }}<small> / 100</small></strong><small>{{ record.residents|length }} 位教職員生</small></article>
       </div>
     </section>
     {% endif %}
   </section>
 
-  <section class="result-section">
-    <h2>{{ record.years }} 年人口與滿意度變化</h2>
-    <div class="yearly-table-wrap">
-      <table class="yearly-table">
-          <thead><tr><th>學年</th><th>校園人口</th><th>教職員生滿意度</th><th>校務基金</th><th>年度挑戰</th><th>當年評分</th></tr></thead>
-        <tbody>
-          {% for year in record.yearly %}
-            <tr><th>第 {{ year.year }} 年</th><td>{{ year.population }}</td><td>{{ year.satisfaction }} / 100</td><td>{{ year.treasury }}</td><td>{% if year.challenge is defined %}{{ year.challenge }} · {{ "完成" if year.challenge_completed else "未完成" }}{% else %}—{% endif %}</td><td>{{ year.score }}</td></tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </section>
+  <div class="result-campus-map">
+    {% include "_campus_map.html" %}
+  </div>
 
-  {% if record.challenges is defined %}
-  {% set completed_challenges = record.challenges|selectattr("completed")|list %}
-  <section class="result-section">
-    <h2>本局完成的年度挑戰 <span class="result-count">{{ completed_challenges|length }} / {{ record.challenges|length }} 項</span></h2>
-    {% if completed_challenges %}
-    <ul class="challenge-result-list">
-      {% for challenge in completed_challenges %}
-      <li>
-        <strong>第 {{ challenge.year }} 年 · {{ challenge.title }}</strong>
-        <span>{{ challenge.description }}</span>
-        <small>完成獎勵：校務基金 +{{ challenge.reward }} 點</small>
-      </li>
-      {% endfor %}
-    </ul>
-    {% else %}
-    <p>本局尚未完成年度挑戰。</p>
-    {% endif %}
-  </section>
-  {% endif %}
-
-  {% if record.titles is defined %}
-  <section class="result-section">
-    <h2>本局稱號收藏 · {{ record.titles|length }} 枚</h2>
-    {% if record.titles %}
-    <ul class="title-badge-list result-title-list">
-      {% for title in record.titles %}
-      <li><strong>{{ title.name }}</strong><small>{{ title.description }}</small></li>
-      {% endfor %}
-    </ul>
-    {% else %}
-    <p>這次還沒有解鎖稱號；換個策略再來挑戰圖鑑吧！</p>
-    {% endif %}
-  </section>
-  {% endif %}
-
-  <section class="result-section">
-    <h2>教職員生心聲</h2>
-    <div class="resident-grid">
-      {% for resident in record.residents %}
-      {% set portrait = resident.get("portrait", "portrait-student.svg" if resident.group == "students" else "portrait-faculty.svg" if resident.group == "faculty" else "portrait-staff.svg") %}
-      <article class="resident-card">
-        <img class="resident-portrait" src="{{ url_for('static', filename=portrait) }}" alt="" aria-hidden="true" loading="lazy">
-        <strong>{{ resident.name }} <small>{{ resident.role }}</small></strong>
-        <span>{{ resident.concern }}</span>
-        <div class="resident-meter" role="meter" aria-label="{{ resident.name }}滿意度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ resident.satisfaction }}"><i style="width: {{ resident.satisfaction }}%"></i></div>
-        <small>{{ record.years }} 年後滿意度 {{ resident.satisfaction }}</small>
-        <small>{{ resident.personality }} · 目標：{{ resident.goal }}</small>
-        <small>信任 {{ resident.trust }} · 壓力 {{ resident.stress }}</small>
+  <section class="year-review-section game-panel">
+    <div class="game-panel-heading"><div><p class="game-kicker">YEAR-BY-YEAR</p><h2>五年任期回顧</h2></div><span class="panel-note">{{ record.yearly|length }} 次年度結算</span></div>
+    <div class="year-review-grid">
+      {% for year in record.yearly %}
+      <article class="year-review-card">
+        <span class="year-number">0{{ year.year }}</span>
+        <div><p>YEAR {{ year.year }}</p><h3>{{ year.challenge or "年度校務盤點" }}</h3><span>{{ "挑戰完成" if year.challenge_completed else "挑戰未完成" }}{% if year.challenge_reward %} · 基金 +{{ year.challenge_reward }}{% endif %}</span></div>
+        <dl><div><dt>校園人口</dt><dd>{{ year.population }}</dd></div><div><dt>滿意度</dt><dd>{{ year.satisfaction }} / 100</dd></div><div><dt>校務基金</dt><dd>{{ year.treasury }}</dd></div><div><dt>年度分數</dt><dd>{{ year.score }}</dd></div></dl>
       </article>
       {% endfor %}
     </div>
   </section>
 
-  <section class="result-section">
-    <h2>蝴蝶效應決策年表 <span class="result-count">{{ record.history|length }} 個連鎖事件</span></h2>
-    <ol class="action-list decade-action-list">
+  {% if record.challenges is defined %}
+  {% set completed_challenges = record.challenges|selectattr("completed")|list %}
+  <section class="game-panel result-challenge-section">
+    <div class="game-panel-heading"><div><p class="game-kicker">ANNUAL QUESTS</p><h2>年度挑戰</h2></div><span class="achievement-count">{{ completed_challenges|length }} / {{ record.challenges|length }} 完成</span></div>
+    <div class="result-challenge-grid">
+      {% for challenge in record.challenges %}
+      <article class="result-quest-card{% if challenge.completed %} is-complete{% else %} is-incomplete{% endif %}">
+        <span class="quest-status" aria-hidden="true">{{ "✓" if challenge.completed else "·" }}</span>
+        <div><p>第 {{ challenge.year }} 年</p><h3>{{ challenge.title }}</h3><span>{{ challenge.description }}</span></div>
+        <small>{% if challenge.completed %}完成 · 基金 +{{ challenge.reward }}{% else %}未完成{% endif %}</small>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if record.titles is defined %}
+  <section class="game-panel result-awards-section">
+    <div class="game-panel-heading"><div><p class="game-kicker">ACHIEVEMENT COLLECTION</p><h2>本局解鎖稱號</h2></div><span class="achievement-count">{{ record.titles|length }} 枚</span></div>
+    {% if record.titles %}
+    <ul class="result-award-grid">
+      {% for title in record.titles %}
+      <li><span class="badge-emblem" aria-hidden="true">✦</span><span><strong>{{ title.name }}</strong><small>{{ title.description }}</small></span><small>第 {{ title.earned_turn }} 學期解鎖</small></li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>本局尚未解鎖稱號；繼續嘗試不同經營方式，挑戰收藏圖鑑。</p>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  <section class="game-panel residents-panel result-residents-panel">
+    <div class="game-panel-heading"><div><p class="game-kicker">CAMPUS COMMUNITY</p><h2>教職員生最終狀態</h2></div><span class="panel-note">{{ record.residents|length }} 位角色</span></div>
+    <div class="resident-grid">
+      {% for resident in record.residents %}
+      <article class="resident-card npc-card">
+        {% set portrait = resident.get("portrait", "portrait-student.svg" if resident.group == "students" else "portrait-faculty.svg" if resident.group == "faculty" else "portrait-staff.svg") %}
+        <img class="resident-portrait" src="{{ url_for('static', filename=portrait) }}" alt="" aria-hidden="true" loading="lazy">
+        <strong>{{ resident.name }} <small>{{ resident.role }}</small></strong>
+        <span>{{ resident.concern }}</span>
+        <div class="resident-meter" role="meter" aria-label="{{ resident.name }}滿意度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ resident.satisfaction }}"><i style="width: {{ resident.satisfaction }}%"></i></div>
+        <small>滿意度 {{ resident.satisfaction }} · 信任 {{ resident.trust }} · 壓力 {{ resident.stress }}</small>
+        <small>{{ resident.personality }} · 目標：{{ resident.goal }}</small>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="game-panel chronicle-result-section">
+    <div class="game-panel-heading"><div><p class="game-kicker">YOUR DECISIONS, FIVE YEARS</p><h2>十學期決策年表</h2></div><span class="panel-note">{{ record.history|length }} 個學期</span></div>
+    <ol class="action-list decade-action-list game-chronicle">
       {% for item in record.history %}
       <li>
-        <strong>第 {{ item.year }} 年{% if item.semester is defined %}第 {{ item.semester }} 學期{% else %}舊制第 {{ item.quarter }} 季{% endif %} · {{ item.event }}</strong>
-        <span>{{ item.resident }}（{{ item.role }}）選擇：{{ item.response }}</span>
-        <span>後續回響：{{ item.follow_up }}（改善 {{ "%+d"|format(item.delayed_effects.problem_improvement) }} · 公平 {{ "%+d"|format(item.delayed_effects.fairness) }} · 基金 {{ "%+d"|format(item.delayed_effects.treasury) }}）</span>
-        {% for consequence in item.settled_consequences %}
-        <span>已結算後果：{{ consequence.origin_event }} · {{ consequence.resident }} · {{ consequence.description }}</span>
-        {% endfor %}
-        {% if item.resident_trust is defined %}<span>決策後信任 {{ item.resident_trust }} · 壓力 {{ item.resident_stress }}</span>{% endif %}
-        {% if item.event_rule_result is defined %}<span>{{ item.event_rule_result }}</span>{% endif %}
-        {% if item.campus_reaction is defined %}<span class="campus-reaction">{{ item.campus_reaction }}</span>{% endif %}
-        {% if item.story_beat %}<span class="story-beat">{{ item.story_beat.message }}</span>{% endif %}
-        <span>校務措施：{{ item.development }}（{{ item.category }}）</span>
+        <span class="chronicle-turn">第 {{ item.year }} 年 · 第 {{ item.semester }} 學期</span>
+        <div class="chronicle-event"><strong>{{ item.event }}</strong><span>{{ item.resident }}（{{ item.role }}）</span></div>
+        <div class="chronicle-decision"><span>事件回應</span><strong>{{ item.response }}</strong></div>
+        <div class="chronicle-decision"><span>校務措施</span><strong>{{ item.development }} · {{ item.category }}</strong></div>
         <p>{{ item.butterfly }}</p>
+        {% if item.settled_consequences %}<div class="settled-effects">{% for consequence in item.settled_consequences %}<span>已結算：{{ consequence.origin_event }} · {{ consequence.description }}</span>{% endfor %}</div>{% endif %}
       </li>
       {% endfor %}
     </ol>
   </section>
 
-  <section class="result-section">
-    <h2>未來一年模擬</h2>
-    <p>預估校園人口 {{ record.forecast.next_year_population }} 人，教職員生滿意度 {{ record.forecast.next_year_satisfaction }} / 100。</p>
-    <p class="notice">{{ record.forecast.risk }}</p>
+  <section class="future-outlook game-panel">
+    <div><p class="game-kicker">SIMULATED OUTLOOK</p><h2>下一年度展望</h2><p>未來人口估計 {{ record.forecast.next_year_population }} 人 · 預估教職員生滿意度 {{ record.forecast.next_year_satisfaction }} / 100</p><p>{{ record.forecast.risk }}</p></div>
+    <span class="outlook-seal" aria-hidden="true">NEXT<br>YEAR</span>
   </section>
-  <div class="result-actions">
-    <a class="button button-secondary" href="/records">查看歷史任務</a>
-    <a class="button button-secondary" href="/titles">稱號收藏</a>
+
+  <nav class="result-actions game-result-actions" aria-label="結算後操作">
+    <a class="button button-secondary" href="/records">任務紀錄</a>
+    <a class="button button-secondary" href="/titles">稱號圖鑑</a>
     <a class="button button-secondary" href="/leaderboard">排行榜</a>
-    <a class="button" href="/">開始新的五年經營</a>
-  </div>
-</section>
+    <a class="button lobby-start-button" href="/">開始新的五年任期 <span aria-hidden="true">→</span></a>
+  </nav>
+  <p class="result-disclaimer">本頁分數、事件、人口與校園狀態是遊戲模擬結果，不代表真實政策評估或校園成效。</p>
+</div>
 {% endblock %}
