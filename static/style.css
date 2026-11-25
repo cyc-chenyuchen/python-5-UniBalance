@@ -636,6 +636,11 @@ button:hover, .button:hover {
 .campaign-final-score { width: 120px; height: 120px; }
 .decade-results .result-section { margin-top: 25px; }
 .result-facts { margin-top: 20px; }
+.challenge-result-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.challenge-result-list li { display: grid; gap: 4px; padding: 13px 15px; border: 1px solid var(--color-olive-line); border-radius: 13px; background: var(--color-olive-soft); }
+.challenge-result-list strong { color: var(--color-primary-dark); }
+.challenge-result-list span, .challenge-result-list small { color: var(--color-muted); font-size: 13px; }
+.challenge-result-list small { color: var(--color-sand-text); font-weight: 650; }
 .yearly-table-wrap { overflow-x: auto; }
 .yearly-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .yearly-table th, .yearly-table td { padding: 10px 12px; border-bottom: 1px solid var(--color-border); text-align: left; white-space: nowrap; }

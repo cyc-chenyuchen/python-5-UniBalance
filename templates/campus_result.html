@@ -49,6 +49,26 @@
     </div>
   </section>
 
+  {% if record.challenges is defined %}
+  {% set completed_challenges = record.challenges|selectattr("completed")|list %}
+  <section class="result-section">
+    <h2>本局完成的年度挑戰 <span class="result-count">{{ completed_challenges|length }} / {{ record.challenges|length }} 項</span></h2>
+    {% if completed_challenges %}
+    <ul class="challenge-result-list">
+      {% for challenge in completed_challenges %}
+      <li>
+        <strong>第 {{ challenge.year }} 年 · {{ challenge.title }}</strong>
+        <span>{{ challenge.description }}</span>
+        <small>完成獎勵：校務基金 +{{ challenge.reward }} 點</small>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>本局尚未完成年度挑戰。</p>
+    {% endif %}
+  </section>
+  {% endif %}
+
   {% if record.titles is defined %}
   <section class="result-section">
     <h2>本局稱號收藏 · {{ record.titles|length }} 枚</h2>

@@ -27,6 +27,7 @@ from campus_simulation import (
     _resolve_event_rule,
     advance_campaign,
     campus_profile_for_seed,
+    make_campaign_record,
     new_campaign,
     next_story_arc_context,
     resident_profiles,
@@ -924,6 +925,33 @@ class CampusCampaignTests(unittest.TestCase):
         self.assertIn("8 位教職員生平均", page)
         self.assertLess(page.index('class="card campaign-indicators"'), page.index('class="card campaign-event"'))
         self.assertLess(page.index('class="card campaign-event"'), page.index('class="card campaign-challenge"'))
+
+    def test_campaign_result_lists_completed_annual_challenges(self):
+        campaign = self._new_test_campaign()
+        campaign["challenges"][0]["completed"] = True
+        campaign["challenges"][1]["completed"] = False
+        record = make_campaign_record(campaign)
+
+        flow_id = "campus-result-challenge-test"
+        GAMES[flow_id] = {"campaign": campaign, "result": record}
+        self.addCleanup(GAMES.pop, flow_id, None)
+        with self.client.session_transaction() as session:
+            session["flow_id"] = flow_id
+
+        response = self.client.get("/campus/result")
+        page = response.get_data(as_text=True)
+        completed = campaign["challenges"][0]
+        uncompleted = campaign["challenges"][1]
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("本局完成的年度挑戰".encode("utf-8"), response.data)
+        self.assertIn(f"1 / {YEARS} 項".encode("utf-8"), response.data)
+        self.assertIn(completed["title"].encode("utf-8"), response.data)
+        self.assertNotIn(uncompleted["title"].encode("utf-8"), response.data)
+        self.assertIn(
+            f"校務基金 +{completed['reward']} 點".encode("utf-8"),
+            response.data,
+        )
 
     def test_homepage_has_one_problem_input(self):
         response = self.client.get("/")
