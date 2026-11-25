@@ -553,6 +553,14 @@ class CampaignAiGenerationTests(unittest.TestCase):
         self.assertEqual(user_prompt["recent_history"], history)
         self.assertEqual(user_prompt["campus_state"], state)
         self.assertEqual(user_prompt["next_decision"], next_decision)
+        self.assertEqual(
+            user_prompt["continuity_contract"]["primary_issue"],
+            "圖書館座位不足",
+        )
+        self.assertFalse(
+            user_prompt["continuity_contract"]["unrelated_campus_events_allowed"]
+        )
+        self.assertIn("proposal 是整局經營的核心問題", request.call_args.args[0])
         self.assertEqual(request.call_args.kwargs["temperature"], 0.9)
 
     def test_demo_event_batch_uses_distinct_play_formats(self):
