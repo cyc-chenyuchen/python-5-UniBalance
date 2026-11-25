@@ -67,9 +67,19 @@
     <div class="year-review-grid">
       {% for year in record.yearly %}
       <article class="year-review-card">
-        <span class="year-number">0{{ year.year }}</span>
-        <div><p>YEAR {{ year.year }}</p><h3>{{ year.challenge or "年度校務盤點" }}</h3><span>{{ "挑戰完成" if year.challenge_completed else "挑戰未完成" }}{% if year.challenge_reward %} · 基金 +{{ year.challenge_reward }}{% endif %}</span></div>
-        <dl><div><dt>校園人口</dt><dd>{{ year.population }}</dd></div><div><dt>滿意度</dt><dd>{{ year.satisfaction }} / 100</dd></div><div><dt>校務基金</dt><dd>{{ year.treasury }}</dd></div><div><dt>年度分數</dt><dd>{{ year.score }}</dd></div></dl>
+        <div class="year-review-head">
+          <span class="year-number">Y{{ year.year }}</span>
+          <div class="year-review-summary">
+            <h3 title="{{ year.challenge or '年度校務盤點' }}">{{ year.challenge or "年度校務盤點" }}</h3>
+            <span class="year-review-status{% if year.challenge_completed %} is-complete{% endif %}">{{ "✓ 完成" if year.challenge_completed else "未完成" }}{% if year.challenge_reward %} · <b>基金 +{{ year.challenge_reward }}</b>{% endif %}</span>
+          </div>
+        </div>
+        <dl class="year-review-stats">
+          <div><dt>人口</dt><dd>{{ year.population }}</dd></div>
+          <div><dt>滿意</dt><dd>{{ year.satisfaction }}</dd></div>
+          <div><dt>基金</dt><dd>{{ year.treasury }}</dd></div>
+          <div><dt>分數</dt><dd>{{ year.score }}</dd></div>
+        </dl>
       </article>
       {% endfor %}
     </div>
