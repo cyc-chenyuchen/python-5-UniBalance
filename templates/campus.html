@@ -3,9 +3,9 @@
 {% block content %}
 <section class="campaign-heading card">
   <div>
-    <p class="step">十年校園經營 · 第 {{ year }} 年第 {{ quarter }} 季</p>
+    <p class="step">十年校園經營 · 第 {{ year }} 年第 {{ semester }} 學期</p>
     <h1>把一個問題，經營成一所更好的大學</h1>
-    <p>第 {{ turn_number }} / {{ total_turns }} 季 · 每季處理教職員生議題，再做一項校務投資。</p>
+    <p>第 {{ turn_number }} / {{ total_turns }} 學期 · 每學期處理教職員生議題，再做一項校務投資。</p>
     <p>目前策略：<strong>{{ selected_plan.title }}</strong> · {{ selected_plan.strategy }}</p>
   </div>
   <div class="campaign-score"><strong>{{ metrics.satisfaction }}</strong><span>教職員生滿意度</span></div>
@@ -32,9 +32,15 @@
   <section class="card campaign-event">
     <div class="campaign-section-heading">
       <div><p class="step">{{ event.title }} · {{ event.group_label }}焦點</p><h2>{{ event.event }}</h2></div>
-      <span class="campaign-quarter">第 {{ year }} 年 · Q{{ quarter }}</span>
+      <span class="campaign-period">第 {{ year }} 年 · 第 {{ semester }} 學期</span>
     </div>
-    <blockquote>{{ event.resident.name }}（{{ event.resident.role }}）：{{ event.quote }}</blockquote>
+    <div class="event-character">
+      <img class="event-portrait" src="{{ url_for('static', filename=event.resident.portrait) }}" alt="" aria-hidden="true">
+      <div>
+        <strong>{{ event.resident.name }} · {{ event.resident.role }}</strong>
+        <blockquote>{{ event.quote }}</blockquote>
+      </div>
+    </div>
     <form action="/campus/choose" method="post" class="campaign-form">
       <fieldset>
         <legend>一、如何回應教職員生問題？</legend>
@@ -59,7 +65,7 @@
         </div>
       </fieldset>
       <p class="notice">每個決策都會改變財政、教職員生狀況、資源與下一季事件；財政不足時，請善用盤點或暫緩支出。</p>
-      <button type="submit">執行本季決策 <span aria-hidden="true">→</span></button>
+      <button type="submit">執行本學期決策 <span aria-hidden="true">→</span></button>
     </form>
   </section>
 
@@ -76,6 +82,7 @@
     <div class="resident-grid">
       {% for resident in residents %}
       <article class="resident-card">
+        <img class="resident-portrait" src="{{ url_for('static', filename=resident.portrait) }}" alt="" aria-hidden="true" loading="lazy">
         <strong>{{ resident.name }} <small>{{ resident.role }}</small></strong>
         <span>{{ resident.concern }}</span>
         <div class="resident-meter" role="meter" aria-label="{{ resident.name }}滿意度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ resident.satisfaction }}"><i style="width: {{ resident.satisfaction }}%"></i></div>
@@ -91,7 +98,7 @@
     {% if history %}
     <ol class="butterfly-list">
       {% for item in history[-4:]|reverse %}
-      <li><small>第 {{ item.year }} 年 Q{{ item.quarter }} · {{ item.resident }}</small><span>{{ item.butterfly }}</span></li>
+      <li><small>第 {{ item.year }} 年第 {{ item.semester }} 學期 · {{ item.resident }}</small><span>{{ item.butterfly }}</span></li>
       {% endfor %}
     </ol>
     {% else %}

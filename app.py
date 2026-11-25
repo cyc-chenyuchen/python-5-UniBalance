@@ -11,6 +11,8 @@ from ai_service import (
     recommend_campaign_plans,
 )
 from campus_simulation import (
+    SEMESTERS_PER_YEAR,
+    TOTAL_TURNS,
     advance_campaign,
     campaign_context,
     make_campaign_record,
@@ -476,7 +478,7 @@ def _prepare_campaign_start(game):
         game["campaign_plans"] = plans
     initial_state = {
         "year": 1,
-        "quarter": 1,
+        "semester": 1,
         "metrics": dict(menu["initial_metrics"]),
         "treasury": 850,
         "population": {"students": 9000, "faculty": 720, "staff": 380},
@@ -597,7 +599,7 @@ def _process_campaign_decision(game, action_id, development_id):
         ), 400
 
     next_events = None
-    if not campaign["event_queue"] and campaign["turn"] + 1 < 40:
+    if not campaign["event_queue"] and campaign["turn"] + 1 < TOTAL_TURNS:
         game["pending_decision"] = {
             "action_id": action_id,
             "development_id": development_id,
@@ -607,8 +609,8 @@ def _process_campaign_decision(game, action_id, development_id):
                 game["proposal"],
                 campaign["history"],
                 {
-                    "year": campaign["turn"] // 4 + 1,
-                    "quarter": campaign["turn"] % 4 + 1,
+                    "year": campaign["turn"] // SEMESTERS_PER_YEAR + 1,
+                    "semester": campaign["turn"] % SEMESTERS_PER_YEAR + 1,
                     "metrics": dict(campaign["metrics"]),
                     "treasury": campaign["treasury"],
                     "population": dict(campaign["population"]),

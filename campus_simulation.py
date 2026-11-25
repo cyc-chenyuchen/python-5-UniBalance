@@ -4,8 +4,13 @@ import secrets
 
 
 YEARS = 10
-QUARTERS_PER_YEAR = 4
-TOTAL_TURNS = YEARS * QUARTERS_PER_YEAR
+SEMESTERS_PER_YEAR = 2
+TOTAL_TURNS = YEARS * SEMESTERS_PER_YEAR
+GROUP_PORTRAITS = {
+    "students": "portrait-student.svg",
+    "faculty": "portrait-faculty.svg",
+    "staff": "portrait-staff.svg",
+}
 
 RESIDENTS = (
     {"name": "林沐晴", "role": "學生", "group": "students", "concern": "課業與生活平衡"},
@@ -205,7 +210,11 @@ def new_campaign(concern, event_deck, plan, scenario_title, seed=None):
         "policies": {},
         "metrics": {"budget_remaining": 71, "problem_improvement": 45, "satisfaction": 70, "fairness": 63},
         "residents": [
-            dict(resident, satisfaction=68 + index % 5 * 3)
+            dict(
+                resident,
+                portrait=GROUP_PORTRAITS[resident["group"]],
+                satisfaction=68 + index % 5 * 3,
+            )
             for index, resident in enumerate(RESIDENTS)
         ],
         "history": [],
@@ -247,8 +256,8 @@ def available_developments(state):
 def campaign_context(state):
     turn = state["turn"]
     return {
-        "year": turn // QUARTERS_PER_YEAR + 1,
-        "quarter": turn % QUARTERS_PER_YEAR + 1,
+        "year": turn // SEMESTERS_PER_YEAR + 1,
+        "semester": turn % SEMESTERS_PER_YEAR + 1,
         "turn_number": turn + 1,
         "total_turns": TOTAL_TURNS,
         "progress": turn * 100 // TOTAL_TURNS,
@@ -334,9 +343,9 @@ def advance_campaign(state, action_id, development_id, next_events=None):
     state["treasury"] = max(0, min(2000, state["treasury"] + revenue - 58 - maintenance))
     _refresh_metrics(state)
     state["turn"] += 1
-    year = (state["turn"] - 1) // QUARTERS_PER_YEAR + 1
+    year = (state["turn"] - 1) // SEMESTERS_PER_YEAR + 1
 
-    if state["turn"] % QUARTERS_PER_YEAR == 0:
+    if state["turn"] % SEMESTERS_PER_YEAR == 0:
         satisfaction = state["metrics"]["satisfaction"]
         student_delta = 80 if satisfaction >= 75 else (-80 if satisfaction < 45 else 15)
         state["population"]["students"] = max(0, state["population"]["students"] + student_delta)
@@ -363,7 +372,7 @@ def advance_campaign(state, action_id, development_id, next_events=None):
 
     outcome = {
         "year": year,
-        "quarter": (state["turn"] - 1) % QUARTERS_PER_YEAR + 1,
+        "semester": (state["turn"] - 1) % SEMESTERS_PER_YEAR + 1,
         "event": event["event"],
         "resident": event["resident"]["name"],
         "role": event["resident"]["role"],

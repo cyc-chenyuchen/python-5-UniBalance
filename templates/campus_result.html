@@ -4,7 +4,7 @@
 <section class="card decade-results">
   <div class="visual-heading result-visual-heading">
     <div class="visual-copy">
-      <p class="step">十年校務總結 · 40 季已完成</p>
+      <p class="step">十年校務總結 · 20 學期已完成</p>
       <h1>{{ record.scenario_title }}</h1>
       <p>起始議題：{{ record.proposal }}</p>
     </div>
@@ -45,7 +45,14 @@
     <h2>教職員生心聲</h2>
     <div class="resident-grid">
       {% for resident in record.residents %}
-      <article class="resident-card"><strong>{{ resident.name }} <small>{{ resident.role }}</small></strong><span>{{ resident.concern }}</span><div class="resident-meter" role="meter" aria-label="{{ resident.name }}滿意度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ resident.satisfaction }}"><i style="width: {{ resident.satisfaction }}%"></i></div><small>十年後滿意度 {{ resident.satisfaction }}</small></article>
+      {% set portrait = resident.get("portrait", "portrait-student.svg" if resident.group == "students" else "portrait-faculty.svg" if resident.group == "faculty" else "portrait-staff.svg") %}
+      <article class="resident-card">
+        <img class="resident-portrait" src="{{ url_for('static', filename=portrait) }}" alt="" aria-hidden="true" loading="lazy">
+        <strong>{{ resident.name }} <small>{{ resident.role }}</small></strong>
+        <span>{{ resident.concern }}</span>
+        <div class="resident-meter" role="meter" aria-label="{{ resident.name }}滿意度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ resident.satisfaction }}"><i style="width: {{ resident.satisfaction }}%"></i></div>
+        <small>十年後滿意度 {{ resident.satisfaction }}</small>
+      </article>
       {% endfor %}
     </div>
   </section>
@@ -55,7 +62,7 @@
     <ol class="action-list decade-action-list">
       {% for item in record.history %}
       <li>
-        <strong>第 {{ item.year }} 年 Q{{ item.quarter }} · {{ item.event }}</strong>
+        <strong>第 {{ item.year }} 年{% if item.semester is defined %}第 {{ item.semester }} 學期{% else %}舊制第 {{ item.quarter }} 季{% endif %} · {{ item.event }}</strong>
         <span>{{ item.resident }}（{{ item.role }}）選擇：{{ item.response }}</span>
         <span>校務措施：{{ item.development }}（{{ item.category }}）</span>
         <p>{{ item.butterfly }}</p>

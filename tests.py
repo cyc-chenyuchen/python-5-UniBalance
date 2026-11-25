@@ -500,7 +500,7 @@ class CampaignAiGenerationTests(unittest.TestCase):
             "response": "調整輪班",
             "management_measure": "培訓支援人力",
         }
-        state = {"year": 2, "quarter": 1, "treasury": 540, "resources": {"staffing": 42}}
+        state = {"year": 2, "semester": 1, "treasury": 540, "resources": {"staffing": 42}}
         with (
             patch.dict(os.environ, {"DEMO_MODE": "0"}),
             patch("ai_service._request_gemini", return_value=self._event_payload()) as request,
@@ -619,7 +619,7 @@ class CampusCampaignTests(unittest.TestCase):
         event_deck = generate_campaign_events(
             proposal,
             [],
-            {"year": 1, "quarter": 1},
+            {"year": 1, "semester": 1},
             opening=True,
         )
         return new_campaign(
@@ -651,11 +651,12 @@ class CampusCampaignTests(unittest.TestCase):
                 follow_redirects=True,
             )
             self.assertEqual(response.status_code, 200)
-            self.assertIn("第 1 年第 1 季".encode("utf-8"), response.data)
+            self.assertIn("第 1 年第 1 學期".encode("utf-8"), response.data)
+            self.assertIn('class="event-portrait"'.encode("utf-8"), response.data)
             with self.client.session_transaction() as session:
                 flow_id = session["flow_id"]
 
-            for _ in range(40):
+            for turn in range(20):
                 campaign = GAMES[flow_id]["campaign"]
                 response = self.client.post(
                     "/campus/choose",
@@ -666,14 +667,18 @@ class CampusCampaignTests(unittest.TestCase):
                     follow_redirects=True,
                 )
                 self.assertEqual(response.status_code, 200)
+                if turn == 0:
+                    self.assertIn("第 1 年第 2 學期".encode("utf-8"), response.data)
+                elif turn == 1:
+                    self.assertIn("第 2 年第 1 學期".encode("utf-8"), response.data)
 
         self.assertIn("十年校務總結".encode("utf-8"), response.data)
-        self.assertIn("40 個連鎖事件".encode("utf-8"), response.data)
+        self.assertIn("20 個連鎖事件".encode("utf-8"), response.data)
         self.assertIn("第 10 年".encode("utf-8"), response.data)
         self.assertEqual(save_record.call_count, 1)
         campaign = GAMES[flow_id]["campaign"]
         self.assertTrue(campaign["finished"])
-        self.assertEqual(len(campaign["history"]), 40)
+        self.assertEqual(len(campaign["history"]), 20)
         self.assertEqual(len(campaign["yearly"]), 10)
 
     def test_failed_event_batch_keeps_the_decision_retryable(self):
@@ -696,7 +701,7 @@ class CampusCampaignTests(unittest.TestCase):
         generated_batch = generate_campaign_events(
             campaign["concern"],
             campaign["history"],
-            {"year": 1, "quarter": 1},
+            {"year": 1, "semester": 1},
         )
         with patch(
             "app.generate_campaign_events",
