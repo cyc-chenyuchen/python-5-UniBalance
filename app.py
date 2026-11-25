@@ -21,7 +21,9 @@ from campus_simulation import (
     campaign_context,
     make_campaign_record,
     new_campaign,
+    next_story_arc_context,
     resident_profiles,
+    story_arc_for_seed,
     validate_campaign_choice,
 )
 from simulation import apply_effects, calculate_total_score, make_comment
@@ -494,9 +496,11 @@ def campus_start():
         ), 400
 
     flow_id = secrets.token_urlsafe(16)
+    campaign_seed = secrets.randbits(64)
     game = {
         "proposal": proposal,
-        "campaign_seed": secrets.randbits(64),
+        "campaign_seed": campaign_seed,
+        "story_arc": story_arc_for_seed(campaign_seed),
         "campaign": None,
         "failure": "campaign_start",
     }
@@ -549,6 +553,7 @@ def _prepare_campaign_start(game):
         "policies": {},
         "characters": resident_profiles(),
         "campus_profile": game["campus_profile"],
+        "story_arc": game["story_arc"],
     }
     apply_campus_profile(initial_state, game["campus_profile"])
     events = generate_campaign_events(
@@ -597,6 +602,7 @@ def campus_plans():
         recommendations=game["campaign_plans"]["recommendations"],
         event_count=len(game["campaign_events"]),
         campus_profile=game["campus_profile"],
+        story_arc=game["story_arc"],
     )
 
 
@@ -687,6 +693,7 @@ def _process_campaign_decision(game, action_id, development_id):
                     "policies": dict(campaign["policies"]),
                     "characters": resident_profiles(campaign["residents"]),
                     "campus_profile": campaign["campus_profile"],
+                    "story_arc": next_story_arc_context(campaign, action),
                     "pending_consequences": [
                         {
                             "turns_left": max(
@@ -712,6 +719,8 @@ def _process_campaign_decision(game, action_id, development_id):
                     "management_measure": development["title"],
                     "follow_up": action["follow_up"],
                     "delayed_effects": dict(action["delayed_effects"]),
+                    "relationship_effects": dict(action["resident_effects"]),
+                    "immediate_effects": dict(action["effects"]),
                 },
             )
         except Exception as error:

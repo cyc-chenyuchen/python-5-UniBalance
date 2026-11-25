@@ -494,6 +494,10 @@ def generate_campaign_events(
             "event": {"type": "STRING"},
             "category": {"type": "STRING"},
             "event_type": {"type": "STRING"},
+            "story_stage": {
+                "type": "INTEGER",
+                "description": "人物主線幕次；非主線事件填 0，主線事件依序填 1、2、3。",
+            },
             "group": {"type": "STRING"},
             "resident_id": {"type": "STRING"},
             "resident_quote": {"type": "STRING"},
@@ -504,7 +508,7 @@ def generate_campaign_events(
             },
         },
         "required": [
-            "event", "category", "event_type", "group", "resident_id",
+            "event", "category", "event_type", "story_stage", "group", "resident_id",
             "resident_quote", "resident_concern", "actions",
         ],
     }
@@ -530,6 +534,16 @@ def generate_campaign_events(
         "之後的批次要參考前因後果，兼有蝴蝶效應、跨校園系統的衍生問題與合理的新突發事件。"
         "event_type 只能是 crisis、opportunity、negotiation、campus_vote、character_story，"
         "分別代表緊急危機、限時機會、角色協商、校園投票、人物故事；同一批盡量使用不同類型。"
+        "campus_state.story_arc 描述本局固定教職員生的三幕個人主線。"
+        "若 opening=true、story_arc.next_stage 為 1 且 batch_size 至少 2，第一個事件是玩家起始議題 story_stage=0，"
+        "第二個事件是第一幕 story_stage=1。非 opening 時，next_stage 為 1、2 或 3，"
+        "就從該幕起連續安排可放進本批的主線幕次，例如 2 個事件可依序是 2、3；"
+        "user data 中的 required_story_stages 是逐事件的權威順序，events[i].story_stage 必須完全相同。"
+        "主線事件的 resident_id 必須是 story_arc.resident_id，event_type 必須是 character_story。"
+        "若 story_arc.next_stage 為 0，或 opening 沒有安排第一幕，所有事件 story_stage 都填 0。"
+        "主線要承接角色 concern 與 goal，三幕逐步發展，讓玩家決策改變合作結果。"
+        "可偶爾在角色台詞或選項自然放一句輕鬆、原創的台灣網路梗，例如「進度條終於動了」；"
+        "不要每段都塞梗、不要嘲諷角色，也不要引用長篇流行文案。"
         "若目前有年度挑戰或已解鎖稱號，後續事件應自然反映玩家追求的目標和已取得的成果。"
         "event 最多 160 字、resident_quote 最多 120 字、resident_concern 最多 80 字、"
         "每個 action text 最多 80 字。"
@@ -547,27 +561,59 @@ def generate_campaign_events(
         "-5 到 10、-5 到 5、-5 到 5；cost 為 0 到 60 的整數。"
         "只輸出符合 schema 的 JSON，不得加 Markdown 或說明。"
     )
-    user_prompt = json.dumps(
-        {
-            "proposal": proposal,
-            "opening": opening,
-            "batch_size": batch_size,
-            "recent_history": recent_history[-8:],
-            "campus_state": campus_state,
-            "next_decision": next_decision,
-        },
-        ensure_ascii=False,
-    )
+    prompt_data = {
+        "proposal": proposal,
+        "opening": opening,
+        "batch_size": batch_size,
+        "recent_history": recent_history[-8:],
+        "campus_state": campus_state,
+        "next_decision": next_decision,
+        "required_story_stages": _expected_campaign_story_stages(
+            campus_state.get("story_arc"), batch_size, opening
+        ),
+    }
+    user_prompt = json.dumps(prompt_data, ensure_ascii=False)
     data = _request_gemini(
         system_prompt,
         user_prompt,
         response_schema,
         temperature=0.9,
     )
-    return _validate_campaign_events(data, batch_size, campus_state.get("characters", []))
+    try:
+        return _validate_campaign_events(
+            data,
+            batch_size,
+            campus_state.get("characters", []),
+            campus_state.get("story_arc"),
+            opening,
+        )
+    except ValueError as error:
+        if "人物故事線順序不符" not in str(error):
+            raise
+
+        correction_data = dict(prompt_data)
+        correction_data["format_correction"] = str(error) + (
+            "請依 required_story_stages 逐一修正 events 的 story_stage，"
+            "並確保每個主線事件由指定主角敘述。"
+        )
+        corrected = _request_gemini(
+            system_prompt,
+            json.dumps(correction_data, ensure_ascii=False),
+            response_schema,
+            temperature=0.35,
+        )
+        return _validate_campaign_events(
+            corrected,
+            batch_size,
+            campus_state.get("characters", []),
+            campus_state.get("story_arc"),
+            opening,
+        )
 
 
-def _validate_campaign_events(data, expected_count, characters):
+def _validate_campaign_events(
+    data, expected_count, characters, story_arc=None, opening=False
+):
     if not isinstance(data, dict):
         raise ValueError("延伸事件格式錯誤：根節點必須為物件。")
     if not isinstance(characters, list) or not characters:
@@ -583,6 +629,9 @@ def _validate_campaign_events(data, expected_count, characters):
 
     validated = []
     seen_events = set()
+    expected_story_stages = _expected_campaign_story_stages(
+        story_arc, expected_count, opening
+    )
     for event_index, event in enumerate(events):
         if not isinstance(event, dict):
             raise ValueError("延伸事件格式錯誤：事件必須為物件。")
@@ -592,11 +641,28 @@ def _validate_campaign_events(data, expected_count, characters):
         seen_events.add(title.casefold())
         category = event.get("category")
         event_type = event.get("event_type")
+        story_stage = event.get("story_stage")
         group = event.get("group")
         if not isinstance(category, str) or category not in CAMPAIGN_CATEGORIES:
             raise ValueError("延伸事件格式錯誤：事件類型無效。")
         if not isinstance(event_type, str) or event_type not in CAMPAIGN_EVENT_TYPES:
             raise ValueError("延伸事件格式錯誤：事件玩法類型無效。")
+        if (
+            isinstance(story_stage, bool)
+            or not isinstance(story_stage, int)
+            or story_stage not in {0, 1, 2, 3}
+        ):
+            raise ValueError("延伸事件格式錯誤：人物故事幕次無效。")
+        required_stage = expected_story_stages[event_index]
+        if story_stage != required_stage:
+            actual_stages = [
+                item.get("story_stage") if isinstance(item, dict) else None
+                for item in events
+            ]
+            raise ValueError(
+                "延伸事件格式錯誤：人物故事線順序不符；"
+                f"預期 {expected_story_stages}，收到 {actual_stages}。"
+            )
         if not isinstance(group, str) or group not in CAMPAIGN_GROUPS:
             raise ValueError("延伸事件格式錯誤：受影響的教職員生類型無效。")
         resident_id = event.get("resident_id")
@@ -606,6 +672,12 @@ def _validate_campaign_events(data, expected_count, characters):
             or character_groups[resident_id] != group
         ):
             raise ValueError("延伸事件格式錯誤：指定的教職員生不存在或類型不符。")
+        if story_stage and (
+            not isinstance(story_arc, dict)
+            or resident_id != story_arc.get("resident_id")
+            or event_type != "character_story"
+        ):
+            raise ValueError("延伸事件格式錯誤：人物故事主角或類型不符。")
         resident_quote = _validate_text(
             event.get("resident_quote"), 120, "教職員生發言格式錯誤。"
         )
@@ -659,6 +731,7 @@ def _validate_campaign_events(data, expected_count, characters):
             "event": title,
             "category": category,
             "event_type": event_type,
+            "story_stage": story_stage,
             "group": group,
             "resident_id": resident_id,
             "resident_quote": resident_quote,
@@ -667,6 +740,26 @@ def _validate_campaign_events(data, expected_count, characters):
             "source": "gemini",
         })
     return validated
+
+
+def _expected_campaign_story_stages(story_arc, batch_size, opening):
+    if not isinstance(story_arc, dict):
+        return [0] * batch_size
+    next_stage = story_arc.get("next_stage", 0)
+    if (
+        isinstance(next_stage, bool)
+        or not isinstance(next_stage, int)
+        or next_stage not in {0, 1, 2, 3}
+    ):
+        raise ValueError("人物故事線狀態格式錯誤：下一幕無效。")
+    if opening:
+        if next_stage == 1 and batch_size > 1:
+            return [0, 1] + [0] * (batch_size - 2)
+        return [0] * batch_size
+    if next_stage == 0:
+        return [0] * batch_size
+    stages = list(range(next_stage, min(4, next_stage + batch_size)))
+    return stages + [0] * (batch_size - len(stages))
 
 
 def _demo_campaign_plans(proposal):
@@ -714,6 +807,10 @@ def _demo_campaign_events(proposal, recent_history, campus_state, batch_size, op
     rng = random.Random(seed_text)
     categories = list(CAMPAIGN_CATEGORIES)
     characters = list(campus_state.get("characters", []))
+    story_arc = campus_state.get("story_arc", {})
+    story_stages = _expected_campaign_story_stages(
+        story_arc, batch_size, opening
+    )
     angles = (
         "預算重估牽動跨單位服務",
         "不同學院的需求出現落差",
@@ -756,7 +853,14 @@ def _demo_campaign_events(proposal, recent_history, campus_state, batch_size, op
             {"problem_improvement": -2, "fairness": 1, "treasury": 20},
         ),
     )
-    event_types = rng.sample(sorted(CAMPAIGN_EVENT_TYPES), batch_size)
+    story_count = sum(stage > 0 for stage in story_stages)
+    if story_count:
+        regular_event_types = rng.sample(
+            sorted(CAMPAIGN_EVENT_TYPES - {"character_story"}),
+            batch_size - story_count,
+        )
+    else:
+        regular_event_types = rng.sample(sorted(CAMPAIGN_EVENT_TYPES), batch_size)
     events = []
     recent_titles = {
         item.get("event", "").casefold()
@@ -764,8 +868,14 @@ def _demo_campaign_events(proposal, recent_history, campus_state, batch_size, op
         if isinstance(item, dict)
     }
     for index in range(batch_size):
+        story_stage = story_stages[index]
         if opening and index == 0:
             title = proposal[:160]
+        elif story_stage:
+            title = (
+                f"{story_arc['resident_name']}的「{story_arc['goal']}」"
+                f"迎來第 {story_stage} 幕轉折"
+            )
         else:
             prior_topic = (
                 recent_history[-1].get("event", proposal)
@@ -780,12 +890,19 @@ def _demo_campaign_events(proposal, recent_history, campus_state, batch_size, op
         actions = []
         options = list(response_templates)
         rng.shuffle(options)
-        available_characters = [
-            character for character in characters
-            if isinstance(character, dict) and character.get("id") not in {
-                item.get("resident_id") for item in events
-            }
-        ]
+        if story_stage:
+            available_characters = [
+                character for character in characters
+                if isinstance(character, dict)
+                and character.get("id") == story_arc.get("resident_id")
+            ]
+        else:
+            available_characters = [
+                character for character in characters
+                if isinstance(character, dict) and character.get("id") not in {
+                    item.get("resident_id") for item in events
+                }
+            ]
         if not available_characters:
             available_characters = [
                 character for character in characters if isinstance(character, dict)
@@ -810,12 +927,23 @@ def _demo_campaign_events(proposal, recent_history, campus_state, batch_size, op
         events.append({
             "event": title,
             "category": rng.choice(categories),
-            "event_type": event_types[index],
+            "event_type": (
+                "character_story" if story_stage else regular_event_types.pop(0)
+            ),
+            "story_stage": story_stage,
             "group": group,
             "resident_id": character["id"],
             "resident_quote": (
-                f"「我最近一直在想{character['concern']}，"
-                f"也希望能慢慢完成{character['goal']}。」"
+                f"「{character['concern']}還是很重要，我希望{character['goal']}。"
+                + (
+                    "目前進度有點像卡在載入畫面，但我還沒按離開。」"
+                    if story_stage == 1
+                    else "本來以為是小任務，結果校務副本整個展開了。」"
+                    if story_stage == 2
+                    else "這次想把進度推下去，不想只在群組收到一個貼圖。」"
+                    if story_stage == 3
+                    else "也希望能慢慢完成個人目標。」"
+                )
             ),
             "resident_concern": character["concern"],
             "actions": actions,

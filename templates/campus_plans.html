@@ -8,6 +8,7 @@
       <h1>{{ scenario_title }}</h1>
       <p>起始問題：{{ proposal }}</p>
       <div class="notice campus-profile-note"><strong>本局開局：{{ campus_profile.name }}</strong><br>{{ campus_profile.description }}</div>
+      <div class="notice campus-profile-note"><strong>本局人物主線：{{ story_arc.title }}</strong><br>{{ story_arc.resident_name }}希望{{ story_arc.goal }}；你的選擇會影響故事結局。</div>
       <div class="phase-complete"><span aria-hidden="true">✓</span>{% if demo_mode %}示範內容依問題整理，並準備{% else %}AI 已依問題整理方案，並準備{% endif %} {{ event_count }} 個起始與延伸事件。</div>
     </div>
     <img class="page-illustration" src="{{ url_for('static', filename='plans-illustration.svg') }}" alt="" aria-hidden="true">

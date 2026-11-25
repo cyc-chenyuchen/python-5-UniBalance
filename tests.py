@@ -22,10 +22,13 @@ from app import GAMES, app
 from campus_simulation import (
     TOTAL_TURNS,
     YEARS,
+    _advance_story_arc,
     advance_campaign,
     campus_profile_for_seed,
     new_campaign,
+    next_story_arc_context,
     resident_profiles,
+    story_arc_for_seed,
 )
 from simulation import apply_effects, calculate_total_score, make_comment, run_round_choice
 
@@ -484,6 +487,7 @@ class CampaignAiGenerationTests(unittest.TestCase):
                 "event": f"由玩家決策衍生的校園議題 {event_index + 1}",
                 "category": "policy",
                 "event_type": "negotiation",
+                "story_stage": 0,
                 "group": "students",
                 "resident_id": "lin_muqing",
                 "resident_quote": "我希望學校也能理解我的日常和長期目標。",
@@ -560,6 +564,83 @@ class CampaignAiGenerationTests(unittest.TestCase):
             len({event["event_type"] for event in events}),
             CAMPAIGN_EVENT_BATCH_SIZE,
         )
+
+    def test_demo_event_batch_advances_the_resident_story_arc(self):
+        story_arc = story_arc_for_seed(18)
+        events = generate_campaign_events(
+            "校園空間不足",
+            [],
+            {
+                "characters": resident_profiles(),
+                "story_arc": story_arc,
+            },
+        )
+
+        self.assertEqual(events[0]["story_stage"], 1)
+        self.assertEqual(events[0]["resident_id"], story_arc["resident_id"])
+        self.assertEqual(events[0]["event_type"], "character_story")
+        self.assertEqual(
+            [event["story_stage"] for event in events],
+            [1, 2],
+        )
+        self.assertEqual(events[1]["resident_id"], story_arc["resident_id"])
+
+    def test_api_story_batch_must_follow_the_requested_arc_stage(self):
+        payload = self._event_payload()
+        payload["events"][0]["event_type"] = "character_story"
+        payload["events"][0]["story_stage"] = 2
+        payload["events"][1]["event_type"] = "character_story"
+        payload["events"][1]["story_stage"] = 3
+        story_arc = {"next_stage": 2, "resident_id": "lin_muqing"}
+        state = {
+            "characters": resident_profiles(),
+            "story_arc": story_arc,
+        }
+
+        with (
+            patch.dict(os.environ, {"DEMO_MODE": "0"}),
+            patch("ai_service._request_gemini", return_value=payload),
+        ):
+            events = generate_campaign_events("改善校園服務", [], state)
+
+        self.assertEqual(
+            [event["story_stage"] for event in events],
+            [2, 3],
+        )
+
+        payload["events"][0]["story_stage"] = 1
+        with (
+            patch.dict(os.environ, {"DEMO_MODE": "0"}),
+            patch("ai_service._request_gemini", return_value=payload),
+        ):
+            with self.assertRaisesRegex(ValueError, "人物故事線順序不符"):
+                generate_campaign_events("改善校園服務", [], state)
+
+    def test_api_retries_once_when_story_stage_order_is_wrong(self):
+        invalid_payload = self._event_payload()
+        valid_payload = self._event_payload()
+        for event, stage in zip(valid_payload["events"], (2, 3)):
+            event["event_type"] = "character_story"
+            event["story_stage"] = stage
+        state = {
+            "characters": resident_profiles(),
+            "story_arc": {"next_stage": 2, "resident_id": "lin_muqing"},
+        }
+
+        with (
+            patch.dict(os.environ, {"DEMO_MODE": "0"}),
+            patch(
+                "ai_service._request_gemini",
+                side_effect=[invalid_payload, valid_payload],
+            ) as request,
+        ):
+            events = generate_campaign_events("改善校園服務", [], state)
+
+        self.assertEqual([event["story_stage"] for event in events], [2, 3])
+        self.assertEqual(request.call_count, 2)
+        retry_prompt = json.loads(request.call_args_list[1].args[1])
+        self.assertEqual(retry_prompt["required_story_stages"], [2, 3])
+        self.assertIn("格式錯誤", retry_prompt["format_correction"])
 
     def test_invalid_ai_event_effects_are_rejected(self):
         payload = self._event_payload()
@@ -727,6 +808,7 @@ class CampusCampaignTests(unittest.TestCase):
                 "year": 1,
                 "semester": 1,
                 "characters": resident_profiles(),
+                "story_arc": story_arc_for_seed(seed),
             },
             opening=True,
         )
@@ -753,6 +835,7 @@ class CampusCampaignTests(unittest.TestCase):
             self.assertEqual(response.status_code, 200)
             self.assertIn("圖書館尖峰時段座位不足".encode("utf-8"), response.data)
             self.assertIn("示範方案".encode("utf-8"), response.data)
+            self.assertIn("本局人物主線".encode("utf-8"), response.data)
             response = self.client.post(
                 "/campus/plan",
                 data={"plan_id": "plan_1"},
@@ -789,6 +872,16 @@ class CampusCampaignTests(unittest.TestCase):
         self.assertTrue(campaign["finished"])
         self.assertEqual(len(campaign["history"]), TOTAL_TURNS)
         self.assertEqual(len(campaign["yearly"]), YEARS)
+        self.assertEqual(campaign["story_arc"]["stage"], 3)
+        self.assertIsNotNone(campaign["story_arc"]["ending"])
+        self.assertEqual(
+            [
+                turn
+                for turn, item in enumerate(campaign["history"])
+                if item["story_beat"]
+            ],
+            [1, 2, 3],
+        )
 
     def test_each_play_gets_five_unique_annual_challenges(self):
         first = self._new_test_campaign()
@@ -824,6 +917,33 @@ class CampusCampaignTests(unittest.TestCase):
                 "innovation_campus",
             },
         )
+
+    def test_story_arc_branches_on_player_support(self):
+        cooperative = self._new_test_campaign(seed=18)
+        stalled = self._new_test_campaign(seed=18)
+
+        for campaign, signal in ((cooperative, 15), (stalled, -15)):
+            resident = next(
+                item for item in campaign["residents"]
+                if item["id"] == campaign["story_arc"]["resident_id"]
+            )
+            for stage in range(1, 4):
+                _advance_story_arc(
+                    campaign,
+                    {"story_stage": stage, "resident": resident},
+                    {
+                        "effects": {"fairness": signal // 3},
+                        "resident_effects": {
+                            "trust": signal // 3,
+                            "stress": -signal // 3,
+                        },
+                    },
+                )
+
+        self.assertEqual(cooperative["story_arc"]["ending"], "co_created")
+        self.assertIn("沒有停在群組", cooperative["story_arc"]["ending_text"])
+        self.assertEqual(stalled["story_arc"]["ending"], "stalled")
+        self.assertIn("待跨單位會議確認", stalled["story_arc"]["ending_text"])
 
     def test_delayed_choice_effects_settle_one_semester_later(self):
         campaign = self._new_test_campaign(seed=12)
@@ -866,7 +986,10 @@ class CampusCampaignTests(unittest.TestCase):
         next_events = generate_campaign_events(
             campaign["concern"],
             campaign["history"],
-            {"characters": resident_profiles(campaign["residents"])},
+            {
+                "characters": resident_profiles(campaign["residents"]),
+                "story_arc": next_story_arc_context(campaign),
+            },
         )
         advance_campaign(
             campaign,
@@ -1029,6 +1152,7 @@ class CampusCampaignTests(unittest.TestCase):
                 "year": 1,
                 "semester": 1,
                 "characters": resident_profiles(campaign["residents"]),
+                "story_arc": next_story_arc_context(campaign),
             },
         )
         with patch(

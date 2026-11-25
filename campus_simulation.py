@@ -319,6 +319,41 @@ EVENT_TYPE_INFO = {
 }
 
 
+def story_arc_for_seed(seed):
+    resident = random.Random(f"{seed}:resident-story").choice(RESIDENTS)
+    return {
+        "id": f"story_{resident['id']}",
+        "title": f"{resident['name']}的三學期支線",
+        "resident_id": resident["id"],
+        "resident_name": resident["name"],
+        "resident_role": resident["role"],
+        "group": resident["group"],
+        "concern": resident["concern"],
+        "goal": resident["goal"],
+        "stage": 0,
+        "next_stage": 1,
+        "support_score": 0,
+        "ending": None,
+        "ending_text": None,
+        "last_beat": None,
+    }
+
+
+def next_story_arc_context(state, action=None):
+    story = dict(state["story_arc"])
+    current_stage = state["current_event"]["story_stage"]
+    if current_stage:
+        story["stage"] = current_stage
+        story["next_stage"] = current_stage + 1 if current_stage < 3 else 0
+        if action:
+            story["support_score"] += (
+                action["resident_effects"]["trust"]
+                - action["resident_effects"]["stress"]
+                + action["effects"]["fairness"]
+            )
+    return story
+
+
 def _copy_campus_profile(profile):
     return {
         **profile,
@@ -431,6 +466,7 @@ def _materialize_event(state, raw_event, turn):
     group = raw_event["group"]
     if group not in GROUP_NAMES:
         raise ValueError("AI 事件格式錯誤：受影響對象無效。")
+    story_stage = raw_event.get("story_stage", 0)
     source = raw_event.get("source", "gemini")
     resident_id = raw_event.get("resident_id")
     resident = next(
@@ -439,6 +475,11 @@ def _materialize_event(state, raw_event, turn):
     )
     if resident is None or resident["group"] != group:
         raise ValueError("AI 事件格式錯誤：指定的教職員生不存在或類型不符。")
+    if story_stage and (
+        resident["id"] != state["story_arc"]["resident_id"]
+        or story_stage != state["story_arc"]["next_stage"]
+    ):
+        raise ValueError("AI 事件格式錯誤：人物故事線階段或角色不符。")
     actions = []
     for action in raw_event["actions"]:
         effects = dict(action["effects"])
@@ -466,6 +507,8 @@ def _materialize_event(state, raw_event, turn):
         "event_type": raw_event["event_type"],
         "event_type_label": EVENT_TYPE_INFO[raw_event["event_type"]]["label"],
         "event_type_hint": EVENT_TYPE_INFO[raw_event["event_type"]]["hint"],
+        "story_stage": story_stage,
+        "story_stage_label": f"人物故事第 {story_stage} 幕" if story_stage else None,
         "group": group,
         "group_label": GROUP_NAMES[group],
         "resident": resident,
@@ -527,6 +570,7 @@ def new_campaign(
         "yearly": [],
         "finished": False,
         "campus_profile": campus_profile,
+        "story_arc": story_arc_for_seed(seed),
         "pending_consequences": [],
         "challenges": [
             dict(challenge, year=year, completed=False, reward=30)
@@ -571,6 +615,15 @@ def available_developments(state):
 
 def campaign_context(state):
     turn = state["turn"]
+    story_arc = dict(state["story_arc"])
+    if story_arc["stage"] == 0:
+        story_arc["support_label"] = "故事即將展開"
+    elif story_arc["support_score"] >= 18:
+        story_arc["support_label"] = "合作默契穩固"
+    elif story_arc["support_score"] >= 6:
+        story_arc["support_label"] = "合作正在建立"
+    else:
+        story_arc["support_label"] = "信任仍需經營"
     return {
         "years": YEARS,
         "year": turn // SEMESTERS_PER_YEAR + 1,
@@ -581,6 +634,7 @@ def campaign_context(state):
         "event": state["current_event"],
         "selected_plan": state["selected_plan"],
         "campus_profile": state["campus_profile"],
+        "story_arc": story_arc,
         "metrics": dict(state["metrics"]),
         "treasury": state["treasury"],
         "population": dict(state["population"]),
@@ -655,6 +709,82 @@ def _schedule_delayed_consequence(state, event, action):
     })
 
 
+def _advance_story_arc(state, event, action):
+    story_stage = event["story_stage"]
+    if not story_stage:
+        return None
+
+    story = state["story_arc"]
+    if (
+        story_stage != story["next_stage"]
+        or event["resident"]["id"] != story["resident_id"]
+    ):
+        raise ValueError("人物故事線順序錯誤，無法結算本次決策。")
+
+    effects = action["effects"]
+    relationship = action["resident_effects"]
+    support = (
+        relationship["trust"]
+        - relationship["stress"]
+        + effects["fairness"]
+    )
+    story["support_score"] += support
+    story["stage"] = story_stage
+    story["next_stage"] = story_stage + 1 if story_stage < 3 else 0
+
+    if story_stage == 1:
+        message = (
+            f"第 1 幕完成：{story['resident_name']}願意把目標說出口。"
+            "校園支線正式開啟，這次不是只在群組回「收到」。"
+        )
+    elif story_stage == 2:
+        message = (
+            f"第 2 幕完成：試辦結果讓{story['resident_name']}的目標有了新方向。"
+            "進度條終於動了，先別急著截圖慶祝。"
+        )
+    else:
+        resident = event["resident"]
+        if story["support_score"] >= 18:
+            story["ending"] = "co_created"
+            story["ending_text"] = (
+                f"{story['resident_name']}與校方一起推進了「{story['goal']}」。"
+                "這條支線沒有停在群組的「收到」。"
+            )
+            resident["satisfaction"] = _bounded(resident["satisfaction"] + 4)
+            resident["stress"] = _bounded(resident["stress"] - 3)
+            state["metrics"]["problem_improvement"] = _bounded(
+                state["metrics"]["problem_improvement"] + 2
+            )
+            state["metrics"]["fairness"] = _bounded(
+                state["metrics"]["fairness"] + 2
+            )
+        elif story["support_score"] >= 6:
+            story["ending"] = "fragile_progress"
+            story["ending_text"] = (
+                f"{story['resident_name']}的「{story['goal']}」取得有限進展，"
+                "仍需要下一任校長接力。"
+            )
+            resident["satisfaction"] = _bounded(resident["satisfaction"] + 1)
+        else:
+            story["ending"] = "stalled"
+            story["ending_text"] = (
+                f"{story['resident_name']}的「{story['goal']}」暫時卡關；"
+                "進度進入「待跨單位會議確認」狀態。"
+            )
+            resident["trust"] = _bounded(resident["trust"] - 2)
+            resident["stress"] = _bounded(resident["stress"] + 3)
+
+        message = f"第 3 幕完成：{story['ending_text']}"
+
+    story["last_beat"] = message
+    return {
+        "stage": story_stage,
+        "support_change": support,
+        "message": message,
+        "ending": story["ending"],
+    }
+
+
 def _settle_delayed_consequences(state, final=False):
     settled = []
     pending = []
@@ -708,6 +838,7 @@ def advance_campaign(state, action_id, development_id, next_events=None):
     if development.get("policy"):
         policy = development["policy"]
         state["policies"][policy] = state["policies"].get(policy, 0) + 1
+    story_update = _advance_story_arc(state, event, action)
     _schedule_delayed_consequence(state, event, action)
 
     maintenance = sum(state["buildings"].values()) * 4
@@ -767,6 +898,8 @@ def advance_campaign(state, action_id, development_id, next_events=None):
     else:
         butterfly = f"{development['title']}使{development['benefit']}，五年改革進入成果盤點"
     butterfly += f"；選擇後續回響：{action['follow_up']}"
+    if story_update:
+        butterfly += f"；{story_update['message']}"
     if annual_challenge:
         challenge_status = "完成" if annual_challenge["completed"] else "未完成"
         butterfly += (
@@ -791,6 +924,7 @@ def advance_campaign(state, action_id, development_id, next_events=None):
         "response": action["title"],
         "follow_up": action["follow_up"],
         "delayed_effects": dict(action["delayed_effects"]),
+        "story_beat": story_update,
         "settled_consequences": [
             {
                 "origin_event": item["origin_event"],
@@ -879,6 +1013,7 @@ def make_campaign_record(state):
         ),
         "years": YEARS,
         "campus_profile": state["campus_profile"],
+        "story_arc": state["story_arc"],
         "history": state["history"],
         "yearly": state["yearly"],
         "challenges": state["challenges"],
