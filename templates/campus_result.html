@@ -33,6 +33,20 @@
       <div><strong>校園建設</strong><span>{% for name, level in record.buildings.items() %}{{ record.building_labels[name] }} Lv.{{ level }}{% if not loop.last %} · {% endif %}{% endfor %}</span></div>
       <div><strong>政策成果</strong><span>{% set active_policies = record.policies|dictsort %}{% for name, level in active_policies if level > 0 %}{{ record.policy_labels[name] }} Lv.{{ level }}{% if not loop.last %} · {% endif %}{% else %}尚未制定{% endfor %}</span></div>
     </div>
+    {% if record.averages is defined %}
+    <section class="campaign-averages result-averages" aria-labelledby="result-average-heading">
+      <div class="campaign-section-heading">
+        <div><p class="step">最終統計</p><h3 id="result-average-heading">校園狀態平均值</h3></div>
+        <span>依本局最終模擬資料計算</span>
+      </div>
+      <div class="average-grid">
+        <div class="average-card"><strong>平均資源存量</strong><span>{{ "%.1f"|format(record.averages.resource_stock) }}<small> / 100</small></span><small>能源、用水、人力平均</small></div>
+        <div class="average-card"><strong>平均滿意度</strong><span>{{ "%.1f"|format(record.averages.satisfaction) }}<small> / 100</small></span><small>{{ record.residents|length }} 位教職員生平均</small></div>
+        <div class="average-card"><strong>平均信任度</strong><span>{{ "%.1f"|format(record.averages.trust) }}<small> / 100</small></span><small>{{ record.residents|length }} 位教職員生平均</small></div>
+        <div class="average-card"><strong>平均壓力值</strong><span>{{ "%.1f"|format(record.averages.stress) }}<small> / 100</small></span><small>{{ record.residents|length }} 位教職員生平均</small></div>
+      </div>
+    </section>
+    {% endif %}
   </section>
 
   <section class="result-section">

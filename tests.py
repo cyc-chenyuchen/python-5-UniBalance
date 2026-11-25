@@ -1,6 +1,7 @@
 import json
 import os
 import requests
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import Mock, patch
@@ -20,11 +21,13 @@ from ai_service import (
 )
 from app import GAMES, app
 from campus_simulation import (
+    TITLE_CATALOG,
     TOTAL_TURNS,
     YEARS,
     _advance_story_arc,
     _campus_reaction,
     _resolve_event_rule,
+    _title_is_earned,
     advance_campaign,
     campus_profile_for_seed,
     make_campaign_record,
@@ -34,6 +37,7 @@ from campus_simulation import (
     story_arc_for_seed,
 )
 from simulation import apply_effects, calculate_total_score, make_comment, run_round_choice
+from storage import load_records, save_record
 
 
 class SimulationScoreTests(unittest.TestCase):
@@ -361,6 +365,7 @@ class OfflineDemoTests(unittest.TestCase):
         )
         self.assertIn("離線示範模式".encode("utf-8"), response.data)
         self.assertEqual(response.status_code, 200)
+
         self.assertIn("1 / 3".encode("utf-8"), response.data)
 
         response = self.client.post(
@@ -500,6 +505,31 @@ class OfflineDemoTests(unittest.TestCase):
         self.assertIn("方案探索".encode("utf-8"), response.data)
         self.assertIn("循序改善方案".encode("utf-8"), response.data)
         self.assertEqual(recommend.call_count, 2)
+
+
+class StorageRetentionTests(unittest.TestCase):
+    def test_saving_records_keeps_only_the_most_recent_twenty(self):
+        with tempfile.TemporaryDirectory() as directory:
+            records_file = Path(directory) / "records.json"
+            records_file.write_text(
+                json.dumps([{"record_id": str(index)} for index in range(25)]),
+                encoding="utf-8",
+            )
+            with patch("storage.RECORDS_FILE", records_file):
+                self.assertEqual(
+                    [item["record_id"] for item in load_records()],
+                    [str(index) for index in range(5, 25)],
+                )
+                save_record({"record_id": "record-25"})
+                records = load_records()
+                saved_records = json.loads(
+                    records_file.read_text(encoding="utf-8")
+                )
+
+        self.assertEqual(len(records), 20)
+        self.assertEqual(records[0]["record_id"], "6")
+        self.assertEqual(records[-1]["record_id"], "record-25")
+        self.assertEqual(len(saved_records), 20)
 
 
 class CampaignAiGenerationTests(unittest.TestCase):
@@ -961,6 +991,57 @@ class CampusCampaignTests(unittest.TestCase):
         self.assertIn("8 位教職員生平均", page)
         self.assertLess(page.index('class="card campaign-indicators"'), page.index('class="card campaign-event"'))
         self.assertLess(page.index('class="card campaign-event"'), page.index('class="card campaign-challenge"'))
+
+    def test_campaign_result_shows_final_average_values(self):
+        campaign = self._new_test_campaign()
+        campaign["resources"] = {"energy": 61, "water": 72, "staffing": 68}
+        for index, resident in enumerate(campaign["residents"]):
+            resident["satisfaction"] = 51 + index
+            resident["trust"] = 41 + index
+            resident["stress"] = 31 + index
+        record = make_campaign_record(campaign)
+
+        flow_id = "campus-result-average-test"
+        GAMES[flow_id] = {"campaign": campaign, "result": record}
+        self.addCleanup(GAMES.pop, flow_id, None)
+        with self.client.session_transaction() as session:
+            session["flow_id"] = flow_id
+
+        response = self.client.get("/campus/result")
+        page = response.get_data(as_text=True)
+        self.assertEqual(response.status_code, 200)
+        for value in ("67.0", "54.5", "44.5", "34.5"):
+            self.assertIn(value, page)
+        for label in ("平均資源存量", "平均滿意度", "平均信任度", "平均壓力值"):
+            self.assertIn(label, page)
+
+    def test_title_catalog_has_twenty_titles_with_reachable_conditions(self):
+        self.assertEqual(len(TITLE_CATALOG), 20)
+        campaign = self._new_test_campaign()
+        added_titles = TITLE_CATALOG[10:]
+        self.assertTrue(
+            all(not _title_is_earned(campaign, title["rule"]) for title in added_titles)
+        )
+
+        campaign["resources"] = {"energy": 90, "water": 90, "staffing": 90}
+        campaign["metrics"]["satisfaction"] = 95
+        campaign["buildings"] = {"library": 1, "housing": 1, "wellbeing": 1}
+        campaign["policies"] = {
+            "scholarships": 1,
+            "workload": 1,
+            "accessibility": 1,
+        }
+        for resident in campaign["residents"]:
+            resident["trust"] = 80
+            resident["stress"] = 20
+        for challenge in campaign["challenges"]:
+            challenge["completed"] = True
+        campaign["story_arc"]["stage"] = 3
+        campaign["story_arc"]["support_score"] = 20
+
+        self.assertTrue(
+            all(_title_is_earned(campaign, title["rule"]) for title in added_titles)
+        )
 
     def test_campaign_result_lists_completed_annual_challenges(self):
         campaign = self._new_test_campaign()

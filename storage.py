@@ -8,6 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 MENU_FILE = DATA_DIR / "menu.json"
 RECORDS_FILE = DATA_DIR / "records.json"
+MAX_RECORDS = 20
 _record_lock = threading.Lock()
 
 
@@ -47,7 +48,7 @@ def load_records():
         raise ValueError(f"data/records.json 格式錯誤：{error}") from error
     if not isinstance(records, list):
         raise ValueError("data/records.json 格式錯誤：根節點必須為陣列。")
-    return records
+    return records[-MAX_RECORDS:]
 
 
 def save_record(record):
@@ -56,5 +57,6 @@ def save_record(record):
         record_ids = {item.get("record_id") for item in records if isinstance(item, dict)}
         if record.get("record_id") not in record_ids:
             records.append(record)
+            records = records[-MAX_RECORDS:]
             with RECORDS_FILE.open("w", encoding="utf-8") as file:
                 json.dump(records, file, ensure_ascii=False, indent=2)

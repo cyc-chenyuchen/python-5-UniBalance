@@ -18,6 +18,7 @@ from campus_simulation import (
     YEARS,
     apply_campus_profile,
     advance_campaign,
+    calculate_campaign_averages,
     campus_profile_for_seed,
     campaign_context,
     make_campaign_record,
@@ -478,6 +479,7 @@ def record_detail(record_id):
     if not record:
         return render_template("error.html", title="找不到紀錄", message="此紀錄沒有新格式識別碼或已不存在。"), 404
     if record.get("scenario_id") == "campus_decade":
+        _ensure_campaign_averages(record)
         return render_template("campus_result.html", record=record)
     return render_template("result.html", record=record)
 
@@ -784,7 +786,36 @@ def campus_result():
         )
     if not record:
         return redirect("/")
+    _ensure_campaign_averages(record)
     return render_template("campus_result.html", record=record)
+
+
+def _ensure_campaign_averages(record):
+    if isinstance(record.get("averages"), dict):
+        return
+    resources = record.get("resources")
+    residents = record.get("residents")
+    if (
+        not isinstance(resources, dict)
+        or not resources
+        or not isinstance(residents, list)
+        or not residents
+        or not all(
+            isinstance(value, (int, float)) and not isinstance(value, bool)
+            for value in resources.values()
+        )
+        or not all(
+            isinstance(resident, dict)
+            and all(
+                isinstance(resident.get(metric), (int, float))
+                and not isinstance(resident.get(metric), bool)
+                for metric in ("satisfaction", "trust", "stress")
+            )
+            for resident in residents
+        )
+    ):
+        return
+    record["averages"] = calculate_campaign_averages(resources, residents)
 
 
 def _utc_now():

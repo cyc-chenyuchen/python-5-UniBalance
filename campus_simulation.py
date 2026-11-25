@@ -250,6 +250,16 @@ TITLE_CATALOG = (
     {"id": "problem_solver", "name": "問題終結者", "description": "問題改善度達到 75。", "rule": "problem"},
     {"id": "challenge_collector", "name": "挑戰收藏家", "description": "完成至少三項年度挑戰。", "rule": "challenges"},
     {"id": "five_year_legend", "name": "五年傳奇", "description": "完成五年經營並取得 85 分以上。", "rule": "champion"},
+    {"id": "energy_keeper", "name": "能源管家", "description": "能源存量達到 80。", "rule": "energy"},
+    {"id": "water_saver", "name": "節水高手", "description": "用水存量達到 80。", "rule": "water"},
+    {"id": "staffing_coordinator", "name": "人力調度師", "description": "人力存量達到 80。", "rule": "staffing"},
+    {"id": "satisfaction_expert", "name": "滿意度推手", "description": "教職員生平均滿意度達到 90。", "rule": "high_satisfaction"},
+    {"id": "trust_builder", "name": "信任築橋人", "description": "教職員生平均信任達到 70。", "rule": "high_trust"},
+    {"id": "stress_relief", "name": "壓力舒緩師", "description": "教職員生平均壓力降至 35 以下。", "rule": "low_stress"},
+    {"id": "campus_trifecta", "name": "三大建設總監", "description": "學習空間、宿舍與健康支持中心皆完成至少一級建設。", "rule": "all_buildings"},
+    {"id": "policy_integrator", "name": "政策整合推手", "description": "至少三種校園政策各推動一級。", "rule": "policy_mix"},
+    {"id": "challenge_master", "name": "年度挑戰全制霸", "description": "完成全部五項年度挑戰。", "rule": "all_challenges"},
+    {"id": "story_companion", "name": "人物主線最佳拍檔", "description": "完成三幕人物主線，並累積至少 18 點合作支持。", "rule": "supported_story"},
 )
 
 CAMPUS_PROFILES = (
@@ -444,6 +454,24 @@ def _average_resident_metric(state, metric):
     return sum(resident[metric] for resident in state["residents"]) / len(state["residents"])
 
 
+def calculate_campaign_averages(resources, residents):
+    return {
+        "resource_stock": round(sum(resources.values()) / len(resources), 1),
+        "satisfaction": round(
+            sum(resident["satisfaction"] for resident in residents) / len(residents),
+            1,
+        ),
+        "trust": round(
+            sum(resident["trust"] for resident in residents) / len(residents),
+            1,
+        ),
+        "stress": round(
+            sum(resident["stress"] for resident in residents) / len(residents),
+            1,
+        ),
+    }
+
+
 def _challenge_is_complete(state, challenge):
     rule = challenge["rule"]
     if rule == "treasury":
@@ -486,6 +514,34 @@ def _title_is_earned(state, rule):
         return sum(challenge["completed"] for challenge in state["challenges"]) >= 3
     if rule == "champion":
         return state["finished"] and calculate_campaign_score(state) >= 85
+    if rule == "energy":
+        return state["resources"]["energy"] >= 80
+    if rule == "water":
+        return state["resources"]["water"] >= 80
+    if rule == "staffing":
+        return state["resources"]["staffing"] >= 80
+    if rule == "high_satisfaction":
+        return state["metrics"]["satisfaction"] >= 90
+    if rule == "high_trust":
+        return _average_resident_metric(state, "trust") >= 70
+    if rule == "low_stress":
+        return _average_resident_metric(state, "stress") <= 35
+    if rule == "all_buildings":
+        return all(
+            state["buildings"].get(building, 0) >= 1
+            for building in ("library", "housing", "wellbeing")
+        )
+    if rule == "policy_mix":
+        return sum(level > 0 for level in state["policies"].values()) >= 3
+    if rule == "all_challenges":
+        return bool(state["challenges"]) and all(
+            challenge["completed"] for challenge in state["challenges"]
+        )
+    if rule == "supported_story":
+        return (
+            state["story_arc"]["stage"] >= 3
+            and state["story_arc"]["support_score"] >= 18
+        )
     return False
 
 
@@ -657,7 +713,6 @@ def available_developments(state):
 def campaign_context(state):
     turn = state["turn"]
     residents = state["residents"]
-    resource_values = state["resources"].values()
     story_arc = dict(state["story_arc"])
     if story_arc["stage"] == 0:
         story_arc["support_label"] = "故事即將展開"
@@ -679,21 +734,7 @@ def campaign_context(state):
         "campus_profile": state["campus_profile"],
         "story_arc": story_arc,
         "metrics": dict(state["metrics"]),
-        "averages": {
-            "resource_stock": round(sum(resource_values) / len(state["resources"]), 1),
-            "satisfaction": round(
-                sum(resident["satisfaction"] for resident in residents) / len(residents),
-                1,
-            ),
-            "trust": round(
-                sum(resident["trust"] for resident in residents) / len(residents),
-                1,
-            ),
-            "stress": round(
-                sum(resident["stress"] for resident in residents) / len(residents),
-                1,
-            ),
-        },
+        "averages": calculate_campaign_averages(state["resources"], residents),
         "treasury": state["treasury"],
         "population": dict(state["population"]),
         "resources": dict(state["resources"]),
@@ -1132,6 +1173,9 @@ def make_campaign_record(state):
         "yearly": state["yearly"],
         "challenges": state["challenges"],
         "titles": state["titles"],
+        "averages": calculate_campaign_averages(
+            state["resources"], state["residents"]
+        ),
         "population": dict(state["population"]),
         "resources": dict(state["resources"]),
         "buildings": dict(state["buildings"]),
