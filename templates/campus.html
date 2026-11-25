@@ -59,6 +59,7 @@
       <span class="campaign-period">第 {{ year }} 年 · 第 {{ semester }} 學期</span>
     </div>
     <p class="event-format-hint">{{ event.event_type_hint }}</p>
+    <p class="event-format-rule"><strong>本類特殊規則：</strong>{{ event.event_type_rule }}</p>
     {% if pending_consequences %}
     <div class="consequence-queue">
       <strong>即將回響的決策</strong>
@@ -135,7 +136,7 @@
     {% if history %}
     <ol class="butterfly-list">
       {% for item in history[-4:]|reverse %}
-      <li><small>第 {{ item.year }} 年第 {{ item.semester }} 學期 · {{ item.resident }} · 信任 {{ item.resident_trust }} · 壓力 {{ item.resident_stress }}</small><span>{{ item.butterfly }}</span></li>
+      <li><small>第 {{ item.year }} 年第 {{ item.semester }} 學期 · {{ item.resident }} · 信任 {{ item.resident_trust }} · 壓力 {{ item.resident_stress }}</small><span>{{ item.butterfly }}</span><small class="event-rule-result">{{ item.event_rule_result }}</small><small class="campus-reaction">{{ item.campus_reaction }}</small></li>
       {% endfor %}
     </ol>
     {% else %}

@@ -94,6 +94,8 @@
         <span>已結算後果：{{ consequence.origin_event }} · {{ consequence.resident }} · {{ consequence.description }}</span>
         {% endfor %}
         {% if item.resident_trust is defined %}<span>決策後信任 {{ item.resident_trust }} · 壓力 {{ item.resident_stress }}</span>{% endif %}
+        {% if item.event_rule_result is defined %}<span>{{ item.event_rule_result }}</span>{% endif %}
+        {% if item.campus_reaction is defined %}<span class="campus-reaction">{{ item.campus_reaction }}</span>{% endif %}
         {% if item.story_beat %}<span class="story-beat">{{ item.story_beat.message }}</span>{% endif %}
         <span>校務措施：{{ item.development }}（{{ item.category }}）</span>
         <p>{{ item.butterfly }}</p>

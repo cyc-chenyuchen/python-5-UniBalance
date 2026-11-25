@@ -543,6 +543,8 @@ button:hover, .button:hover {
 .story-progress-track { height: 8px; overflow: hidden; border-radius: 999px; background: var(--color-border); }
 .story-progress-track span { display: block; width: var(--story-progress); height: 100%; border-radius: inherit; background: var(--color-gold); transition: width 180ms ease; }
 .story-beat { display: block; padding: 8px 10px; border-radius: 10px; background: #fbf7e9; color: var(--color-primary-dark); }
+.event-rule-result { display: block; color: var(--color-primary-dark) !important; }
+.campus-reaction { display: block; color: #806348 !important; font-style: italic; }
 .event-format-badge { display: inline-flex; padding: 3px 8px; border-radius: 999px; background: var(--color-mint); color: var(--color-primary-dark); font-size: 11px; font-weight: 750; }
 .event-format-crisis { background: #f7e5df; color: #8a4c40; }
 .event-format-opportunity { background: #f7efd7; color: #7d6325; }
@@ -550,6 +552,7 @@ button:hover, .button:hover {
 .event-format-campus_vote { background: #e7eaf6; color: #565f93; }
 .event-format-character_story { background: #eee7f2; color: #71567d; }
 .event-format-hint { margin: 10px 0; color: var(--color-muted); font-size: 13px; }
+.event-format-rule { margin: 8px 0 14px; padding: 10px 12px; border-left: 3px solid var(--color-gold); border-radius: 0 10px 10px 0; background: #fbf7e9; font-size: 13px; }
 .consequence-queue { margin: 12px 0; padding: 12px 14px; border: 1px solid var(--color-gold); border-radius: 12px; background: #fbf7e9; }
 .consequence-queue strong { color: var(--color-primary-dark); font-size: 13px; }
 .consequence-queue p { margin: 5px 0 0; color: var(--color-muted); font-size: 12px; }

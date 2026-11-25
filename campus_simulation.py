@@ -299,23 +299,63 @@ EVENT_TYPE_INFO = {
     "crisis": {
         "label": "緊急危機",
         "hint": "情勢正在升溫，本學期的處理方式會影響後續損失。",
+        "rule": "回應本身的問題改善達 +5，成功止損；未達標會額外損失 2 點改善，焦點角色壓力 +2。",
     },
     "opportunity": {
         "label": "限時機會",
         "hint": "校外或校內出現短期機會，請衡量投入、回報與機會成本。",
+        "rule": "若延遲改善至少 +4 且公平效果不為負，本回合校務基金額外 +20。",
     },
     "negotiation": {
         "label": "角色協商",
         "hint": "不同群體各有立場，協調方式會改變當事人的信任與公平感。",
+        "rule": "公平效果達 +3，焦點角色額外信任 +2；公平效果為負，信任 -2。",
     },
     "campus_vote": {
         "label": "校園投票",
         "hint": "教職員生意見不一，決策需在多數支持與少數需求間取捨。",
+        "rule": "公平效果達 +2，事件群體滿意度 +2；否則投票未過，群體滿意度 -2。",
     },
     "character_story": {
         "label": "人物故事",
         "hint": "事件關係到一位教職員生的個人目標與長期發展。",
+        "rule": "主線幕次會累積信任、壓力與公平的支持值，並影響第三幕結局。",
     },
+}
+
+CAMPUS_REACTIONS = {
+    "crisis": (
+        "校務群組的驚嘆號依然很忙，但至少有了處理方向。",
+        "消防栓今天有出場，還好不是只負責背景。",
+        "緊急會議終於不只是在聊天室打「收到」。",
+    ),
+    "opportunity": (
+        "機會就像限時優惠，校務基金先看完條款再按下去。",
+        "基金與機會的相遇，至少有留下會議紀錄。",
+        "下學期的自己表示：這次先把條件看清楚。",
+    ),
+    "negotiation": (
+        "協商桌上沒有秒讀不回，已經是一種進展。",
+        "「先這樣」今天多附了一份具體後續事項。",
+        "會議紀錄不是連載，至少這一章有個句點。",
+    ),
+    "campus_vote": (
+        "有票有真相，少數意見也能留在紀錄上。",
+        "投票結果出爐，表單今天終於不是唯一主角。",
+        "票數之外，也記得看一下沒來得及舉手的人。",
+    ),
+    "character_story": (
+        "主線進度條動了，角色目標沒有繼續在待辦清單裡吃灰。",
+        "群組的「收到」沒有變成大結局，支線還在更新。",
+        "角色成長中，這次不是只解鎖「已讀」成就。",
+    ),
+}
+
+DEVELOPMENT_PUNS = {
+    "建設": ("有建設，才有建樹。", "校園地圖升級，終於不是只多一個群組。"),
+    "政策": ("表單少一張，心情多一章。", "流程開始瘦身，同仁不用再替文件跑馬拉松。"),
+    "資源": ("節能節水，水到渠成。", "資源省著用，耐心不用省著給。"),
+    "財政": ("財政有節，校務不劫。", "帳本先喘口氣，會計室眉頭少打一個結。"),
 }
 
 
@@ -507,6 +547,7 @@ def _materialize_event(state, raw_event, turn):
         "event_type": raw_event["event_type"],
         "event_type_label": EVENT_TYPE_INFO[raw_event["event_type"]]["label"],
         "event_type_hint": EVENT_TYPE_INFO[raw_event["event_type"]]["hint"],
+        "event_type_rule": EVENT_TYPE_INFO[raw_event["event_type"]]["rule"],
         "story_stage": story_stage,
         "story_stage_label": f"人物故事第 {story_stage} 幕" if story_stage else None,
         "group": group,
@@ -699,6 +740,58 @@ def _update_residents(state, group, change):
             )
 
 
+def _resolve_event_rule(state, event, action):
+    event_type = event["event_type"]
+    effects = action["effects"]
+    resident = event["resident"]
+
+    if event_type == "crisis":
+        if effects["problem_improvement"] >= 5:
+            return "危機止損成功：本次改善達標，沒有追加損失。"
+        state["metrics"]["problem_improvement"] = _bounded(
+            state["metrics"]["problem_improvement"] - 2
+        )
+        resident["stress"] = _bounded(resident["stress"] + 2)
+        return "止損未達門檻：問題改善額外 -2，焦點角色壓力 +2。"
+
+    if event_type == "opportunity":
+        delayed = action["delayed_effects"]
+        if delayed["problem_improvement"] >= 4 and delayed["fairness"] >= 0:
+            state["treasury"] = min(2000, state["treasury"] + 20)
+            return "把握限時機會：校務基金獲得 20 點紅利。"
+        return "機會稍縱即逝：本次未達紅利條件。"
+
+    if event_type == "negotiation":
+        if effects["fairness"] >= 3:
+            resident["trust"] = _bounded(resident["trust"] + 2)
+            return "協商取得公平共識：焦點角色信任額外 +2。"
+        if effects["fairness"] < 0:
+            resident["trust"] = _bounded(resident["trust"] - 2)
+            return "協商失衡：焦點角色信任額外 -2。"
+        return "協商暫時維持現狀：信任沒有額外變化。"
+
+    if event_type == "campus_vote":
+        change = 2 if effects["fairness"] >= 2 else -2
+        _update_residents(state, event["group"], change)
+        return (
+            "投票通過：事件群體滿意度額外 +2。"
+            if change > 0
+            else "投票未獲足夠支持：事件群體滿意度額外 -2。"
+        )
+
+    if event_type == "character_story":
+        return "人物主線會記下這次選擇，信任、公平與壓力將影響後續結局。"
+
+    raise ValueError("校園事件玩法類型無效，無法結算特殊規則。")
+
+
+def _campus_reaction(state, event, development):
+    rng = random.Random(f"{state['seed']}:campus-reaction:{state['turn']}")
+    event_reaction = rng.choice(CAMPUS_REACTIONS[event["event_type"]])
+    development_pun = rng.choice(DEVELOPMENT_PUNS[development["category"]])
+    return f"校園匿名板熱帖：{event_reaction} {development_pun}"
+
+
 def _schedule_delayed_consequence(state, event, action):
     state["pending_consequences"].append({
         "origin_event": event["event"],
@@ -838,6 +931,7 @@ def advance_campaign(state, action_id, development_id, next_events=None):
     if development.get("policy"):
         policy = development["policy"]
         state["policies"][policy] = state["policies"].get(policy, 0) + 1
+    event_rule_result = _resolve_event_rule(state, event, action)
     story_update = _advance_story_arc(state, event, action)
     _schedule_delayed_consequence(state, event, action)
 
@@ -890,6 +984,7 @@ def advance_campaign(state, action_id, development_id, next_events=None):
         next_event = _materialize_event(state, next_raw_event, state["turn"])
 
     _award_available_titles(state)
+    campus_reaction = _campus_reaction(state, event, development)
     if next_event:
         butterfly = (
             f"{development['title']}使{development['benefit']}；"
@@ -925,6 +1020,8 @@ def advance_campaign(state, action_id, development_id, next_events=None):
         "follow_up": action["follow_up"],
         "delayed_effects": dict(action["delayed_effects"]),
         "story_beat": story_update,
+        "event_rule_result": event_rule_result,
+        "campus_reaction": campus_reaction,
         "settled_consequences": [
             {
                 "origin_event": item["origin_event"],

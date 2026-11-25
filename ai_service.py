@@ -533,7 +533,11 @@ def generate_campaign_events(
         "若 opening=true，第一個事件要直接具體化玩家提出的問題，其餘事件要合理延伸；"
         "之後的批次要參考前因後果，兼有蝴蝶效應、跨校園系統的衍生問題與合理的新突發事件。"
         "event_type 只能是 crisis、opportunity、negotiation、campus_vote、character_story，"
-        "分別代表緊急危機、限時機會、角色協商、校園投票、人物故事；同一批盡量使用不同類型。"
+        "分別代表緊急危機、限時機會、角色協商、校園投票、人物故事；同批非主線事件盡量使用不同類型。"
+        "character_story 只用於 story_stage 大於 0 的主線事件；非主線事件必須使用其他四種玩法。"
+        "crisis 至少有一個 effects.problem_improvement 達 +5 的高成本止損選項，也要有較便宜但可能未達標的取捨；"
+        "opportunity 至少有一個 delayed_effects.problem_improvement 達 +4 且 fairness 不為負的選項；"
+        "negotiation 和 campus_vote 的三個方案至少要有兩種不同的 fairness 效果，讓特殊規則真的有選擇。"
         "campus_state.story_arc 描述本局固定教職員生的三幕個人主線。"
         "若 opening=true、story_arc.next_stage 為 1 且 batch_size 至少 2，第一個事件是玩家起始議題 story_stage=0，"
         "第二個事件是第一幕 story_stage=1。非 opening 時，next_stage 為 1、2 或 3，"
@@ -588,13 +592,17 @@ def generate_campaign_events(
             opening,
         )
     except ValueError as error:
-        if "人物故事線順序不符" not in str(error):
+        error_message = str(error)
+        if not any(
+            marker in error_message
+            for marker in ("人物故事線順序不符", "事件特殊規則格式錯誤")
+        ):
             raise
 
         correction_data = dict(prompt_data)
-        correction_data["format_correction"] = str(error) + (
-            "請依 required_story_stages 逐一修正 events 的 story_stage，"
-            "並確保每個主線事件由指定主角敘述。"
+        correction_data["format_correction"] = error_message + (
+            "請修正上述格式問題；story_stage 必須符合 required_story_stages，"
+            "人物主線由指定主角敘述，且每個事件至少有一個符合其玩法門檻的決策選項。"
         )
         corrected = _request_gemini(
             system_prompt,
@@ -678,6 +686,10 @@ def _validate_campaign_events(
             or event_type != "character_story"
         ):
             raise ValueError("延伸事件格式錯誤：人物故事主角或類型不符。")
+        if event_type == "character_story" and not story_stage:
+            raise ValueError(
+                "事件特殊規則格式錯誤：人物故事事件必須安排有效主線幕次。"
+            )
         resident_quote = _validate_text(
             event.get("resident_quote"), 120, "教職員生發言格式錯誤。"
         )
@@ -727,6 +739,27 @@ def _validate_campaign_events(
                 "follow_up": follow_up,
                 "delayed_effects": delayed_effects,
             })
+        if event_type == "crisis" and not any(
+            action["effects"]["problem_improvement"] >= 5
+            for action in validated_actions
+        ):
+            raise ValueError(
+                "事件特殊規則格式錯誤：危機事件缺少問題改善達 +5 的止損選項。"
+            )
+        if event_type == "opportunity" and not any(
+            action["delayed_effects"]["problem_improvement"] >= 4
+            and action["delayed_effects"]["fairness"] >= 0
+            for action in validated_actions
+        ):
+            raise ValueError(
+                "事件特殊規則格式錯誤：機會事件缺少符合基金紅利條件的選項。"
+            )
+        if event_type in {"negotiation", "campus_vote"} and len({
+            action["effects"]["fairness"] for action in validated_actions
+        }) < 2:
+            raise ValueError(
+                "事件特殊規則格式錯誤：協商或投票事件的公平效果必須有所區別。"
+            )
         validated.append({
             "event": title,
             "category": category,
@@ -834,7 +867,7 @@ def _demo_campaign_events(proposal, recent_history, campus_state, batch_size, op
             {"problem_improvement": 8, "satisfaction": 2, "fairness": -1},
             {"trust": 1, "stress": -3},
             "急迫瓶頸改善後，後續維護費用可能增加。",
-            {"problem_improvement": 4, "fairness": -2, "treasury": -30},
+            {"problem_improvement": 4, "fairness": 0, "treasury": -30},
         ),
         (
             "先小規模試辦並設定檢視期限",
@@ -854,13 +887,10 @@ def _demo_campaign_events(proposal, recent_history, campus_state, batch_size, op
         ),
     )
     story_count = sum(stage > 0 for stage in story_stages)
-    if story_count:
-        regular_event_types = rng.sample(
-            sorted(CAMPAIGN_EVENT_TYPES - {"character_story"}),
-            batch_size - story_count,
-        )
-    else:
-        regular_event_types = rng.sample(sorted(CAMPAIGN_EVENT_TYPES), batch_size)
+    regular_event_types = rng.sample(
+        sorted(CAMPAIGN_EVENT_TYPES - {"character_story"}),
+        batch_size - story_count,
+    )
     events = []
     recent_titles = {
         item.get("event", "").casefold()
@@ -869,6 +899,9 @@ def _demo_campaign_events(proposal, recent_history, campus_state, batch_size, op
     }
     for index in range(batch_size):
         story_stage = story_stages[index]
+        event_type = (
+            "character_story" if story_stage else regular_event_types.pop(0)
+        )
         if opening and index == 0:
             title = proposal[:160]
         elif story_stage:
@@ -890,6 +923,18 @@ def _demo_campaign_events(proposal, recent_history, campus_state, batch_size, op
         actions = []
         options = list(response_templates)
         rng.shuffle(options)
+        selected_options = options[:3]
+        if event_type == "opportunity":
+            eligible_option = next(
+                (
+                    option for option in options
+                    if option[5]["problem_improvement"] >= 4
+                    and option[5]["fairness"] >= 0
+                ),
+                None,
+            )
+            if eligible_option and eligible_option not in selected_options:
+                selected_options[-1] = eligible_option
         if story_stage:
             available_characters = [
                 character for character in characters
@@ -913,7 +958,7 @@ def _demo_campaign_events(proposal, recent_history, campus_state, batch_size, op
         group = character["group"]
         for action_index, (
             text, cost, effects, resident_effects, follow_up, delayed_effects
-        ) in enumerate(options[:3]):
+        ) in enumerate(selected_options):
             actions.append({
                 "action_id": f"demo_{index + 1}_{action_index + 1}",
                 "title": text,
@@ -927,9 +972,7 @@ def _demo_campaign_events(proposal, recent_history, campus_state, batch_size, op
         events.append({
             "event": title,
             "category": rng.choice(categories),
-            "event_type": (
-                "character_story" if story_stage else regular_event_types.pop(0)
-            ),
+            "event_type": event_type,
             "story_stage": story_stage,
             "group": group,
             "resident_id": character["id"],

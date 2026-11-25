@@ -23,6 +23,8 @@ from campus_simulation import (
     TOTAL_TURNS,
     YEARS,
     _advance_story_arc,
+    _campus_reaction,
+    _resolve_event_rule,
     advance_campaign,
     campus_profile_for_seed,
     new_campaign,
@@ -564,6 +566,22 @@ class CampaignAiGenerationTests(unittest.TestCase):
             len({event["event_type"] for event in events}),
             CAMPAIGN_EVENT_BATCH_SIZE,
         )
+        for event in events:
+            self.assertEqual(
+                event["event_type"] == "character_story",
+                event["story_stage"] > 0,
+            )
+            if event["event_type"] == "crisis":
+                self.assertTrue(any(
+                    action["effects"]["problem_improvement"] >= 5
+                    for action in event["actions"]
+                ))
+            if event["event_type"] == "opportunity":
+                self.assertTrue(any(
+                    action["delayed_effects"]["problem_improvement"] >= 4
+                    and action["delayed_effects"]["fairness"] >= 0
+                    for action in event["actions"]
+                ))
 
     def test_demo_event_batch_advances_the_resident_story_arc(self):
         story_arc = story_arc_for_seed(18)
@@ -642,6 +660,54 @@ class CampaignAiGenerationTests(unittest.TestCase):
         self.assertEqual(retry_prompt["required_story_stages"], [2, 3])
         self.assertIn("格式錯誤", retry_prompt["format_correction"])
 
+    def test_api_retries_once_when_event_rules_have_no_playable_success(self):
+        invalid_payload = self._event_payload()
+        invalid_payload["events"][0]["event_type"] = "opportunity"
+        valid_payload = self._event_payload()
+        valid_payload["events"][0]["event_type"] = "opportunity"
+        valid_payload["events"][0]["actions"][0]["delayed_effects"] = {
+            "problem_improvement": 4,
+            "fairness": 0,
+            "treasury": 0,
+        }
+
+        with (
+            patch.dict(os.environ, {"DEMO_MODE": "0"}),
+            patch(
+                "ai_service._request_gemini",
+                side_effect=[invalid_payload, valid_payload],
+            ) as request,
+        ):
+            events = generate_campaign_events(
+                "改善校園服務", [], {"characters": resident_profiles()}
+            )
+
+        self.assertEqual(events[0]["event_type"], "opportunity")
+        self.assertEqual(request.call_count, 2)
+        retry_prompt = json.loads(request.call_args_list[1].args[1])
+        self.assertIn("格式錯誤", retry_prompt["format_correction"])
+
+    def test_api_rejects_event_rules_without_a_success_option(self):
+        invalid_cases = (
+            ("crisis", "止損選項"),
+            ("opportunity", "基金紅利條件"),
+        )
+        for event_type, message in invalid_cases:
+            with self.subTest(event_type=event_type):
+                payload = self._event_payload()
+                payload["events"][0]["event_type"] = event_type
+                with (
+                    patch.dict(os.environ, {"DEMO_MODE": "0"}),
+                    patch("ai_service._request_gemini", return_value=payload),
+                ):
+                    with self.assertRaisesRegex(ValueError, message):
+                        generate_campaign_events(
+                            "改善校園服務",
+                            [],
+                            {"characters": resident_profiles()},
+                            opening=True,
+                        )
+
     def test_invalid_ai_event_effects_are_rejected(self):
         payload = self._event_payload()
         payload["events"][0]["actions"][0]["effects"]["problem_improvement"] = 11
@@ -673,6 +739,21 @@ class CampaignAiGenerationTests(unittest.TestCase):
                             {"characters": resident_profiles()},
                             opening=True,
                         )
+
+    def test_character_story_event_requires_an_active_story_stage(self):
+        payload = self._event_payload()
+        payload["events"][0]["event_type"] = "character_story"
+        with (
+            patch.dict(os.environ, {"DEMO_MODE": "0"}),
+            patch("ai_service._request_gemini", return_value=payload),
+        ):
+            with self.assertRaisesRegex(ValueError, "必須安排有效主線幕次"):
+                generate_campaign_events(
+                    "改善校園服務",
+                    [],
+                    {"characters": resident_profiles()},
+                    opening=True,
+                )
 
     def test_invalid_ai_personal_effects_are_rejected(self):
         payload = self._event_payload()
@@ -845,6 +926,7 @@ class CampusCampaignTests(unittest.TestCase):
             self.assertIn("第 1 年第 1 學期".encode("utf-8"), response.data)
             self.assertIn('class="event-portrait"'.encode("utf-8"), response.data)
             self.assertIn("個人目標".encode("utf-8"), response.data)
+            self.assertIn("本類特殊規則".encode("utf-8"), response.data)
             with self.client.session_transaction() as session:
                 flow_id = session["flow_id"]
 
@@ -861,6 +943,7 @@ class CampusCampaignTests(unittest.TestCase):
                 self.assertEqual(response.status_code, 200)
                 if turn == 0:
                     self.assertIn("第 1 年第 2 學期".encode("utf-8"), response.data)
+                    self.assertIn("校園匿名板熱帖".encode("utf-8"), response.data)
                 elif turn == 1:
                     self.assertIn("第 2 年第 1 學期".encode("utf-8"), response.data)
 
@@ -871,6 +954,10 @@ class CampusCampaignTests(unittest.TestCase):
         campaign = GAMES[flow_id]["campaign"]
         self.assertTrue(campaign["finished"])
         self.assertEqual(len(campaign["history"]), TOTAL_TURNS)
+        self.assertTrue(all(
+            item["event_rule_result"] and item["campus_reaction"]
+            for item in campaign["history"]
+        ))
         self.assertEqual(len(campaign["yearly"]), YEARS)
         self.assertEqual(campaign["story_arc"]["stage"], 3)
         self.assertIsNotNone(campaign["story_arc"]["ending"])
@@ -1127,6 +1214,70 @@ class CampusCampaignTests(unittest.TestCase):
             {resident["id"]: resident["trust"] for resident in campaign["residents"] if resident["id"] != focused["id"]},
             other_trust,
         )
+
+    def test_event_rules_apply_success_and_failure_effects(self):
+        crisis = self._new_test_campaign()
+        event = crisis["current_event"]
+        event["event_type"] = "crisis"
+        action = event["actions"][0]
+        action["effects"]["problem_improvement"] = 5
+        improvement_before = crisis["metrics"]["problem_improvement"]
+        stress_before = event["resident"]["stress"]
+        self.assertIn("成功", _resolve_event_rule(crisis, event, action))
+        self.assertEqual(crisis["metrics"]["problem_improvement"], improvement_before)
+        self.assertEqual(event["resident"]["stress"], stress_before)
+
+        action["effects"]["problem_improvement"] = 4
+        self.assertIn("未達門檻", _resolve_event_rule(crisis, event, action))
+        self.assertEqual(crisis["metrics"]["problem_improvement"], improvement_before - 2)
+        self.assertEqual(event["resident"]["stress"], stress_before + 2)
+
+        opportunity = self._new_test_campaign()
+        event = opportunity["current_event"]
+        event["event_type"] = "opportunity"
+        action = event["actions"][0]
+        action["delayed_effects"]["problem_improvement"] = 4
+        action["delayed_effects"]["fairness"] = 0
+        treasury_before = opportunity["treasury"]
+        _resolve_event_rule(opportunity, event, action)
+        self.assertEqual(opportunity["treasury"], treasury_before + 20)
+        action["delayed_effects"]["fairness"] = -1
+        _resolve_event_rule(opportunity, event, action)
+        self.assertEqual(opportunity["treasury"], treasury_before + 20)
+
+        negotiation = self._new_test_campaign()
+        event = negotiation["current_event"]
+        event["event_type"] = "negotiation"
+        action = event["actions"][0]
+        action["effects"]["fairness"] = 3
+        trust_before = event["resident"]["trust"]
+        _resolve_event_rule(negotiation, event, action)
+        self.assertEqual(event["resident"]["trust"], trust_before + 2)
+        action["effects"]["fairness"] = -1
+        _resolve_event_rule(negotiation, event, action)
+        self.assertEqual(event["resident"]["trust"], trust_before)
+
+        vote = self._new_test_campaign()
+        event = vote["current_event"]
+        event["event_type"] = "campus_vote"
+        action = event["actions"][0]
+        action["effects"]["fairness"] = 2
+        satisfaction_before = event["resident"]["satisfaction"]
+        _resolve_event_rule(vote, event, action)
+        self.assertEqual(event["resident"]["satisfaction"], satisfaction_before + 2)
+        action["effects"]["fairness"] = 1
+        _resolve_event_rule(vote, event, action)
+        self.assertEqual(event["resident"]["satisfaction"], satisfaction_before)
+
+    def test_campus_reaction_is_reproducible_for_the_same_seed_and_turn(self):
+        campaign = self._new_test_campaign(seed=42)
+        event = campaign["current_event"]
+        development = {"category": "政策"}
+
+        first = _campus_reaction(campaign, event, development)
+        second = _campus_reaction(campaign, event, development)
+
+        self.assertEqual(first, second)
 
     def test_failed_event_batch_keeps_the_decision_retryable(self):
         response = self.client.post(
