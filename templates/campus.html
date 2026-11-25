@@ -28,30 +28,16 @@
       <div><strong>校園建設</strong><span>{% for name, value in buildings.items() %}{{ building_labels[name] }} Lv.{{ value }}{% if not loop.last %} · {% endif %}{% endfor %}</span></div>
       <div><strong>現行政策</strong><span>{% if policies.values()|sum > 0 %}{% for name, level in policies.items() if level > 0 %}{{ policy_labels[name] }} Lv.{{ level }}{% if not loop.last %} · {% endif %}{% endfor %}{% else %}尚未制定{% endif %}</span></div>
     </div>
+    <section class="campaign-averages" aria-labelledby="average-heading">
+      <div class="campaign-section-heading"><div><p class="step">即時統計</p><h3 id="average-heading">校園狀態平均值</h3></div><span>依目前模擬資料計算</span></div>
+      <div class="average-grid">
+        <div class="average-card"><strong>平均資源存量</strong><span>{{ "%.1f"|format(averages.resource_stock) }}<small> / 100</small></span><small>能源、用水、人力平均</small></div>
+        <div class="average-card"><strong>平均滿意度</strong><span>{{ "%.1f"|format(averages.satisfaction) }}<small> / 100</small></span><small>{{ residents|length }} 位教職員生平均</small></div>
+        <div class="average-card"><strong>平均信任度</strong><span>{{ "%.1f"|format(averages.trust) }}<small> / 100</small></span><small>{{ residents|length }} 位教職員生平均</small></div>
+        <div class="average-card"><strong>平均壓力值</strong><span>{{ "%.1f"|format(averages.stress) }}<small> / 100</small></span><small>{{ residents|length }} 位教職員生平均</small></div>
+      </div>
+    </section>
   </section>
-
-  <aside class="card campaign-challenge">
-    <p class="step">第 {{ year }} 年年度挑戰 · 已完成 {{ completed_challenge_count }} / {{ years }}</p>
-    <h2>{{ current_challenge.title }}</h2>
-    <p>{{ current_challenge.description }}</p>
-    <p class="notice">完成可獲得 {{ current_challenge.reward }} 點校務基金；每局挑戰順序不同。</p>
-  </aside>
-
-  <aside class="card campaign-story">
-    <p class="step">本局人物主線 · 第 {{ story_arc.stage }} / 3 幕</p>
-    <h2>{{ story_arc.title }}</h2>
-    <p><strong>{{ story_arc.resident_name }} · {{ story_arc.resident_role }}</strong></p>
-    <p>目標：{{ story_arc.goal }}</p>
-    <p>合作狀態：<strong>{{ story_arc.support_label }}</strong></p>
-    <div class="story-progress-track" role="progressbar" aria-label="人物主線進度" aria-valuemin="0" aria-valuemax="3" aria-valuenow="{{ story_arc.stage }}" style="--story-progress: {{ story_arc.stage * 100 // 3 }}%"><span></span></div>
-    {% if story_arc.ending_text %}
-    <p class="notice">{{ story_arc.ending_text }}</p>
-    {% elif story_arc.last_beat %}
-    <p class="notice">{{ story_arc.last_beat }}</p>
-    {% else %}
-    <p class="notice">三幕故事會在校務事件中逐步展開；支持、壓力與公平取捨都會影響結局。</p>
-    {% endif %}
-  </aside>
 
   <section class="card campaign-event">
     <div class="campaign-section-heading">
@@ -105,12 +91,27 @@
     </form>
   </section>
 
-  <aside class="card campaign-forecast">
-    <p class="step">未來模擬</p>
-    <h2>下一年度展望</h2>
-    <p>預估校園人口：<strong>{{ forecast.next_year_population }}</strong></p>
-    <p>預估教職員生滿意度：<strong>{{ forecast.next_year_satisfaction }} / 100</strong></p>
-    <p class="notice">{{ forecast.risk }}</p>
+  <aside class="card campaign-challenge">
+    <p class="step">第 {{ year }} 年年度挑戰 · 已完成 {{ completed_challenge_count }} / {{ years }}</p>
+    <h2>{{ current_challenge.title }}</h2>
+    <p>{{ current_challenge.description }}</p>
+    <p class="notice">完成可獲得 {{ current_challenge.reward }} 點校務基金；每局挑戰順序不同。</p>
+  </aside>
+
+  <aside class="card campaign-story">
+    <p class="step">本局人物主線 · 第 {{ story_arc.stage }} / 3 幕</p>
+    <h2>{{ story_arc.title }}</h2>
+    <p><strong>{{ story_arc.resident_name }} · {{ story_arc.resident_role }}</strong></p>
+    <p>目標：{{ story_arc.goal }}</p>
+    <p>合作狀態：<strong>{{ story_arc.support_label }}</strong></p>
+    <div class="story-progress-track" role="progressbar" aria-label="人物主線進度" aria-valuemin="0" aria-valuemax="3" aria-valuenow="{{ story_arc.stage }}" style="--story-progress: {{ story_arc.stage * 100 // 3 }}%"><span></span></div>
+    {% if story_arc.ending_text %}
+    <p class="notice">{{ story_arc.ending_text }}</p>
+    {% elif story_arc.last_beat %}
+    <p class="notice">{{ story_arc.last_beat }}</p>
+    {% else %}
+    <p class="notice">三幕故事會在校務事件中逐步展開；支持、壓力與公平取捨都會影響結局。</p>
+    {% endif %}
   </aside>
 
   <section class="card campaign-residents">
@@ -129,6 +130,14 @@
       {% endfor %}
     </div>
   </section>
+
+  <aside class="card campaign-forecast">
+    <p class="step">未來模擬</p>
+    <h2>下一年度展望</h2>
+    <p>預估校園人口：<strong>{{ forecast.next_year_population }}</strong></p>
+    <p>預估教職員生滿意度：<strong>{{ forecast.next_year_satisfaction }} / 100</strong></p>
+    <p class="notice">{{ forecast.risk }}</p>
+  </aside>
 
   <aside class="card campaign-history">
     <p class="step">蝴蝶效應引擎</p>

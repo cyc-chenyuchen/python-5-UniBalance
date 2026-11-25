@@ -901,6 +901,30 @@ class CampusCampaignTests(unittest.TestCase):
             seed=seed,
         )
 
+    def test_campus_dashboard_shows_current_average_values(self):
+        campaign = self._new_test_campaign()
+        campaign["resources"] = {"energy": 61, "water": 72, "staffing": 68}
+        for index, resident in enumerate(campaign["residents"]):
+            resident["satisfaction"] = 51 + index
+            resident["trust"] = 41 + index
+            resident["stress"] = 31 + index
+
+        flow_id = "campus-average-dashboard-test"
+        GAMES[flow_id] = {"campaign": campaign}
+        self.addCleanup(GAMES.pop, flow_id, None)
+        with self.client.session_transaction() as session:
+            session["flow_id"] = flow_id
+
+        response = self.client.get("/campus")
+        page = response.get_data(as_text=True)
+        self.assertEqual(response.status_code, 200)
+        for value in ("67.0", "54.5", "44.5", "34.5"):
+            self.assertIn(value, page)
+        self.assertIn("能源、用水、人力平均", page)
+        self.assertIn("8 位教職員生平均", page)
+        self.assertLess(page.index('class="card campaign-indicators"'), page.index('class="card campaign-event"'))
+        self.assertLess(page.index('class="card campaign-event"'), page.index('class="card campaign-challenge"'))
+
     def test_homepage_has_one_problem_input(self):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)

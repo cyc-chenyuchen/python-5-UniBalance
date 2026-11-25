@@ -656,6 +656,8 @@ def available_developments(state):
 
 def campaign_context(state):
     turn = state["turn"]
+    residents = state["residents"]
+    resource_values = state["resources"].values()
     story_arc = dict(state["story_arc"])
     if story_arc["stage"] == 0:
         story_arc["support_label"] = "故事即將展開"
@@ -677,6 +679,21 @@ def campaign_context(state):
         "campus_profile": state["campus_profile"],
         "story_arc": story_arc,
         "metrics": dict(state["metrics"]),
+        "averages": {
+            "resource_stock": round(sum(resource_values) / len(state["resources"]), 1),
+            "satisfaction": round(
+                sum(resident["satisfaction"] for resident in residents) / len(residents),
+                1,
+            ),
+            "trust": round(
+                sum(resident["trust"] for resident in residents) / len(residents),
+                1,
+            ),
+            "stress": round(
+                sum(resident["stress"] for resident in residents) / len(residents),
+                1,
+            ),
+        },
         "treasury": state["treasury"],
         "population": dict(state["population"]),
         "resources": dict(state["resources"]),
@@ -686,7 +703,7 @@ def campaign_context(state):
         "policies": dict(state["policies"]),
         "policy_labels": POLICY_LABELS,
         "developments": available_developments(state),
-        "residents": state["residents"],
+        "residents": residents,
         "history": state["history"],
         "yearly": state["yearly"],
         "current_challenge": state["challenges"][turn // SEMESTERS_PER_YEAR],
