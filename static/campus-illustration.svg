@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" fill="none">
   <style>
-    .walker-a { animation: walk 3.2s ease-in-out infinite alternate; }
-    .walker-b { animation: walk 3.8s ease-in-out infinite alternate-reverse; }
+    .walker-a { animation: walk 1.4s ease-in-out infinite alternate; }
+    .walker-b { animation: walk 1.6s ease-in-out infinite alternate-reverse; }
     @keyframes walk { to { transform: translateX(12px); } }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; }
