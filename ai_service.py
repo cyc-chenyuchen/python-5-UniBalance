@@ -109,7 +109,8 @@ REVIEW_RESPONSE_SCHEMA = {
 
 
 def send_request(url, headers, request_data):
-    for attempt in range(2):
+    retry_delays = (2, 4)
+    for attempt in range(len(retry_delays) + 1):
         try:
             response = requests.post(
                 url,
@@ -125,11 +126,11 @@ def send_request(url, headers, request_data):
             raise RuntimeError("Gemini 連線失敗，請重試。") from error
 
         if response.status_code == 503:
-            if attempt == 0:
-                time.sleep(2)
+            if attempt < len(retry_delays):
+                time.sleep(retry_delays[attempt])
                 continue
             raise RuntimeError(
-                "Gemini 服務暫時無法使用（HTTP 503），已自動重試一次仍失敗，請稍後再試。"
+                "Gemini 服務暫時無法使用（HTTP 503），已自動重試兩次仍失敗，請稍後再試。"
             )
 
         try:
