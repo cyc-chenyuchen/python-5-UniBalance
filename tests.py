@@ -992,7 +992,21 @@ class CampusCampaignTests(unittest.TestCase):
     def test_homepage_has_one_problem_input(self):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.get_data(as_text=True).count("<textarea"), 1)
+        page = response.get_data(as_text=True)
+        self.assertEqual(page.count("<textarea"), 1)
+        self.assertIn('href="/characters"'.encode("utf-8"), response.data)
+
+    def test_character_directory_uses_all_existing_residents(self):
+        response = self.client.get("/characters")
+        page = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("校園人物誌".encode("utf-8"), response.data)
+        self.assertIn('class="character-directory"'.encode("utf-8"), response.data)
+        for resident in resident_profiles():
+            self.assertIn(resident["name"], page)
+            self.assertIn(resident["concern"], page)
+            self.assertIn(resident["goal"], page)
 
     def test_five_year_campaign_runs_ten_turns_and_saves_report(self):
         with patch("app.save_record") as save_record:

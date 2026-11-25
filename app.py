@@ -11,6 +11,7 @@ from ai_service import (
     recommend_campaign_plans,
 )
 from campus_simulation import (
+    RESIDENTS,
     SEMESTERS_PER_YEAR,
     TITLE_CATALOG,
     TOTAL_TURNS,
@@ -128,6 +129,11 @@ def handle_value_error(error):
 @app.route("/")
 def index():
     return render_template("index.html")
+
+
+@app.route("/characters")
+def characters():
+    return render_template("characters.html", characters=RESIDENTS)
 
 
 @app.route("/interview/start", methods=["POST"])

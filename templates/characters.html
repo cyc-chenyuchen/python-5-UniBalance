@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block page_class %}characters-page{% endblock %}
+{% block content %}
+<header class="page-heading characters-heading">
+  <p class="eyebrow">校園人物誌</p>
+  <h1>認識一起經營校園的夥伴</h1>
+  <p>每位角色都有自己的關注焦點、個性與目標；你的校務決策，也會影響他們的感受與故事。</p>
+</header>
+
+<section class="character-directory" aria-label="校園角色介紹">
+  {% for character in characters %}
+  <article class="card character-profile">
+    <div class="character-profile-heading">
+      <img
+        class="character-profile-portrait"
+        src="{{ url_for('static', filename=character.portrait) }}"
+        alt="{{ character.name }}的角色插畫"
+        loading="lazy"
+      >
+      <div>
+        <span class="character-role">{{ character.role }}</span>
+        <h2>{{ character.name }}</h2>
+      </div>
+    </div>
+    <dl class="character-facts">
+      <div>
+        <dt>關注焦點</dt>
+        <dd>{{ character.concern }}</dd>
+      </div>
+      <div>
+        <dt>角色個性</dt>
+        <dd>{{ character.personality }}</dd>
+      </div>
+      <div class="character-goal">
+        <dt>個人目標</dt>
+        <dd>{{ character.goal }}</dd>
+      </div>
+    </dl>
+  </article>
+  {% endfor %}
+</section>
+
+<div class="character-directory-actions">
+  <a class="button button-secondary" href="/">← 返回首頁</a>
+</div>
+{% endblock %}
