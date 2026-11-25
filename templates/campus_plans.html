@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block page_class %}plans-page{% endblock %}
+{% block content %}
+<section>
+  <div class="page-heading visual-heading">
+    <div class="visual-copy">
+      <span class="eyebrow">{% if demo_mode %}離線示範方案{% else %}AI 校務方案{% endif %}</span>
+      <h1>{{ scenario_title }}</h1>
+      <p>起始問題：{{ proposal }}</p>
+      <div class="phase-complete"><span aria-hidden="true">✓</span>{% if demo_mode %}示範內容依問題整理，並準備{% else %}AI 已依問題整理方案，並準備{% endif %} {{ event_count }} 個起始與延伸事件。</div>
+    </div>
+    <img class="page-illustration" src="{{ url_for('static', filename='plans-illustration.svg') }}" alt="" aria-hidden="true">
+  </div>
+  <p class="notice">選擇一項十年發展方向。後續事件與決策選項會參考你的問題、校務狀態及歷次選擇動態生成。</p>
+  <div class="grid">
+    {% for plan in recommendations %}
+    <article class="card plan-card">
+      <div class="plan-card-top">
+        <span class="plan-index">{% if demo_mode %}示範方案{% else %}AI 建議方案{% endif %} {{ "%02d"|format(loop.index) }}</span>
+        <span class="strategy-tag">{{ plan.strategy }}</span>
+      </div>
+      <h2>{{ plan.title }}</h2>
+      <p class="plan-description">{{ plan.description }}</p>
+      <div class="recommendation-note"><strong>推薦理由</strong><p>{{ plan.reason }}</p></div>
+      <div class="effect-list" aria-label="方案起始效果">
+        {% for name, value in plan.effects.items() %}
+        <div class="effect-row">
+          <span class="effect-label">{{ {"budget_remaining": "財政", "problem_improvement": "問題改善", "satisfaction": "滿意度", "fairness": "公平性"}.get(name, name) }}</span>
+          <span class="effect-track" aria-hidden="true">
+            <span class="effect-axis"></span>
+            <span class="effect-fill {% if value >= 0 %}is-positive{% else %}is-negative{% endif %}" style="--effect-width: {{ [value|abs * 5, 100]|min }}%"></span>
+          </span>
+          <strong class="effect-value {% if value >= 0 %}is-positive{% else %}is-negative{% endif %}">{{ "%+d"|format(value) }}</strong>
+        </div>
+        {% endfor %}
+      </div>
+      <form action="/campus/plan" method="post">
+        <input type="hidden" name="plan_id" value="{{ plan.plan_id }}">
+        <button type="submit">採用此十年策略 <span aria-hidden="true">→</span></button>
+      </form>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

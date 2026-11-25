@@ -11,7 +11,7 @@
     <img class="page-illustration" src="{{ url_for('static', filename='error-illustration.svg') }}" alt="" aria-hidden="true">
   </div>
   {% if retry %}
-    <form action="/interview/retry" method="post" data-game-submit data-pending-message="正在重新連線並重試，請稍候。">
+    <form action="{{ retry_url|default('/interview/retry') }}" method="post" data-game-submit data-pending-message="正在重新連線並重試，請稍候。">
       <button type="submit">重試 <span aria-hidden="true">→</span></button>
       <p class="submit-status" data-submit-status role="status" hidden></p>
     </form>

@@ -6,13 +6,16 @@ from ai_service import (
     INTERVIEW_QUESTION_COUNT,
     ask_interview_question,
     choose_review_focus,
+    generate_campaign_events,
     recommend_plans,
+    recommend_campaign_plans,
 )
 from campus_simulation import (
     advance_campaign,
     campaign_context,
     make_campaign_record,
     new_campaign,
+    validate_campaign_choice,
 )
 from simulation import apply_effects, calculate_total_score, make_comment
 from storage import load_menu, load_records, save_record
@@ -420,18 +423,140 @@ def reset():
 
 @app.route("/campus/start", methods=["POST"])
 def campus_start():
-    concern = request.form.get("concern", "").strip()
-    try:
-        campaign = new_campaign(concern)
-    except ValueError as error:
+    proposal = request.form.get("proposal", "").strip()
+    if not proposal or len(proposal) > 300:
         return render_template(
-            "error.html", title="校園議題格式錯誤", message=str(error)
+            "error.html",
+            title="校園議題格式錯誤",
+            message="請輸入 1 到 300 個字的校園問題。",
         ), 400
 
     flow_id = secrets.token_urlsafe(16)
-    GAMES[flow_id] = {"campaign": campaign}
+    game = {
+        "proposal": proposal,
+        "campaign": None,
+        "failure": "campaign_start",
+    }
+    GAMES[flow_id] = game
     session["flow_id"] = flow_id
     session.pop("recent_record_id", None)
+    try:
+        if not _prepare_campaign_start(game):
+            return render_template(
+                "error.html",
+                title="目前不支援此提案",
+                message="請描述與校園生活、設施、服務或制度相關的問題。",
+            ), 400
+    except ValueError as error:
+        return render_template(
+            "error.html",
+            title="AI 方案或事件格式錯誤",
+            message=str(error),
+            retry=True,
+            retry_url="/campus/retry-start",
+        ), 503
+    except Exception as error:
+        return render_template(
+            "error.html",
+            title="無法分析校園問題",
+            message=str(error),
+            retry=True,
+            retry_url="/campus/retry-start",
+        ), 503
+    return redirect("/campus/plans")
+
+
+def _prepare_campaign_start(game):
+    plans = game.get("campaign_plans")
+    if not plans:
+        menu = load_menu()
+        plans = recommend_campaign_plans(game["proposal"], menu)
+        if not plans["supported"]:
+            return False
+        game["campaign_plans"] = plans
+    initial_state = {
+        "year": 1,
+        "quarter": 1,
+        "metrics": dict(menu["initial_metrics"]),
+        "treasury": 850,
+        "population": {"students": 9000, "faculty": 720, "staff": 380},
+        "resources": {"energy": 68, "water": 72, "staffing": 64},
+        "buildings": {"library": 0, "housing": 0, "wellbeing": 0},
+        "policies": {},
+    }
+    events = generate_campaign_events(
+        game["proposal"],
+        [],
+        initial_state,
+        opening=True,
+    )
+    game["campaign_events"] = events
+    game["failure"] = None
+    return True
+
+
+@app.route("/campus/retry-start", methods=["POST"])
+def campus_retry_start():
+    game = _get_game()
+    if not game or game.get("failure") != "campaign_start":
+        return redirect("/")
+    try:
+        if not _prepare_campaign_start(game):
+            return render_template(
+                "error.html",
+                title="目前不支援此提案",
+                message="請描述與校園生活、設施、服務或制度相關的問題。",
+            ), 400
+    except Exception as error:
+        return render_template(
+            "error.html",
+            title="重試分析失敗",
+            message=str(error),
+            retry=True,
+            retry_url="/campus/retry-start",
+        ), 503
+    return redirect("/campus/plans")
+
+
+@app.route("/campus/plans")
+def campus_plans():
+    game = _get_game()
+    if not game or not game.get("campaign_plans"):
+        return redirect("/")
+    return render_template(
+        "campus_plans.html",
+        proposal=game["proposal"],
+        scenario_title=game["campaign_plans"]["scenario_title"],
+        recommendations=game["campaign_plans"]["recommendations"],
+        event_count=len(game["campaign_events"]),
+    )
+
+
+@app.route("/campus/plan", methods=["POST"])
+def campus_plan():
+    game = _get_game()
+    if not game or not game.get("campaign_plans"):
+        return redirect("/")
+    if game.get("campaign"):
+        return redirect("/campus")
+    plan_id = request.form.get("plan_id")
+    plan = next(
+        (
+            item for item in game["campaign_plans"]["recommendations"]
+            if item["plan_id"] == plan_id
+        ),
+        None,
+    )
+    if not plan:
+        return render_template(
+            "error.html", title="方案格式錯誤", message="請選擇一個有效的 AI 方案。"
+        ), 400
+    game["campaign"] = new_campaign(
+        game["proposal"],
+        game["campaign_events"],
+        plan,
+        game["campaign_plans"]["scenario_title"],
+    )
     return redirect("/campus")
 
 
@@ -452,16 +577,67 @@ def campus_choose():
     campaign = game.get("campaign") if game else None
     if not campaign:
         return redirect("/")
+
+    return _process_campaign_decision(
+        game,
+        request.form.get("action_id", ""),
+        request.form.get("development_id", ""),
+    )
+
+
+def _process_campaign_decision(game, action_id, development_id):
+    campaign = game["campaign"]
     try:
-        advance_campaign(
-            campaign,
-            request.form.get("action_id", ""),
-            request.form.get("development_id", ""),
+        action, development = validate_campaign_choice(
+            campaign, action_id, development_id
         )
     except ValueError as error:
         return render_template(
             "error.html", title="經營決策格式錯誤", message=str(error)
         ), 400
+
+    next_events = None
+    if not campaign["event_queue"] and campaign["turn"] + 1 < 40:
+        game["pending_decision"] = {
+            "action_id": action_id,
+            "development_id": development_id,
+        }
+        try:
+            next_events = generate_campaign_events(
+                game["proposal"],
+                campaign["history"],
+                {
+                    "year": campaign["turn"] // 4 + 1,
+                    "quarter": campaign["turn"] % 4 + 1,
+                    "metrics": dict(campaign["metrics"]),
+                    "treasury": campaign["treasury"],
+                    "population": dict(campaign["population"]),
+                    "resources": dict(campaign["resources"]),
+                    "buildings": dict(campaign["buildings"]),
+                    "policies": dict(campaign["policies"]),
+                },
+                next_decision={
+                    "current_issue": campaign["current_event"]["event"],
+                    "response": action["title"],
+                    "management_measure": development["title"],
+                },
+            )
+        except Exception as error:
+            return render_template(
+                "error.html",
+                title="無法產生下一批校園事件",
+                message=str(error),
+                retry=True,
+                retry_url="/campus/retry-choice",
+            ), 503
+
+    try:
+        advance_campaign(campaign, action_id, development_id, next_events)
+    except ValueError as error:
+        return render_template(
+            "error.html", title="經營決策格式錯誤", message=str(error)
+        ), 400
+    game.pop("pending_decision", None)
 
     if campaign["finished"]:
         record = make_campaign_record(campaign)
@@ -470,6 +646,19 @@ def campus_choose():
         session["recent_record_id"] = record["record_id"]
         return redirect("/campus/result")
     return redirect("/campus")
+
+
+@app.route("/campus/retry-choice", methods=["POST"])
+def campus_retry_choice():
+    game = _get_game()
+    pending = game.get("pending_decision") if game else None
+    if not game or not pending:
+        return redirect("/campus")
+    return _process_campaign_decision(
+        game,
+        pending["action_id"],
+        pending["development_id"],
+    )
 
 
 @app.route("/campus/result")

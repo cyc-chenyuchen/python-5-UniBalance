@@ -8,7 +8,16 @@ from unittest.mock import Mock, patch
 os.environ.setdefault("FLASK_SECRET_KEY", "test-only-secret")
 os.environ["DEMO_MODE"] = "1"
 
-from ai_service import METRIC_RANGES, PLAN_RESPONSE_SCHEMA, _validate_effects, recommend_plans, send_request
+from ai_service import (
+    CAMPAIGN_EVENT_BATCH_SIZE,
+    METRIC_RANGES,
+    PLAN_RESPONSE_SCHEMA,
+    _validate_effects,
+    generate_campaign_events,
+    recommend_campaign_plans,
+    recommend_plans,
+    send_request,
+)
 from app import GAMES, app
 from campus_simulation import advance_campaign, new_campaign
 from simulation import apply_effects, calculate_total_score, make_comment, run_round_choice
@@ -460,6 +469,129 @@ class OfflineDemoTests(unittest.TestCase):
         self.assertEqual(recommend.call_count, 2)
 
 
+class CampaignAiGenerationTests(unittest.TestCase):
+    def _event_payload(self, count=CAMPAIGN_EVENT_BATCH_SIZE):
+        events = []
+        for event_index in range(count):
+            events.append({
+                "event": f"由玩家決策衍生的校園議題 {event_index + 1}",
+                "category": "policy",
+                "group": "students",
+                "resident_concern": "資源分配與服務可及性",
+                "actions": [
+                    {
+                        "text": f"方案選項 {action_index + 1}",
+                        "cost": 10 + action_index,
+                        "effects": {
+                            "problem_improvement": action_index,
+                            "satisfaction": 1,
+                            "fairness": 2 - action_index,
+                        },
+                    }
+                    for action_index in range(3)
+                ],
+            })
+        return {"events": events}
+
+    def test_event_generation_sends_proposal_state_and_previous_decision_to_gemini(self):
+        history = [{"event": "圖書館空間不足", "response": "擴大開放時段"}]
+        next_decision = {
+            "current_issue": "晚間延長開放後人力吃緊",
+            "response": "調整輪班",
+            "management_measure": "培訓支援人力",
+        }
+        state = {"year": 2, "quarter": 1, "treasury": 540, "resources": {"staffing": 42}}
+        with (
+            patch.dict(os.environ, {"DEMO_MODE": "0"}),
+            patch("ai_service._request_gemini", return_value=self._event_payload()) as request,
+        ):
+            events = generate_campaign_events(
+                "圖書館座位不足",
+                history,
+                state,
+                next_decision=next_decision,
+            )
+
+        self.assertEqual(len(events), CAMPAIGN_EVENT_BATCH_SIZE)
+        self.assertEqual(len(events[0]["actions"]), 3)
+        self.assertEqual(events[0]["source"], "gemini")
+        user_prompt = json.loads(request.call_args.args[1])
+        self.assertEqual(user_prompt["proposal"], "圖書館座位不足")
+        self.assertEqual(user_prompt["recent_history"], history)
+        self.assertEqual(user_prompt["campus_state"], state)
+        self.assertEqual(user_prompt["next_decision"], next_decision)
+        self.assertEqual(request.call_args.kwargs["temperature"], 0.9)
+
+    def test_invalid_ai_event_effects_are_rejected(self):
+        payload = self._event_payload()
+        payload["events"][0]["actions"][0]["effects"]["problem_improvement"] = 11
+        with (
+            patch.dict(os.environ, {"DEMO_MODE": "0"}),
+            patch("ai_service._request_gemini", return_value=payload),
+        ):
+            with self.assertRaisesRegex(ValueError, "problem_improvement=11"):
+                generate_campaign_events("改善校園服務", [], {}, opening=True)
+
+    def test_campaign_plans_use_problem_specific_api_output(self):
+        response_data = {
+            "supported": True,
+            "scenario_title": "圖書館空間改善",
+            "recommendations": [
+                {
+                    "title": "延長開放方案",
+                    "strategy": "分時段改善",
+                    "description": "先調整尖峰開放時段並觀察座位使用需求。",
+                    "reason": "可迅速紓解尖峰壓力並逐步驗證成效。",
+                    "effects": {
+                        "budget_remaining": -5,
+                        "problem_improvement": 8,
+                        "satisfaction": 4,
+                        "fairness": 3,
+                    },
+                },
+                {
+                    "title": "空間增建方案",
+                    "strategy": "擴建閱讀空間",
+                    "description": "投入建設預算增加長期座位與自習空間。",
+                    "reason": "能擴大容量，但短期財政負擔較高。",
+                    "effects": {
+                        "budget_remaining": -15,
+                        "problem_improvement": 15,
+                        "satisfaction": 3,
+                        "fairness": 1,
+                    },
+                },
+            ],
+        }
+        game_config = {
+            "metric_labels": {
+                "budget_remaining": "剩餘預算",
+                "problem_improvement": "問題改善",
+                "satisfaction": "教職員生滿意度",
+                "fairness": "公平性",
+            },
+            "initial_metrics": {
+                "budget_remaining": 75,
+                "problem_improvement": 75,
+                "satisfaction": 75,
+                "fairness": 75,
+            },
+        }
+        with (
+            patch.dict(os.environ, {"DEMO_MODE": "0"}),
+            patch("ai_service._request_gemini", return_value=response_data) as request,
+        ):
+            result = recommend_campaign_plans("圖書館尖峰座位不足", game_config)
+
+        self.assertTrue(result["supported"])
+        self.assertEqual(len(result["recommendations"]), 2)
+        self.assertEqual(result["recommendations"][0]["plan_id"], "plan_1")
+        self.assertIn("圖書館尖峰座位不足", json.loads(request.call_args.args[1])["proposal"])
+        self.assertEqual(request.call_args.args[2]["required"], [
+            "supported", "scenario_title", "recommendations",
+        ])
+
+
 class CampusCampaignTests(unittest.TestCase):
     def setUp(self):
         app.config["TESTING"] = True
@@ -467,23 +599,70 @@ class CampusCampaignTests(unittest.TestCase):
         with self.client.session_transaction() as session:
             session.clear()
 
+    def _new_test_campaign(self):
+        game_config = {
+            "metric_labels": {
+                "budget_remaining": "剩餘預算",
+                "problem_improvement": "問題改善",
+                "satisfaction": "教職員生滿意度",
+                "fairness": "公平性",
+            },
+            "initial_metrics": {
+                "budget_remaining": 75,
+                "problem_improvement": 75,
+                "satisfaction": 75,
+                "fairness": 75,
+            },
+        }
+        proposal = "校園空間不足"
+        plans = recommend_campaign_plans(proposal, game_config)
+        event_deck = generate_campaign_events(
+            proposal,
+            [],
+            {"year": 1, "quarter": 1},
+            opening=True,
+        )
+        return new_campaign(
+            proposal,
+            event_deck,
+            plans["recommendations"][0],
+            plans["scenario_title"],
+            seed=7,
+        )
+
+    def test_homepage_has_one_problem_input(self):
+        response = self.client.get("/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get_data(as_text=True).count("<textarea"), 1)
+
     def test_ten_year_campaign_runs_forty_turns_and_saves_decade_report(self):
         with patch("app.save_record") as save_record:
             response = self.client.post(
                 "/campus/start",
-                data={"concern": "圖書館尖峰時段座位不足"},
+                data={"proposal": "圖書館尖峰時段座位不足"},
                 follow_redirects=True,
             )
             self.assertEqual(response.status_code, 200)
             self.assertIn("圖書館尖峰時段座位不足".encode("utf-8"), response.data)
+            self.assertIn("示範方案".encode("utf-8"), response.data)
+            response = self.client.post(
+                "/campus/plan",
+                data={"plan_id": "plan_1"},
+                follow_redirects=True,
+            )
+            self.assertEqual(response.status_code, 200)
             self.assertIn("第 1 年第 1 季".encode("utf-8"), response.data)
             with self.client.session_transaction() as session:
                 flow_id = session["flow_id"]
 
             for _ in range(40):
+                campaign = GAMES[flow_id]["campaign"]
                 response = self.client.post(
                     "/campus/choose",
-                    data={"action_id": "listen", "development_id": "audit"},
+                    data={
+                        "action_id": campaign["current_event"]["actions"][0]["action_id"],
+                        "development_id": "audit",
+                    },
                     follow_redirects=True,
                 )
                 self.assertEqual(response.status_code, 200)
@@ -497,27 +676,63 @@ class CampusCampaignTests(unittest.TestCase):
         self.assertEqual(len(campaign["history"]), 40)
         self.assertEqual(len(campaign["yearly"]), 10)
 
+    def test_failed_event_batch_keeps_the_decision_retryable(self):
+        response = self.client.post(
+            "/campus/start",
+            data={"proposal": "圖書館尖峰座位不足"},
+            follow_redirects=True,
+        )
+        self.assertIn("示範方案".encode("utf-8"), response.data)
+        response = self.client.post(
+            "/campus/plan",
+            data={"plan_id": "plan_1"},
+            follow_redirects=True,
+        )
+        with self.client.session_transaction() as session:
+            flow_id = session["flow_id"]
+        campaign = GAMES[flow_id]["campaign"]
+        campaign["event_queue"] = []
+        action_id = campaign["current_event"]["actions"][0]["action_id"]
+        generated_batch = generate_campaign_events(
+            campaign["concern"],
+            campaign["history"],
+            {"year": 1, "quarter": 1},
+        )
+        with patch(
+            "app.generate_campaign_events",
+            side_effect=[RuntimeError("Gemini unavailable"), generated_batch],
+        ) as generate_events:
+            response = self.client.post(
+                "/campus/choose",
+                data={"action_id": action_id, "development_id": "audit"},
+            )
+            self.assertEqual(response.status_code, 503)
+            self.assertIn(b"/campus/retry-choice", response.data)
+            self.assertEqual(campaign["turn"], 0)
+
+            response = self.client.post("/campus/retry-choice", follow_redirects=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(campaign["turn"], 1)
+        self.assertNotIn("pending_decision", GAMES[flow_id])
+        self.assertEqual(generate_events.call_count, 2)
+
     def test_invalid_development_does_not_consume_a_turn(self):
-        campaign = new_campaign("校園空間不足", seed=7)
+        campaign = self._new_test_campaign()
+        action_id = campaign["current_event"]["actions"][0]["action_id"]
         with self.assertRaisesRegex(ValueError, "可負擔"):
-            advance_campaign(campaign, "listen", "not-a-development")
+            advance_campaign(campaign, action_id, "not-a-development")
         self.assertEqual(campaign["turn"], 0)
         self.assertEqual(len(campaign["history"]), 0)
 
     def test_decision_cannot_spend_more_than_available_funds(self):
-        campaign = new_campaign("校園空間不足", seed=7)
+        campaign = self._new_test_campaign()
         campaign["treasury"] = 0
+        action = campaign["current_event"]["actions"][0]
+        action["cost"] = 40
         with self.assertRaisesRegex(ValueError, "校務基金不足"):
-            advance_campaign(campaign, "act", "austerity")
+            advance_campaign(campaign, action["action_id"], "austerity")
         self.assertEqual(campaign["turn"], 0)
-
-    def test_development_choice_branches_the_next_campus_issue(self):
-        next_events = set()
-        for development in ("library", "scholarships", "conservation", "audit"):
-            campaign = new_campaign("校園空間不足", seed=14)
-            outcome = advance_campaign(campaign, "listen", development)
-            next_events.add(outcome["next_event"])
-        self.assertGreater(len(next_events), 1)
 
 
 if __name__ == "__main__":

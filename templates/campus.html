@@ -6,6 +6,7 @@
     <p class="step">十年校園經營 · 第 {{ year }} 年第 {{ quarter }} 季</p>
     <h1>把一個問題，經營成一所更好的大學</h1>
     <p>第 {{ turn_number }} / {{ total_turns }} 季 · 每季處理教職員生議題，再做一項校務投資。</p>
+    <p>目前策略：<strong>{{ selected_plan.title }}</strong> · {{ selected_plan.strategy }}</p>
   </div>
   <div class="campaign-score"><strong>{{ metrics.satisfaction }}</strong><span>教職員生滿意度</span></div>
   <div class="campaign-progress progress-track" role="progressbar" aria-label="十年經營進度" aria-valuemin="0" aria-valuemax="{{ total_turns }}" aria-valuenow="{{ turn_number - 1 }}" style="--progress: {{ progress }}%"><span></span></div>

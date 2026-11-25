@@ -18,60 +18,6 @@ RESIDENTS = (
     {"name": "黃可欣", "role": "國際學生", "group": "students", "concern": "友善環境與資訊取得"},
 )
 
-EVENTS = (
-    {"category": "infrastructure", "title": "老舊教室設備頻繁故障", "group": "faculty"},
-    {"category": "wellbeing", "title": "期中考週壓力與身心狀況受到關注", "group": "students"},
-    {"category": "policy", "title": "不同學院對資源分配提出疑問", "group": "faculty"},
-    {"category": "environment", "title": "熱浪讓教室空調與用電需求上升", "group": "students"},
-    {"category": "finance", "title": "營運成本上升，年度預算需要重新盤點", "group": "staff"},
-    {"category": "accessibility", "title": "無障礙動線在施工期間受到影響", "group": "students"},
-    {"category": "infrastructure", "title": "宿舍候補人數增加，居住空間吃緊", "group": "students"},
-    {"category": "wellbeing", "title": "校園諮商服務的等候時間拉長", "group": "students"},
-    {"category": "policy", "title": "教師反映行政工作排擠教學與研究", "group": "faculty"},
-    {"category": "environment", "title": "乾旱使校園用水調度面臨壓力", "group": "staff"},
-    {"category": "finance", "title": "學生社團反映活動補助不敷需求", "group": "students"},
-    {"category": "accessibility", "title": "新生反映校園資訊與服務不易取得", "group": "students"},
-    {"category": "infrastructure", "title": "圖書館尖峰時段座位不足", "group": "students"},
-    {"category": "wellbeing", "title": "校園餐飲選擇與價格引發討論", "group": "students"},
-    {"category": "policy", "title": "跨院合作計畫需要更透明的審議制度", "group": "faculty"},
-    {"category": "environment", "title": "高耗能設備讓校園減碳進度落後", "group": "staff"},
-    {"category": "finance", "title": "校園維護人力不足，報修案件持續累積", "group": "staff"},
-    {"category": "accessibility", "title": "通勤尖峰的接駁與自行車停放空間不足", "group": "students"},
-)
-
-RESPONSES = (
-    {
-        "id": "listen",
-        "title": "先聽取教職員生意見，組成跨單位工作小組",
-        "cost": 10,
-        "effects": {"problem_improvement": 2, "satisfaction": 3, "fairness": 4},
-        "resources": {"staffing": -2},
-        "group_effect": 4,
-        "category": "policy",
-        "cause": "教職員生參與增加，後續政策更貼近需求",
-    },
-    {
-        "id": "act",
-        "title": "立即投入資源，優先處理眼前問題",
-        "cost": 34,
-        "effects": {"problem_improvement": 8, "satisfaction": 3, "fairness": -1},
-        "resources": {"energy": -2, "water": -1},
-        "group_effect": 3,
-        "category": "infrastructure",
-        "cause": "快速改善緩解了眼前壓力，但增加資源負擔",
-    },
-    {
-        "id": "phase",
-        "title": "小規模試辦，蒐集成效後再決定是否擴大",
-        "cost": 8,
-        "effects": {"problem_improvement": 4, "satisfaction": 1, "fairness": 2},
-        "resources": {"staffing": -1},
-        "group_effect": 2,
-        "category": "accessibility",
-        "cause": "試辦累積了資料，讓下一步調整更有依據",
-    },
-)
-
 DEVELOPMENTS = (
     {
         "id": "library",
@@ -189,14 +135,6 @@ POLICY_LABELS = {
     "conservation": "節能節水",
     "training": "服務人力培訓",
 }
-DEVELOPMENT_EVENT_CATEGORIES = {
-    "建設": "infrastructure",
-    "政策": "policy",
-    "資源": "environment",
-    "財政": "finance",
-}
-
-
 def _bounded(value, minimum=0, maximum=100):
     return max(minimum, min(maximum, int(round(value))))
 
@@ -209,55 +147,51 @@ def _refresh_metrics(state):
     state["metrics"]["budget_remaining"] = _bounded(state["treasury"] / 12)
 
 
-def _event_for(state, turn, starting_concern=None, cause_category=None):
-    rng = random.Random(f"{state['seed']}:{turn}")
-    if starting_concern:
-        category = "infrastructure"
-        issue = starting_concern
-        group = "students"
-        title = "你提出的校園議題"
-    else:
-        events = list(EVENTS)
-        previous_category = DEVELOPMENT_EVENT_CATEGORIES.get(cause_category)
-        if previous_category:
-            favored = [event for event in events if event["category"] == previous_category]
-            events.extend(favored)
-        if state["metrics"]["budget_remaining"] < 35:
-            events.extend(event for event in EVENTS if event["category"] == "finance")
-        if min(state["resources"].values()) < 35:
-            events.extend(event for event in EVENTS if event["category"] == "environment")
-        event = rng.choice(events)
-        category = event["category"]
-        issue = event["title"]
-        group = event["group"]
-        title = "校園突發議題"
-
+def _materialize_event(state, raw_event, turn):
+    group = raw_event["group"]
+    if group not in GROUP_NAMES:
+        raise ValueError("AI 事件格式錯誤：受影響對象無效。")
+    source = raw_event.get("source", "gemini")
     residents = [resident for resident in state["residents"] if resident["group"] == group]
-    resident = rng.choice(residents)
+    resident = random.Random(f"{state['seed']}:{turn}").choice(residents)
     actions = []
-    for template in RESPONSES:
-        action = dict(template)
-        action["effects"] = dict(template["effects"])
-        action["resources"] = dict(template["resources"])
-        action["action_id"] = template["id"]
-        action["text"] = template["title"]
-        actions.append(action)
+    for action in raw_event["actions"]:
+        effects = dict(action["effects"])
+        actions.append({
+            "action_id": action["action_id"],
+            "title": action["title"],
+            "text": action["text"],
+            "cost": action["cost"],
+            "effects": effects,
+            "resources": {},
+            "group_effect": effects["satisfaction"],
+            "cause": f"這項決策使問題改善 {effects['problem_improvement']:+d}、滿意度 {effects['satisfaction']:+d}、公平性 {effects['fairness']:+d}",
+        })
     return {
-        "title": title,
-        "event": issue,
-        "category": category,
+        "title": (
+            "離線示範起始議題" if source == "demo" else "玩家提出的起始議題"
+        ) if turn == 0 else (
+            "離線示範延伸議題" if source == "demo" else "AI 延伸校園議題"
+        ),
+        "event": raw_event["event"],
+        "category": raw_event["category"],
         "group": group,
         "group_label": GROUP_NAMES[group],
         "resident": resident,
         "actions": actions,
-        "quote": f"「{resident['concern']}是我最近最在意的事，希望學校能讓我們知道後續。」",
+        "quote": f"「{raw_event['resident_concern']}是我目前最關注的事，希望學校能說明後續安排。」",
+        "source": source,
     }
 
 
-def new_campaign(concern, seed=None):
+def new_campaign(concern, event_deck, plan, scenario_title, seed=None):
     concern = (concern or "").strip()
-    if not concern or len(concern) > 160:
-        raise ValueError("校園議題需為 1 到 160 個字。")
+    if not concern or len(concern) > 300:
+        raise ValueError("校園議題需為 1 到 300 個字。")
+    if not isinstance(event_deck, list) or not event_deck:
+        raise ValueError("尚未產生校園事件，請重新分析起始問題。")
+    if not isinstance(plan, dict):
+        raise ValueError("請先選擇一項 AI 校務方案。")
     if seed is None:
         seed = secrets.randbits(64)
     state = {
@@ -277,8 +211,19 @@ def new_campaign(concern, seed=None):
         "history": [],
         "yearly": [],
         "finished": False,
+        "selected_plan": dict(plan),
+        "scenario_title": scenario_title,
+        "event_queue": list(event_deck[1:]),
     }
-    state["current_event"] = _event_for(state, 0, starting_concern=concern)
+    for name, effect in plan["effects"].items():
+        if name == "budget_remaining":
+            state["treasury"] = max(0, min(2000, state["treasury"] + effect * 12))
+        elif name == "satisfaction":
+            for resident in state["residents"]:
+                resident["satisfaction"] = _bounded(resident["satisfaction"] + effect)
+        else:
+            state["metrics"][name] = _bounded(state["metrics"][name] + effect)
+    state["current_event"] = _materialize_event(state, event_deck[0], 0)
     _refresh_metrics(state)
     return state
 
@@ -308,6 +253,7 @@ def campaign_context(state):
         "total_turns": TOTAL_TURNS,
         "progress": turn * 100 // TOTAL_TURNS,
         "event": state["current_event"],
+        "selected_plan": state["selected_plan"],
         "metrics": dict(state["metrics"]),
         "treasury": state["treasury"],
         "population": dict(state["population"]),
@@ -331,15 +277,7 @@ def _apply_effects(state, effects):
             state["metrics"][key] = _bounded(state["metrics"][key] + amount)
 
 
-def _update_residents(state, group, change):
-    for resident in state["residents"]:
-        if resident["group"] == group:
-            resident["satisfaction"] = _bounded(
-                resident["satisfaction"] + change * (1 if resident is state["current_event"]["resident"] else 0.35)
-            )
-
-
-def advance_campaign(state, action_id, development_id):
+def validate_campaign_choice(state, action_id, development_id):
     if state["finished"] or state["turn"] >= TOTAL_TURNS:
         raise ValueError("這場十年經營已經結束。")
     event = state["current_event"]
@@ -355,6 +293,22 @@ def advance_campaign(state, action_id, development_id):
     net_cost = action["cost"] + development["cost"] - development.get("treasury_gain", 0)
     if net_cost > state["treasury"]:
         raise ValueError("校務基金不足以支應這組決策；請改選較低成本的回應或財政措施。")
+    return action, development
+
+
+def _update_residents(state, group, change):
+    for resident in state["residents"]:
+        if resident["group"] == group:
+            resident["satisfaction"] = _bounded(
+                resident["satisfaction"] + change * (1 if resident is state["current_event"]["resident"] else 0.35)
+            )
+
+
+def advance_campaign(state, action_id, development_id, next_events=None):
+    action, development = validate_campaign_choice(state, action_id, development_id)
+    event = state["current_event"]
+    if state["turn"] + 1 < TOTAL_TURNS and not state["event_queue"] and not next_events:
+        raise ValueError("下一批 AI 校園事件尚未準備完成。")
 
     state["treasury"] -= action["cost"] + development["cost"]
     state["treasury"] += development.get("treasury_gain", 0)
@@ -400,11 +354,12 @@ def advance_campaign(state, action_id, development_id):
     if state["turn"] >= TOTAL_TURNS:
         state["finished"] = True
     else:
-        next_event = _event_for(
-            state,
-            state["turn"],
-            cause_category=development["category"],
-        )
+        if not state["event_queue"]:
+            state["event_queue"] = list(next_events[1:])
+            next_raw_event = next_events[0]
+        else:
+            next_raw_event = state["event_queue"].pop(0)
+        next_event = _materialize_event(state, next_raw_event, state["turn"])
 
     outcome = {
         "year": year,
@@ -471,11 +426,13 @@ def make_campaign_record(state):
         "record_id": secrets.token_hex(16),
         "created_at": datetime.now(timezone.utc).isoformat(),
         "scenario_id": "campus_decade",
-        "scenario_title": f"十年校園經營：{state['concern']}",
+        "scenario_title": state["scenario_title"],
         "proposal": state["concern"],
-        "plan_title": "十年校務發展藍圖",
-        "plan_strategy": "教職員生回應、設施建設與永續治理並進",
-        "plan_description": "每季處理校園事件並選擇一項年度經營措施。",
+        "plan_title": state["selected_plan"]["title"],
+        "plan_strategy": state["selected_plan"]["strategy"],
+        "plan_description": state["selected_plan"]["description"],
+        "plan_reason": state["selected_plan"]["reason"],
+        "plan_effects": dict(state["selected_plan"]["effects"]),
         "initial_metrics": {
             "budget_remaining": 71, "problem_improvement": 45, "satisfaction": 70, "fairness": 63,
         },
