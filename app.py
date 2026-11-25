@@ -8,6 +8,12 @@ from ai_service import (
     choose_review_focus,
     recommend_plans,
 )
+from campus_simulation import (
+    advance_campaign,
+    campaign_context,
+    make_campaign_record,
+    new_campaign,
+)
 from simulation import apply_effects, calculate_total_score, make_comment
 from storage import load_menu, load_records, save_record
 
@@ -398,6 +404,8 @@ def record_detail(record_id):
     )
     if not record:
         return render_template("error.html", title="找不到紀錄", message="此紀錄沒有新格式識別碼或已不存在。"), 404
+    if record.get("scenario_id") == "campus_decade":
+        return render_template("campus_result.html", record=record)
     return render_template("result.html", record=record)
 
 
@@ -408,6 +416,79 @@ def reset():
         GAMES.pop(flow_id, None)
     session.pop("recent_record_id", None)
     return redirect("/")
+
+
+@app.route("/campus/start", methods=["POST"])
+def campus_start():
+    concern = request.form.get("concern", "").strip()
+    try:
+        campaign = new_campaign(concern)
+    except ValueError as error:
+        return render_template(
+            "error.html", title="校園議題格式錯誤", message=str(error)
+        ), 400
+
+    flow_id = secrets.token_urlsafe(16)
+    GAMES[flow_id] = {"campaign": campaign}
+    session["flow_id"] = flow_id
+    session.pop("recent_record_id", None)
+    return redirect("/campus")
+
+
+@app.route("/campus")
+def campus():
+    game = _get_game()
+    campaign = game.get("campaign") if game else None
+    if not campaign:
+        return redirect("/")
+    if campaign["finished"]:
+        return redirect("/campus/result")
+    return render_template("campus.html", **campaign_context(campaign))
+
+
+@app.route("/campus/choose", methods=["POST"])
+def campus_choose():
+    game = _get_game()
+    campaign = game.get("campaign") if game else None
+    if not campaign:
+        return redirect("/")
+    try:
+        advance_campaign(
+            campaign,
+            request.form.get("action_id", ""),
+            request.form.get("development_id", ""),
+        )
+    except ValueError as error:
+        return render_template(
+            "error.html", title="經營決策格式錯誤", message=str(error)
+        ), 400
+
+    if campaign["finished"]:
+        record = make_campaign_record(campaign)
+        game["result"] = record
+        save_record(record)
+        session["recent_record_id"] = record["record_id"]
+        return redirect("/campus/result")
+    return redirect("/campus")
+
+
+@app.route("/campus/result")
+def campus_result():
+    game = _get_game()
+    record = game.get("result") if game else None
+    if not record:
+        record_id = session.get("recent_record_id")
+        record = next(
+            (
+                item for item in load_records()
+                if item.get("record_id") == record_id
+                and item.get("scenario_id") == "campus_decade"
+            ),
+            None,
+        )
+    if not record:
+        return redirect("/")
+    return render_template("campus_result.html", record=record)
 
 
 def _utc_now():

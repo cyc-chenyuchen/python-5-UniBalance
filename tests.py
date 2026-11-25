@@ -9,7 +9,8 @@ os.environ.setdefault("FLASK_SECRET_KEY", "test-only-secret")
 os.environ["DEMO_MODE"] = "1"
 
 from ai_service import METRIC_RANGES, PLAN_RESPONSE_SCHEMA, _validate_effects, recommend_plans, send_request
-from app import app
+from app import GAMES, app
+from campus_simulation import advance_campaign, new_campaign
 from simulation import apply_effects, calculate_total_score, make_comment, run_round_choice
 
 
@@ -457,6 +458,66 @@ class OfflineDemoTests(unittest.TestCase):
         self.assertIn("方案探索".encode("utf-8"), response.data)
         self.assertIn("循序改善方案".encode("utf-8"), response.data)
         self.assertEqual(recommend.call_count, 2)
+
+
+class CampusCampaignTests(unittest.TestCase):
+    def setUp(self):
+        app.config["TESTING"] = True
+        self.client = app.test_client()
+        with self.client.session_transaction() as session:
+            session.clear()
+
+    def test_ten_year_campaign_runs_forty_turns_and_saves_decade_report(self):
+        with patch("app.save_record") as save_record:
+            response = self.client.post(
+                "/campus/start",
+                data={"concern": "圖書館尖峰時段座位不足"},
+                follow_redirects=True,
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertIn("圖書館尖峰時段座位不足".encode("utf-8"), response.data)
+            self.assertIn("第 1 年第 1 季".encode("utf-8"), response.data)
+            with self.client.session_transaction() as session:
+                flow_id = session["flow_id"]
+
+            for _ in range(40):
+                response = self.client.post(
+                    "/campus/choose",
+                    data={"action_id": "listen", "development_id": "audit"},
+                    follow_redirects=True,
+                )
+                self.assertEqual(response.status_code, 200)
+
+        self.assertIn("十年校務總結".encode("utf-8"), response.data)
+        self.assertIn("40 個連鎖事件".encode("utf-8"), response.data)
+        self.assertIn("第 10 年".encode("utf-8"), response.data)
+        self.assertEqual(save_record.call_count, 1)
+        campaign = GAMES[flow_id]["campaign"]
+        self.assertTrue(campaign["finished"])
+        self.assertEqual(len(campaign["history"]), 40)
+        self.assertEqual(len(campaign["yearly"]), 10)
+
+    def test_invalid_development_does_not_consume_a_turn(self):
+        campaign = new_campaign("校園空間不足", seed=7)
+        with self.assertRaisesRegex(ValueError, "可負擔"):
+            advance_campaign(campaign, "listen", "not-a-development")
+        self.assertEqual(campaign["turn"], 0)
+        self.assertEqual(len(campaign["history"]), 0)
+
+    def test_decision_cannot_spend_more_than_available_funds(self):
+        campaign = new_campaign("校園空間不足", seed=7)
+        campaign["treasury"] = 0
+        with self.assertRaisesRegex(ValueError, "校務基金不足"):
+            advance_campaign(campaign, "act", "austerity")
+        self.assertEqual(campaign["turn"], 0)
+
+    def test_development_choice_branches_the_next_campus_issue(self):
+        next_events = set()
+        for development in ("library", "scholarships", "conservation", "audit"):
+            campaign = new_campaign("校園空間不足", seed=14)
+            outcome = advance_campaign(campaign, "listen", development)
+            next_events.add(outcome["next_event"])
+        self.assertGreater(len(next_events), 1)
 
 
 if __name__ == "__main__":

@@ -2,11 +2,23 @@
 {% block content %}
 <section class="hero home-hero">
   <div class="hero-copy">
-    <span class="eyebrow">校園改革任務大廳</span>
-    <h1>從一個校園議題，<br>開始你的改革任務</h1>
-    <p>提出觀察、了解需求、比較策略，再透過情境模擬，看看不同決策如何影響校園指標。</p>
+    <span class="eyebrow">十年校園經營模擬</span>
+    <h1>從一個校園問題，<br>經營大學的下一個十年</h1>
+    <p>面對接連發生的居民需求，管理財政、建設與政策，觀察每個選擇如何改變校園未來。</p>
   </div>
   <img class="hero-illustration" src="{{ url_for('static', filename='campus-illustration.svg') }}" alt="" aria-hidden="true">
+</section>
+<section class="card decade-entry" id="decade-campaign">
+  <div class="decade-entry-copy">
+    <p class="step">完整經營模式 · 40 季 · 10 年</p>
+    <h2>開始一場十年校務挑戰</h2>
+    <p>從你提出的第一個問題開始，每季回應居民、投資校園發展，並追蹤蝴蝶效應與未來預測。</p>
+  </div>
+  <form action="/campus/start" method="post">
+    <label for="campus-concern">你的校園起始問題 <span class="step">1～160 字</span></label>
+    <textarea id="campus-concern" name="concern" maxlength="160" required placeholder="例如：圖書館尖峰時段座位不足，學生找不到安靜的閱讀空間。"></textarea>
+    <button type="submit">開始十年經營 <span aria-hidden="true">→</span></button>
+  </form>
 </section>
 <div class="lobby-grid">
   <section class="card mission-card">

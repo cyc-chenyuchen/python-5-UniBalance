@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block page_class %}campus-result-page{% endblock %}
+{% block content %}
+<section class="card decade-results">
+  <div class="visual-heading result-visual-heading">
+    <div class="visual-copy">
+      <p class="step">十年校務總結 · 40 季已完成</p>
+      <h1>{{ record.scenario_title }}</h1>
+      <p>起始議題：{{ record.proposal }}</p>
+    </div>
+    <div class="campaign-score campaign-final-score"><strong>{{ record.total_score }}</strong><span>綜合評分</span></div>
+  </div>
+  <p class="notice">{{ record.comment }}</p>
+
+  <section class="result-section">
+    <h2>十年後的校園</h2>
+    <div class="metrics">
+      {% for name, value in record.final_metrics.items() %}
+      <div data-metric="{{ name }}" data-value="{{ value }}"><strong>{{ record.metric_labels[name] }}</strong><span>{{ value }}</span></div>
+      {% endfor %}
+    </div>
+    <div class="campaign-facts result-facts">
+      <div><strong>校務基金</strong><span>{{ record.treasury }} 點</span></div>
+      <div><strong>校園總人口</strong><span>{{ record.population.students }} 位學生 · {{ record.population.faculty }} 位教職員 · {{ record.population.staff }} 位行政與服務人員</span></div>
+      <div><strong>校園建設</strong><span>{% for name, level in record.buildings.items() %}{{ record.building_labels[name] }} Lv.{{ level }}{% if not loop.last %} · {% endif %}{% endfor %}</span></div>
+      <div><strong>政策成果</strong><span>{% set active_policies = record.policies|dictsort %}{% for name, level in active_policies if level > 0 %}{{ record.policy_labels[name] }} Lv.{{ level }}{% if not loop.last %} · {% endif %}{% else %}尚未制定{% endfor %}</span></div>
+    </div>
+  </section>
+
+  <section class="result-section">
+    <h2>十年人口與滿意度變化</h2>
+    <div class="yearly-table-wrap">
+      <table class="yearly-table">
+        <thead><tr><th>學年</th><th>校園人口</th><th>居民滿意度</th><th>校務基金</th><th>當年評分</th></tr></thead>
+        <tbody>
+          {% for year in record.yearly %}
+          <tr><th>第 {{ year.year }} 年</th><td>{{ year.population }}</td><td>{{ year.satisfaction }} / 100</td><td>{{ year.treasury }}</td><td>{{ year.score }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="result-section">
+    <h2>居民聲音</h2>
+    <div class="resident-grid">
+      {% for resident in record.residents %}
+      <article class="resident-card"><strong>{{ resident.name }} <small>{{ resident.role }}</small></strong><span>{{ resident.concern }}</span><div class="resident-meter" role="meter" aria-label="{{ resident.name }}滿意度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ resident.satisfaction }}"><i style="width: {{ resident.satisfaction }}%"></i></div><small>十年後滿意度 {{ resident.satisfaction }}</small></article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="result-section">
+    <h2>蝴蝶效應決策年表 <span class="result-count">{{ record.history|length }} 個連鎖事件</span></h2>
+    <ol class="action-list decade-action-list">
+      {% for item in record.history %}
+      <li>
+        <strong>第 {{ item.year }} 年 Q{{ item.quarter }} · {{ item.event }}</strong>
+        <span>{{ item.resident }}（{{ item.role }}）選擇：{{ item.response }}</span>
+        <span>校務措施：{{ item.development }}（{{ item.category }}）</span>
+        <p>{{ item.butterfly }}</p>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  <section class="result-section">
+    <h2>未來一年模擬</h2>
+    <p>預估校園人口 {{ record.forecast.next_year_population }} 人，居民滿意度 {{ record.forecast.next_year_satisfaction }} / 100。</p>
+    <p class="notice">{{ record.forecast.risk }}</p>
+  </section>
+  <div class="result-actions">
+    <a class="button button-secondary" href="/records">查看歷史任務</a>
+    <a class="button" href="/">開始新的十年經營</a>
+  </div>
+</section>
+{% endblock %}

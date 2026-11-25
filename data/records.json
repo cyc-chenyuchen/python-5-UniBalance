@@ -1002,5 +1002,86 @@
     "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
     "review": "本次採用「宿舍區新建室內車棚」。在「第二回合：工程預算與施工地點引發部分宿舍管理員擔憂。」中，玩家選擇了「調整施工範圍以保留宿舍綠地並縮短工期。」；完成模擬後，問題改善為 100，總分為 84 分。",
     "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
+  },
+  {
+    "record_id": "45c2e961e9730b181db1e29c8c39d690",
+    "created_at": "2026-11-25T04:51:05.574411+00:00",
+    "scenario_id": "campus_custom",
+    "scenario_title": "校園保健室距離過遠改善計畫",
+    "proposal": "學校只有一間保健室，若是在離那邊很遠的地方受傷了，要走很久才能到。",
+    "plan_id": "plan_1",
+    "plan_title": "增設簡易醫療站",
+    "plan_strategy": "分散醫療資源",
+    "plan_description": "在各棟教學大樓設立簡易急救箱與護理人員巡點。",
+    "plan_reason": "能有效縮短遠距離學生的就醫時間。",
+    "plan_effects": {
+      "budget_remaining": -15,
+      "problem_improvement": 15,
+      "satisfaction": 8,
+      "fairness": 5
+    },
+    "initial_metrics": {
+      "budget_remaining": 75,
+      "problem_improvement": 75,
+      "satisfaction": 75,
+      "fairness": 75
+    },
+    "final_metrics": {
+      "budget_remaining": 46,
+      "problem_improvement": 100,
+      "satisfaction": 91,
+      "fairness": 88
+    },
+    "metric_labels": {
+      "budget_remaining": "剩餘預算",
+      "problem_improvement": "問題改善",
+      "satisfaction": "學生滿意度",
+      "fairness": "公平性"
+    },
+    "actions": [
+      {
+        "round": 1,
+        "event": "第一回合：評估遠距大樓的受傷熱點與各棟實際需求",
+        "action_index": 0,
+        "action_id": "r1_a1",
+        "action_text": "進行全校受傷地點統計調查",
+        "action_effects": {
+          "budget_remaining": -5,
+          "problem_improvement": 5,
+          "satisfaction": 2,
+          "fairness": 3
+        }
+      },
+      {
+        "round": 2,
+        "event": "第二回合：招募志工與規劃巡邏車行駛路線",
+        "action_index": 0,
+        "action_id": "r2_a1",
+        "action_text": "培訓教職員與學生急救志工隊",
+        "action_effects": {
+          "budget_remaining": -6,
+          "problem_improvement": 6,
+          "satisfaction": 3,
+          "fairness": 2
+        }
+      },
+      {
+        "round": 3,
+        "event": "第三回合：全面檢視成效並進行制度化調整",
+        "action_index": 0,
+        "action_id": "r3_a1",
+        "action_text": "發放問卷收集師生使用反饋",
+        "action_effects": {
+          "budget_remaining": -3,
+          "problem_improvement": 4,
+          "satisfaction": 3,
+          "fairness": 3
+        }
+      }
+    ],
+    "total_score": 81,
+    "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
+    "review": "本次採用「增設簡易醫療站」。在「第二回合：招募志工與規劃巡邏車行駛路線」中，玩家選擇了「培訓教職員與學生急救志工隊」；完成模擬後，問題改善為 100，總分為 81 分。",
+    "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
   }
 ]
