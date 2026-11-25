@@ -26,6 +26,7 @@ METRIC_RANGES = {
 INTERVIEW_QUESTION_COUNT = 3
 SIMULATION_ROUND_COUNT = 3
 CAMPAIGN_EVENT_BATCH_SIZE = 2
+CAMPAIGN_HISTORY_CONTEXT_TURNS = 4
 CAMPAIGN_GROUPS = {"students", "faculty", "staff"}
 CAMPAIGN_CATEGORIES = {
     "infrastructure",
@@ -633,7 +634,7 @@ def generate_campaign_events(
         },
         "opening": opening,
         "batch_size": batch_size,
-        "recent_history": recent_history[-8:],
+        "recent_history": recent_history[-CAMPAIGN_HISTORY_CONTEXT_TURNS:],
         "campus_state": campus_state,
         "next_decision": next_decision,
         "required_story_stages": _expected_campaign_story_stages(

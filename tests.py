@@ -11,6 +11,7 @@ os.environ["DEMO_MODE"] = "1"
 
 from ai_service import (
     CAMPAIGN_EVENT_BATCH_SIZE,
+    CAMPAIGN_HISTORY_CONTEXT_TURNS,
     METRIC_RANGES,
     PLAN_RESPONSE_SCHEMA,
     _validate_effects,
@@ -596,7 +597,10 @@ class CampaignAiGenerationTests(unittest.TestCase):
         return {"events": events}
 
     def test_event_generation_sends_proposal_state_and_previous_decision_to_gemini(self):
-        history = [{"event": "圖書館空間不足", "response": "擴大開放時段"}]
+        history = [
+            {"event": f"近期事件 {index}", "response": f"近期回應 {index}"}
+            for index in range(6)
+        ]
         next_decision = {
             "current_issue": "晚間延長開放後人力吃緊",
             "response": "調整輪班",
@@ -625,7 +629,10 @@ class CampaignAiGenerationTests(unittest.TestCase):
         self.assertEqual(events[0]["source"], "gemini")
         user_prompt = json.loads(request.call_args.args[1])
         self.assertEqual(user_prompt["proposal"], "圖書館座位不足")
-        self.assertEqual(user_prompt["recent_history"], history)
+        self.assertEqual(
+            user_prompt["recent_history"],
+            history[-CAMPAIGN_HISTORY_CONTEXT_TURNS:],
+        )
         self.assertEqual(user_prompt["campus_state"], state)
         self.assertEqual(user_prompt["next_decision"], next_decision)
         self.assertEqual(
