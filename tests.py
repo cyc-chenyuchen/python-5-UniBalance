@@ -560,7 +560,15 @@ class CampaignAiGenerationTests(unittest.TestCase):
         self.assertFalse(
             user_prompt["continuity_contract"]["unrelated_campus_events_allowed"]
         )
+        self.assertTrue(
+            user_prompt["continuity_contract"]["include_unexpected_event"]
+        )
+        self.assertIn(
+            "起因出乎意料",
+            user_prompt["continuity_contract"]["unexpected_event_requirements"][0],
+        )
         self.assertIn("proposal 是整局經營的核心問題", request.call_args.args[0])
+        self.assertIn("至少安排一個真正未預期的突發事件", request.call_args.args[0])
         self.assertEqual(request.call_args.kwargs["temperature"], 0.9)
 
     def test_demo_event_batch_uses_distinct_play_formats(self):

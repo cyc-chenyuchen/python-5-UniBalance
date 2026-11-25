@@ -531,14 +531,18 @@ def generate_campaign_events(
         "每個事件都必須能清楚追溯到 proposal 的具體場域、服務、流程、受影響族群或其直接後果；"
         "只因為同屬校園議題不算相關。event 必須寫出具體的因果連結，resident_concern 也要說明該角色為何受此問題影響。"
         "若跨到財政、人力、空間、健康或公平等其他系統，必須交代它如何由核心問題或玩家決策造成；"
-        "不得只為了事件多樣性加入沒有因果關係的隨機插曲。"
+        "突發意外可以有獨立於核心問題與玩家決策之外的起因，但必須清楚呈現它如何影響核心問題；"
+        "這類意外是用來增加不確定性，不可被寫成前一決策的必然後果。"
+        "只要本批有非人物主線事件名額，就至少安排一個真正未預期的突發事件，例如設備故障、"
+        "天候或外部供應變化、臨時人力缺口、需求突然增加；意外因素需多樣，不要每批都套用同一模板。"
+        "同批其餘事件則以原始需求、玩家選擇及其可追溯後果為主；不得加入影響核心問題之外的無關隨機插曲。"
         "opening 批次的第一個事件直接呈現 proposal，其餘事件須沿著同一問題的成因、影響或解決過程延伸。"
         "後續批次優先承接 next_decision 的回應、校務措施、後續影響，再接續 relevant recent_history；"
         "同批事件也要有可理解的先後或因果關係。變化應來自不同角色與決策取捨，而不是突然更換主題。"
         "每個事件必須指定 campus_state.characters 中一位真實存在的角色 resident_id，"
         "group 必須與該角色的 group 相符。依照角色的 personality、goal、concern 和目前 trust/stress"
         "為該角色寫具體事件與第一人稱 resident_quote；有足夠角色時，避免同批重複指定同一人。"
-        "蝴蝶效應或新突發狀況只能作為核心問題的合理後果，且需在事件中交代連結。"
+        "蝴蝶效應需是決策的合理後果；突發意外則可由外部因素引發，但需在事件中交代其對核心問題的影響。"
         "event_type 只能是 crisis、opportunity、negotiation、campus_vote、character_story，"
         "分別代表緊急危機、限時機會、角色協商、校園投票、人物故事；同批非主線事件盡量使用不同類型。"
         "character_story 只用於 story_stage 大於 0 的主線事件；非主線事件必須使用其他四種玩法。"
@@ -582,6 +586,17 @@ def generate_campaign_events(
                 "後續批次承接玩家最近的決策或其可追溯的歷史影響",
             ],
             "unrelated_campus_events_allowed": False,
+            "include_unexpected_event": any(
+                stage == 0
+                for stage in _expected_campaign_story_stages(
+                    campus_state.get("story_arc"), batch_size, opening
+                )
+            ),
+            "unexpected_event_requirements": [
+                "起因出乎意料，且不是玩家近期決策的必然後果",
+                "意外造成的影響必須明確連回核心問題",
+                "每批有非人物主線名額時至少安排一個",
+            ],
         },
         "opening": opening,
         "batch_size": batch_size,
