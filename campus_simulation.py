@@ -55,16 +55,21 @@ RESIDENTS = (
     },
 )
 
+
 def resident_profiles(residents=None):
     source = residents if residents is not None else RESIDENTS
     fields = (
         "id", "name", "role", "group", "concern", "personality", "goal",
         "satisfaction", "trust", "stress",
     )
-    return [
-        {field: resident[field] for field in fields if field in resident}
-        for resident in source
-    ]
+    profiles = []
+    for index, resident in enumerate(source):
+        profile = {field: resident[field] for field in fields if field in resident}
+        profile.setdefault("satisfaction", 68 + index % 5 * 3)
+        profile.setdefault("trust", 42 + index % 4 * 8)
+        profile.setdefault("stress", 38 + index % 4 * 9)
+        profiles.append(profile)
+    return profiles
 
 
 DEVELOPMENTS = (
@@ -246,6 +251,108 @@ TITLE_CATALOG = (
     {"id": "challenge_collector", "name": "挑戰收藏家", "description": "完成至少三項年度挑戰。", "rule": "challenges"},
     {"id": "five_year_legend", "name": "五年傳奇", "description": "完成五年經營並取得 85 分以上。", "rule": "champion"},
 )
+
+CAMPUS_PROFILES = (
+    {
+        "id": "metro_commuter",
+        "name": "都會通勤校園",
+        "description": "通勤學生多，尖峰服務需求高；人力與公平性需要優先照顧。",
+        "treasury_delta": -90,
+        "population_delta": {"students": 1200, "faculty": 0, "staff": 20},
+        "resource_delta": {"energy": -4, "water": -3, "staffing": -6},
+        "metric_delta": {"satisfaction": -3, "fairness": -2},
+        "resident_delta": {"students": {"stress": 6}},
+    },
+    {
+        "id": "research_hub",
+        "name": "研究重鎮",
+        "description": "研究量能與教職員規模較大；能源消耗和教學負荷是隱憂。",
+        "treasury_delta": 80,
+        "population_delta": {"students": -300, "faculty": 100, "staff": 20},
+        "resource_delta": {"energy": -8, "water": 0, "staffing": 3},
+        "metric_delta": {"problem_improvement": 5, "satisfaction": -2},
+        "resident_delta": {"faculty": {"stress": 6}},
+    },
+    {
+        "id": "regional_community",
+        "name": "地方共融校園",
+        "description": "校園與在地連結緊密；資源有限但社群互助基礎良好。",
+        "treasury_delta": 120,
+        "population_delta": {"students": -900, "faculty": 20, "staff": 40},
+        "resource_delta": {"energy": 0, "water": 5, "staffing": -3},
+        "metric_delta": {"satisfaction": 3, "fairness": 7},
+        "resident_delta": {"students": {"trust": 4}},
+    },
+    {
+        "id": "innovation_campus",
+        "name": "新興創意校園",
+        "description": "新學院與社團快速成長；機會多，但服務量能仍在追趕。",
+        "treasury_delta": -100,
+        "population_delta": {"students": 600, "faculty": 40, "staff": 0},
+        "resource_delta": {"energy": 5, "water": 5, "staffing": -4},
+        "metric_delta": {"problem_improvement": 4, "satisfaction": 4, "fairness": -2},
+        "resident_delta": {"students": {"stress": 4}, "staff": {"stress": 3}},
+    },
+)
+
+EVENT_TYPE_INFO = {
+    "crisis": {
+        "label": "緊急危機",
+        "hint": "情勢正在升溫，本學期的處理方式會影響後續損失。",
+    },
+    "opportunity": {
+        "label": "限時機會",
+        "hint": "校外或校內出現短期機會，請衡量投入、回報與機會成本。",
+    },
+    "negotiation": {
+        "label": "角色協商",
+        "hint": "不同群體各有立場，協調方式會改變當事人的信任與公平感。",
+    },
+    "campus_vote": {
+        "label": "校園投票",
+        "hint": "教職員生意見不一，決策需在多數支持與少數需求間取捨。",
+    },
+    "character_story": {
+        "label": "人物故事",
+        "hint": "事件關係到一位教職員生的個人目標與長期發展。",
+    },
+}
+
+
+def _copy_campus_profile(profile):
+    return {
+        **profile,
+        "population_delta": dict(profile["population_delta"]),
+        "resource_delta": dict(profile["resource_delta"]),
+        "metric_delta": dict(profile["metric_delta"]),
+        "resident_delta": {
+            group: dict(effects)
+            for group, effects in profile["resident_delta"].items()
+        },
+    }
+
+
+def campus_profile_for_seed(seed):
+    profile = random.Random(f"{seed}:campus-profile").choice(CAMPUS_PROFILES)
+    return _copy_campus_profile(profile)
+
+
+def apply_campus_profile(state, profile):
+    state["treasury"] = max(0, min(2000, state["treasury"] + profile["treasury_delta"]))
+    for population, change in profile["population_delta"].items():
+        state["population"][population] = max(0, state["population"][population] + change)
+    for resource, change in profile["resource_delta"].items():
+        state["resources"][resource] = _bounded(state["resources"][resource] + change)
+    for metric, change in profile["metric_delta"].items():
+        state["metrics"][metric] = _bounded(state["metrics"][metric] + change)
+    residents = state.get("residents", state.get("characters", []))
+    for resident in residents:
+        for field, change in profile["resident_delta"].get(resident["group"], {}).items():
+            if field in resident:
+                resident[field] = _bounded(resident[field] + change)
+    return state
+
+
 def _bounded(value, minimum=0, maximum=100):
     return max(minimum, min(maximum, int(round(value))))
 
@@ -342,6 +449,8 @@ def _materialize_event(state, raw_event, turn):
             "cost": action["cost"],
             "effects": effects,
             "resident_effects": dict(action["resident_effects"]),
+            "follow_up": action["follow_up"],
+            "delayed_effects": dict(action["delayed_effects"]),
             "resources": {},
             "group_effect": effects["satisfaction"],
             "cause": f"這項決策使問題改善 {effects['problem_improvement']:+d}、滿意度 {effects['satisfaction']:+d}、公平性 {effects['fairness']:+d}",
@@ -354,6 +463,9 @@ def _materialize_event(state, raw_event, turn):
         ),
         "event": raw_event["event"],
         "category": raw_event["category"],
+        "event_type": raw_event["event_type"],
+        "event_type_label": EVENT_TYPE_INFO[raw_event["event_type"]]["label"],
+        "event_type_hint": EVENT_TYPE_INFO[raw_event["event_type"]]["hint"],
         "group": group,
         "group_label": GROUP_NAMES[group],
         "resident": resident,
@@ -364,7 +476,14 @@ def _materialize_event(state, raw_event, turn):
     }
 
 
-def new_campaign(concern, event_deck, plan, scenario_title, seed=None):
+def new_campaign(
+    concern,
+    event_deck,
+    plan,
+    scenario_title,
+    seed=None,
+    campus_profile_id=None,
+):
     concern = (concern or "").strip()
     if not concern or len(concern) > 300:
         raise ValueError("校園議題需為 1 到 300 個字。")
@@ -375,6 +494,16 @@ def new_campaign(concern, event_deck, plan, scenario_title, seed=None):
     if seed is None:
         seed = secrets.randbits(64)
     challenge_deck = random.Random(seed).sample(ANNUAL_CHALLENGES, YEARS)
+    if campus_profile_id is None:
+        campus_profile = campus_profile_for_seed(seed)
+    else:
+        profile = next(
+            (profile for profile in CAMPUS_PROFILES if profile["id"] == campus_profile_id),
+            None,
+        )
+        if profile is None:
+            raise ValueError("指定的校園開局條件不存在。")
+        campus_profile = _copy_campus_profile(profile)
     state = {
         "seed": seed,
         "concern": concern,
@@ -397,6 +526,8 @@ def new_campaign(concern, event_deck, plan, scenario_title, seed=None):
         "history": [],
         "yearly": [],
         "finished": False,
+        "campus_profile": campus_profile,
+        "pending_consequences": [],
         "challenges": [
             dict(challenge, year=year, completed=False, reward=30)
             for year, challenge in enumerate(challenge_deck, start=1)
@@ -406,6 +537,7 @@ def new_campaign(concern, event_deck, plan, scenario_title, seed=None):
         "scenario_title": scenario_title,
         "event_queue": list(event_deck[1:]),
     }
+    apply_campus_profile(state, campus_profile)
     for name, effect in plan["effects"].items():
         if name == "budget_remaining":
             state["treasury"] = max(0, min(2000, state["treasury"] + effect * 12))
@@ -416,6 +548,7 @@ def new_campaign(concern, event_deck, plan, scenario_title, seed=None):
             state["metrics"][name] = _bounded(state["metrics"][name] + effect)
     state["current_event"] = _materialize_event(state, event_deck[0], 0)
     _refresh_metrics(state)
+    state["initial_metrics"] = dict(state["metrics"])
     _award_available_titles(state)
     return state
 
@@ -447,6 +580,7 @@ def campaign_context(state):
         "progress": turn * 100 // TOTAL_TURNS,
         "event": state["current_event"],
         "selected_plan": state["selected_plan"],
+        "campus_profile": state["campus_profile"],
         "metrics": dict(state["metrics"]),
         "treasury": state["treasury"],
         "population": dict(state["population"]),
@@ -465,6 +599,13 @@ def campaign_context(state):
         "completed_challenge_count": sum(
             challenge["completed"] for challenge in state["challenges"]
         ),
+        "pending_consequences": [
+            {
+                **consequence,
+                "turns_left": max(0, consequence["due_turn"] - turn),
+            }
+            for consequence in state["pending_consequences"]
+        ],
         "titles": state["titles"],
         "title_catalog": TITLE_CATALOG,
         "forecast": forecast(state),
@@ -504,6 +645,38 @@ def _update_residents(state, group, change):
             )
 
 
+def _schedule_delayed_consequence(state, event, action):
+    state["pending_consequences"].append({
+        "origin_event": event["event"],
+        "resident": event["resident"]["name"],
+        "description": action["follow_up"],
+        "effects": dict(action["delayed_effects"]),
+        "due_turn": min(TOTAL_TURNS, state["turn"] + 2),
+    })
+
+
+def _settle_delayed_consequences(state, final=False):
+    settled = []
+    pending = []
+    for consequence in state["pending_consequences"]:
+        if consequence["due_turn"] > state["turn"] and not final:
+            pending.append(consequence)
+            continue
+        effects = consequence["effects"]
+        state["metrics"]["problem_improvement"] = _bounded(
+            state["metrics"]["problem_improvement"] + effects["problem_improvement"]
+        )
+        state["metrics"]["fairness"] = _bounded(
+            state["metrics"]["fairness"] + effects["fairness"]
+        )
+        state["treasury"] = max(
+            0, min(2000, state["treasury"] + effects["treasury"])
+        )
+        settled.append(consequence)
+    state["pending_consequences"] = pending
+    return settled
+
+
 def advance_campaign(state, action_id, development_id, next_events=None):
     action, development = validate_campaign_choice(state, action_id, development_id)
     event = state["current_event"]
@@ -535,12 +708,17 @@ def advance_campaign(state, action_id, development_id, next_events=None):
     if development.get("policy"):
         policy = development["policy"]
         state["policies"][policy] = state["policies"].get(policy, 0) + 1
+    _schedule_delayed_consequence(state, event, action)
 
     maintenance = sum(state["buildings"].values()) * 4
     revenue = 59 + min(12, state["population"]["students"] // 1000)
     state["treasury"] = max(0, min(2000, state["treasury"] + revenue - 58 - maintenance))
     _refresh_metrics(state)
     state["turn"] += 1
+    settled_consequences = _settle_delayed_consequences(
+        state, final=state["turn"] >= TOTAL_TURNS
+    )
+    _refresh_metrics(state)
     year = (state["turn"] - 1) // SEMESTERS_PER_YEAR + 1
     annual_challenge = None
     challenge_reward = 0
@@ -588,12 +766,19 @@ def advance_campaign(state, action_id, development_id, next_events=None):
         )
     else:
         butterfly = f"{development['title']}使{development['benefit']}，五年改革進入成果盤點"
+    butterfly += f"；選擇後續回響：{action['follow_up']}"
     if annual_challenge:
         challenge_status = "完成" if annual_challenge["completed"] else "未完成"
         butterfly += (
             f"；年度挑戰「{annual_challenge['title']}」{challenge_status}"
             + (f"，獲得 {challenge_reward} 點基金獎勵" if challenge_reward else "")
         )
+    if settled_consequences:
+        settled_summary = "；".join(
+            f"「{item['origin_event']}」的後續影響已結算"
+            for item in settled_consequences
+        )
+        butterfly += f"；{settled_summary}"
 
     outcome = {
         "year": year,
@@ -604,6 +789,17 @@ def advance_campaign(state, action_id, development_id, next_events=None):
         "resident_trust": event["resident"]["trust"],
         "resident_stress": event["resident"]["stress"],
         "response": action["title"],
+        "follow_up": action["follow_up"],
+        "delayed_effects": dict(action["delayed_effects"]),
+        "settled_consequences": [
+            {
+                "origin_event": item["origin_event"],
+                "resident": item["resident"],
+                "description": item["description"],
+                "effects": dict(item["effects"]),
+            }
+            for item in settled_consequences
+        ],
         "development": development["title"],
         "category": development["category"],
         "benefit": development["benefit"],
@@ -668,9 +864,7 @@ def make_campaign_record(state):
         "plan_description": state["selected_plan"]["description"],
         "plan_reason": state["selected_plan"]["reason"],
         "plan_effects": dict(state["selected_plan"]["effects"]),
-        "initial_metrics": {
-            "budget_remaining": 71, "problem_improvement": 45, "satisfaction": 70, "fairness": 63,
-        },
+        "initial_metrics": dict(state["initial_metrics"]),
         "final_metrics": dict(state["metrics"]),
         "metric_labels": {
             "budget_remaining": "財政健康",
@@ -684,6 +878,7 @@ def make_campaign_record(state):
             if score >= 70 else "五年校務仍有改善空間，可優先補足低分指標並維持教職員生參與。"
         ),
         "years": YEARS,
+        "campus_profile": state["campus_profile"],
         "history": state["history"],
         "yearly": state["yearly"],
         "challenges": state["challenges"],

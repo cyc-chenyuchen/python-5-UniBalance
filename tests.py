@@ -23,6 +23,7 @@ from campus_simulation import (
     TOTAL_TURNS,
     YEARS,
     advance_campaign,
+    campus_profile_for_seed,
     new_campaign,
     resident_profiles,
 )
@@ -482,6 +483,7 @@ class CampaignAiGenerationTests(unittest.TestCase):
             events.append({
                 "event": f"由玩家決策衍生的校園議題 {event_index + 1}",
                 "category": "policy",
+                "event_type": "negotiation",
                 "group": "students",
                 "resident_id": "lin_muqing",
                 "resident_quote": "我希望學校也能理解我的日常和長期目標。",
@@ -498,6 +500,12 @@ class CampaignAiGenerationTests(unittest.TestCase):
                         "resident_effects": {
                             "trust": action_index,
                             "stress": -action_index,
+                        },
+                        "follow_up": "後續學期持續觀察執行成效。",
+                        "delayed_effects": {
+                            "problem_improvement": 2,
+                            "fairness": 1,
+                            "treasury": -5,
                         },
                     }
                     for action_index in range(3)
@@ -539,6 +547,19 @@ class CampaignAiGenerationTests(unittest.TestCase):
         self.assertEqual(user_prompt["campus_state"], state)
         self.assertEqual(user_prompt["next_decision"], next_decision)
         self.assertEqual(request.call_args.kwargs["temperature"], 0.9)
+
+    def test_demo_event_batch_uses_distinct_play_formats(self):
+        events = generate_campaign_events(
+            "圖書館座位不足",
+            [],
+            {"characters": resident_profiles()},
+        )
+
+        self.assertEqual(len(events), CAMPAIGN_EVENT_BATCH_SIZE)
+        self.assertEqual(
+            len({event["event_type"] for event in events}),
+            CAMPAIGN_EVENT_BATCH_SIZE,
+        )
 
     def test_invalid_ai_event_effects_are_rejected(self):
         payload = self._event_payload()
@@ -586,6 +607,34 @@ class CampaignAiGenerationTests(unittest.TestCase):
                     {"characters": resident_profiles()},
                     opening=True,
                 )
+
+    def test_invalid_event_type_and_delayed_effects_are_rejected(self):
+        invalid_cases = (
+            ("event_type", "routine", "事件玩法類型無效"),
+            ("delayed_effects", {
+                "problem_improvement": 9,
+                "fairness": 1,
+                "treasury": 0,
+            }, "problem_improvement=9"),
+        )
+        for field, value, message in invalid_cases:
+            with self.subTest(field=field):
+                payload = self._event_payload()
+                if field == "event_type":
+                    payload["events"][0][field] = value
+                else:
+                    payload["events"][0]["actions"][0][field] = value
+                with (
+                    patch.dict(os.environ, {"DEMO_MODE": "0"}),
+                    patch("ai_service._request_gemini", return_value=payload),
+                ):
+                    with self.assertRaisesRegex(ValueError, message):
+                        generate_campaign_events(
+                            "改善校園服務",
+                            [],
+                            {"characters": resident_profiles()},
+                            opening=True,
+                        )
 
     def test_campaign_plans_use_problem_specific_api_output(self):
         response_data = {
@@ -751,6 +800,120 @@ class CampusCampaignTests(unittest.TestCase):
         self.assertEqual(len(set(first_challenges)), YEARS)
         self.assertNotEqual(first_challenges, second_challenges)
         self.assertEqual(first["challenges"][0]["reward"], 30)
+
+    def test_seed_reuses_the_same_random_campus_profile(self):
+        profile = campus_profile_for_seed(42)
+        campaign = self._new_test_campaign(seed=42)
+
+        self.assertEqual(campus_profile_for_seed(42), profile)
+        self.assertEqual(campaign["campus_profile"]["id"], profile["id"])
+        self.assertEqual(campaign["initial_metrics"], campaign["metrics"])
+        self.assertEqual(
+            campaign["population"]["students"],
+            9000 + profile["population_delta"]["students"],
+        )
+        self.assertEqual(
+            {
+                campus_profile_for_seed(seed)["id"]
+                for seed in range(12)
+            },
+            {
+                "metro_commuter",
+                "research_hub",
+                "regional_community",
+                "innovation_campus",
+            },
+        )
+
+    def test_delayed_choice_effects_settle_one_semester_later(self):
+        campaign = self._new_test_campaign(seed=12)
+        control = self._new_test_campaign(seed=12)
+        for state in (campaign, control):
+            state["metrics"]["problem_improvement"] = 50
+            state["metrics"]["fairness"] = 50
+            state["treasury"] = 1000
+            state["pending_consequences"] = []
+
+        action = campaign["current_event"]["actions"][0]
+        control_action = control["current_event"]["actions"][0]
+        for selected in (action, control_action):
+            selected["effects"] = {
+                "problem_improvement": 0,
+                "satisfaction": 0,
+                "fairness": 0,
+            }
+            selected["group_effect"] = 0
+            selected["resident_effects"] = {"trust": 0, "stress": 0}
+            selected["cost"] = 0
+        action["follow_up"] = "兩學期後完成服務擴充。"
+        action["delayed_effects"] = {
+            "problem_improvement": 7,
+            "fairness": 4,
+            "treasury": 40,
+        }
+        control_action["follow_up"] = action["follow_up"]
+        control_action["delayed_effects"] = {
+            "problem_improvement": 0,
+            "fairness": 0,
+            "treasury": 0,
+        }
+
+        advance_campaign(campaign, action["action_id"], "audit")
+        advance_campaign(control, control_action["action_id"], "audit")
+        self.assertEqual(len(campaign["pending_consequences"]), 1)
+        self.assertEqual(campaign["turn"], 1)
+
+        next_events = generate_campaign_events(
+            campaign["concern"],
+            campaign["history"],
+            {"characters": resident_profiles(campaign["residents"])},
+        )
+        advance_campaign(
+            campaign,
+            campaign["current_event"]["actions"][0]["action_id"],
+            "audit",
+            next_events,
+        )
+        outcome = advance_campaign(
+            control,
+            control["current_event"]["actions"][0]["action_id"],
+            "audit",
+            next_events,
+        )
+
+        self.assertEqual(
+            campaign["metrics"]["problem_improvement"]
+            - control["metrics"]["problem_improvement"],
+            7,
+        )
+        self.assertEqual(
+            campaign["metrics"]["fairness"] - control["metrics"]["fairness"], 4
+        )
+        self.assertEqual(
+            campaign["treasury"] - control["treasury"],
+            40 + campaign["yearly"][0]["challenge_reward"],
+        )
+        self.assertEqual(len(campaign["history"][-1]["settled_consequences"]), 1)
+        self.assertEqual(
+            outcome["settled_consequences"][0]["effects"],
+            {"problem_improvement": 0, "fairness": 0, "treasury": 0},
+        )
+
+    def test_final_turn_settles_pending_consequences(self):
+        campaign = self._new_test_campaign()
+        campaign["turn"] = TOTAL_TURNS - 1
+        action = campaign["current_event"]["actions"][0]
+        action["delayed_effects"] = {
+            "problem_improvement": 1,
+            "fairness": 1,
+            "treasury": 1,
+        }
+
+        outcome = advance_campaign(campaign, action["action_id"], "audit")
+
+        self.assertTrue(campaign["finished"])
+        self.assertEqual(campaign["pending_consequences"], [])
+        self.assertEqual(len(outcome["settled_consequences"]), 1)
 
     def test_completing_annual_challenge_grants_reward_and_titles(self):
         campaign = self._new_test_campaign()

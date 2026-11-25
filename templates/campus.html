@@ -7,6 +7,7 @@
     <h1>把一個問題，經營成一所更好的大學</h1>
     <p>第 {{ turn_number }} / {{ total_turns }} 學期 · 每學期處理教職員生議題，再做一項校務投資。</p>
     <p>目前策略：<strong>{{ selected_plan.title }}</strong> · {{ selected_plan.strategy }}</p>
+    <p>本局開局：<strong>{{ campus_profile.name }}</strong> · {{ campus_profile.description }}</p>
   </div>
   <div class="campaign-score"><strong>{{ metrics.satisfaction }}</strong><span>教職員生滿意度</span></div>
   <div class="campaign-progress progress-track" role="progressbar" aria-label="五年經營進度" aria-valuemin="0" aria-valuemax="{{ total_turns }}" aria-valuenow="{{ turn_number - 1 }}" style="--progress: {{ progress }}%"><span></span></div>
@@ -38,9 +39,18 @@
 
   <section class="card campaign-event">
     <div class="campaign-section-heading">
-      <div><p class="step">{{ event.title }} · {{ event.group_label }}焦點</p><h2>{{ event.event }}</h2></div>
+      <div><p class="step"><span class="event-format-badge event-format-{{ event.event_type }}">{{ event.event_type_label }}</span> · {{ event.title }} · {{ event.group_label }}焦點</p><h2>{{ event.event }}</h2></div>
       <span class="campaign-period">第 {{ year }} 年 · 第 {{ semester }} 學期</span>
     </div>
+    <p class="event-format-hint">{{ event.event_type_hint }}</p>
+    {% if pending_consequences %}
+    <div class="consequence-queue">
+      <strong>即將回響的決策</strong>
+      {% for consequence in pending_consequences %}
+      <p>{{ consequence.turns_left }} 學期後：{{ consequence.resident }} · {{ consequence.description }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
     <div class="event-character">
       <img class="event-portrait" src="{{ url_for('static', filename=event.resident.portrait) }}" alt="" aria-hidden="true">
       <div>
@@ -57,7 +67,7 @@
           {% for action in event.actions %}
           <label class="campaign-option">
             <input type="radio" name="action_id" value="{{ action.action_id }}" required>
-            <span><strong>{{ action.text }}</strong><small>即時支出 {{ action.cost }} 點 · 問題改善 {{ "%+d"|format(action.effects.problem_improvement) }} · 滿意度 {{ "%+d"|format(action.effects.satisfaction) }} · 公平 {{ "%+d"|format(action.effects.fairness) }} · 對{{ event.resident.name }}信任 {{ "%+d"|format(action.resident_effects.trust) }} · 壓力 {{ "%+d"|format(action.resident_effects.stress) }}</small></span>
+            <span><strong>{{ action.text }}</strong><small>即時支出 {{ action.cost }} 點 · 問題改善 {{ "%+d"|format(action.effects.problem_improvement) }} · 滿意度 {{ "%+d"|format(action.effects.satisfaction) }} · 公平 {{ "%+d"|format(action.effects.fairness) }} · 對{{ event.resident.name }}信任 {{ "%+d"|format(action.resident_effects.trust) }} · 壓力 {{ "%+d"|format(action.resident_effects.stress) }}</small><small class="option-fallout">稍後影響：{{ action.follow_up }}（改善 {{ "%+d"|format(action.delayed_effects.problem_improvement) }} · 公平 {{ "%+d"|format(action.delayed_effects.fairness) }} · 基金 {{ "%+d"|format(action.delayed_effects.treasury) }}）</small></span>
           </label>
           {% endfor %}
         </div>

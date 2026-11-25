@@ -42,6 +42,18 @@ CAMPAIGN_RESIDENT_RANGES = {
     "trust": (-5, 5),
     "stress": (-5, 5),
 }
+CAMPAIGN_DELAYED_RANGES = {
+    "problem_improvement": (-8, 8),
+    "fairness": (-6, 6),
+    "treasury": (-50, 50),
+}
+CAMPAIGN_EVENT_TYPES = {
+    "crisis",
+    "opportunity",
+    "negotiation",
+    "campus_vote",
+    "character_story",
+}
 
 INTERVIEW_RESPONSE_SCHEMA = {
     "type": "OBJECT",
@@ -465,14 +477,23 @@ def generate_campaign_events(
             },
             "effects": _effects_schema(CAMPAIGN_ACTION_RANGES),
             "resident_effects": _effects_schema(CAMPAIGN_RESIDENT_RANGES),
+            "follow_up": {
+                "type": "STRING",
+                "description": "用一句話描述這項選擇在之後學期可能造成的影響，最多 100 字。",
+            },
+            "delayed_effects": _effects_schema(CAMPAIGN_DELAYED_RANGES),
         },
-        "required": ["text", "cost", "effects", "resident_effects"],
+        "required": [
+            "text", "cost", "effects", "resident_effects",
+            "follow_up", "delayed_effects",
+        ],
     }
     event_schema = {
         "type": "OBJECT",
         "properties": {
             "event": {"type": "STRING"},
             "category": {"type": "STRING"},
+            "event_type": {"type": "STRING"},
             "group": {"type": "STRING"},
             "resident_id": {"type": "STRING"},
             "resident_quote": {"type": "STRING"},
@@ -483,7 +504,7 @@ def generate_campaign_events(
             },
         },
         "required": [
-            "event", "category", "group", "resident_id",
+            "event", "category", "event_type", "group", "resident_id",
             "resident_quote", "resident_concern", "actions",
         ],
     }
@@ -507,6 +528,8 @@ def generate_campaign_events(
         "為該角色寫具體事件與第一人稱 resident_quote；有足夠角色時，避免同批重複指定同一人。"
         "若 opening=true，第一個事件要直接具體化玩家提出的問題，其餘事件要合理延伸；"
         "之後的批次要參考前因後果，兼有蝴蝶效應、跨校園系統的衍生問題與合理的新突發事件。"
+        "event_type 只能是 crisis、opportunity、negotiation、campus_vote、character_story，"
+        "分別代表緊急危機、限時機會、角色協商、校園投票、人物故事；同一批盡量使用不同類型。"
         "若目前有年度挑戰或已解鎖稱號，後續事件應自然反映玩家追求的目標和已取得的成果。"
         "event 最多 160 字、resident_quote 最多 120 字、resident_concern 最多 80 字、"
         "每個 action text 最多 80 字。"
@@ -514,6 +537,9 @@ def generate_campaign_events(
         "選項必須是實際校務決策，並呈現預算、問題改善、滿意度或公平性的取捨。"
         "每個 action 的 resident_effects 必須恰好包含 trust 和 stress，整數範圍各為 -5 到 5；"
         "正 trust 代表角色更信任校方，正 stress 代表角色壓力增加，選項效果要與描述相符。"
+        "每個選項需提供 follow_up（最多 100 字）和 delayed_effects；"
+        "delayed_effects 必須恰好包含 problem_improvement（-8 到 8）、fairness（-6 到 6）、"
+        "treasury（-50 到 50）整數，代表後續學期才結算的影響，方向需符合選項描述。"
         "遊戲效果只是模擬假設；不可輸出真實個人資料或聲稱真實預測。"
         "category 只能是 infrastructure、wellbeing、policy、environment、finance、accessibility；"
         "group 只能是 students、faculty、staff。"
@@ -565,9 +591,12 @@ def _validate_campaign_events(data, expected_count, characters):
             raise ValueError("延伸事件格式錯誤：同一批事件不可重複。")
         seen_events.add(title.casefold())
         category = event.get("category")
+        event_type = event.get("event_type")
         group = event.get("group")
         if not isinstance(category, str) or category not in CAMPAIGN_CATEGORIES:
             raise ValueError("延伸事件格式錯誤：事件類型無效。")
+        if not isinstance(event_type, str) or event_type not in CAMPAIGN_EVENT_TYPES:
+            raise ValueError("延伸事件格式錯誤：事件玩法類型無效。")
         if not isinstance(group, str) or group not in CAMPAIGN_GROUPS:
             raise ValueError("延伸事件格式錯誤：受影響的教職員生類型無效。")
         resident_id = event.get("resident_id")
@@ -608,6 +637,14 @@ def _validate_campaign_events(data, expected_count, characters):
                 CAMPAIGN_RESIDENT_RANGES,
                 "個人關係效果格式錯誤：",
             )
+            follow_up = _validate_text(
+                action.get("follow_up"), 100, "延伸決策後續影響格式錯誤。"
+            )
+            delayed_effects = _validate_effects(
+                action.get("delayed_effects"),
+                CAMPAIGN_DELAYED_RANGES,
+                "延遲決策效果格式錯誤：",
+            )
             validated_actions.append({
                 "action_id": f"ai_{event_index + 1}_{action_index + 1}",
                 "title": text,
@@ -615,10 +652,13 @@ def _validate_campaign_events(data, expected_count, characters):
                 "cost": cost,
                 "effects": effects,
                 "resident_effects": resident_effects,
+                "follow_up": follow_up,
+                "delayed_effects": delayed_effects,
             })
         validated.append({
             "event": title,
             "category": category,
+            "event_type": event_type,
             "group": group,
             "resident_id": resident_id,
             "resident_quote": resident_quote,
@@ -683,11 +723,40 @@ def _demo_campaign_events(proposal, recent_history, campus_state, batch_size, op
         "服務改變後出現新的使用習慣",
     )
     response_templates = (
-        ("蒐集相關單位意見後共同修正", 10, {"problem_improvement": 2, "satisfaction": 3, "fairness": 4}, {"trust": 4, "stress": -2}),
-        ("投入資源優先處理急迫環節", 32, {"problem_improvement": 8, "satisfaction": 2, "fairness": -1}, {"trust": 1, "stress": -3}),
-        ("先小規模試辦並設定檢視期限", 16, {"problem_improvement": 5, "satisfaction": 2, "fairness": 2}, {"trust": 2, "stress": -1}),
-        ("調整既有流程並重新分配人力", 7, {"problem_improvement": 3, "satisfaction": 1, "fairness": 3}, {"trust": -1, "stress": 1}),
+        (
+            "蒐集相關單位意見後共同修正",
+            10,
+            {"problem_improvement": 2, "satisfaction": 3, "fairness": 4},
+            {"trust": 4, "stress": -2},
+            "共同討論讓服務更貼近需求，但協調時間較長。",
+            {"problem_improvement": 3, "fairness": 3, "treasury": -8},
+        ),
+        (
+            "投入資源優先處理急迫環節",
+            32,
+            {"problem_improvement": 8, "satisfaction": 2, "fairness": -1},
+            {"trust": 1, "stress": -3},
+            "急迫瓶頸改善後，後續維護費用可能增加。",
+            {"problem_improvement": 4, "fairness": -2, "treasury": -30},
+        ),
+        (
+            "先小規模試辦並設定檢視期限",
+            16,
+            {"problem_improvement": 5, "satisfaction": 2, "fairness": 2},
+            {"trust": 2, "stress": -1},
+            "試辦回饋有助於修正方案，未涵蓋群體可能繼續等待。",
+            {"problem_improvement": 2, "fairness": -1, "treasury": 8},
+        ),
+        (
+            "調整既有流程並重新分配人力",
+            7,
+            {"problem_improvement": 3, "satisfaction": 1, "fairness": 3},
+            {"trust": -1, "stress": 1},
+            "重新分工可節省支出，也可能讓同仁承受額外負荷。",
+            {"problem_improvement": -2, "fairness": 1, "treasury": 20},
+        ),
     )
+    event_types = rng.sample(sorted(CAMPAIGN_EVENT_TYPES), batch_size)
     events = []
     recent_titles = {
         item.get("event", "").casefold()
@@ -725,7 +794,9 @@ def _demo_campaign_events(proposal, recent_history, campus_state, batch_size, op
             raise ValueError("離線事件生成失敗：缺少可用的教職員生角色。")
         character = rng.choice(available_characters)
         group = character["group"]
-        for action_index, (text, cost, effects, resident_effects) in enumerate(options[:3]):
+        for action_index, (
+            text, cost, effects, resident_effects, follow_up, delayed_effects
+        ) in enumerate(options[:3]):
             actions.append({
                 "action_id": f"demo_{index + 1}_{action_index + 1}",
                 "title": text,
@@ -733,10 +804,13 @@ def _demo_campaign_events(proposal, recent_history, campus_state, batch_size, op
                 "cost": cost,
                 "effects": dict(effects),
                 "resident_effects": dict(resident_effects),
+                "follow_up": follow_up,
+                "delayed_effects": dict(delayed_effects),
             })
         events.append({
             "event": title,
             "category": rng.choice(categories),
+            "event_type": event_types[index],
             "group": group,
             "resident_id": character["id"],
             "resident_quote": (

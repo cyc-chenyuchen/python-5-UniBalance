@@ -15,7 +15,9 @@ from campus_simulation import (
     TITLE_CATALOG,
     TOTAL_TURNS,
     YEARS,
+    apply_campus_profile,
     advance_campaign,
+    campus_profile_for_seed,
     campaign_context,
     make_campaign_record,
     new_campaign,
@@ -494,6 +496,7 @@ def campus_start():
     flow_id = secrets.token_urlsafe(16)
     game = {
         "proposal": proposal,
+        "campaign_seed": secrets.randbits(64),
         "campaign": None,
         "failure": "campaign_start",
     }
@@ -527,13 +530,14 @@ def campus_start():
 
 
 def _prepare_campaign_start(game):
+    menu = load_menu()
     plans = game.get("campaign_plans")
     if not plans:
-        menu = load_menu()
         plans = recommend_campaign_plans(game["proposal"], menu)
         if not plans["supported"]:
             return False
         game["campaign_plans"] = plans
+    game["campus_profile"] = campus_profile_for_seed(game["campaign_seed"])
     initial_state = {
         "year": 1,
         "semester": 1,
@@ -544,7 +548,9 @@ def _prepare_campaign_start(game):
         "buildings": {"library": 0, "housing": 0, "wellbeing": 0},
         "policies": {},
         "characters": resident_profiles(),
+        "campus_profile": game["campus_profile"],
     }
+    apply_campus_profile(initial_state, game["campus_profile"])
     events = generate_campaign_events(
         game["proposal"],
         [],
@@ -590,6 +596,7 @@ def campus_plans():
         scenario_title=game["campaign_plans"]["scenario_title"],
         recommendations=game["campaign_plans"]["recommendations"],
         event_count=len(game["campaign_events"]),
+        campus_profile=game["campus_profile"],
     )
 
 
@@ -617,6 +624,8 @@ def campus_plan():
         game["campaign_events"],
         plan,
         game["campaign_plans"]["scenario_title"],
+        seed=game["campaign_seed"],
+        campus_profile_id=game["campus_profile"]["id"],
     )
     return redirect("/campus")
 
@@ -677,6 +686,18 @@ def _process_campaign_decision(game, action_id, development_id):
                     "buildings": dict(campaign["buildings"]),
                     "policies": dict(campaign["policies"]),
                     "characters": resident_profiles(campaign["residents"]),
+                    "campus_profile": campaign["campus_profile"],
+                    "pending_consequences": [
+                        {
+                            "turns_left": max(
+                                0, item["due_turn"] - campaign["turn"]
+                            ),
+                            "resident": item["resident"],
+                            "description": item["description"],
+                            "effects": dict(item["effects"]),
+                        }
+                        for item in campaign["pending_consequences"]
+                    ],
                     "current_challenge": campaign["challenges"][
                         campaign["turn"] // SEMESTERS_PER_YEAR
                     ],
@@ -689,6 +710,8 @@ def _process_campaign_decision(game, action_id, development_id):
                     "current_issue": campaign["current_event"]["event"],
                     "response": action["title"],
                     "management_measure": development["title"],
+                    "follow_up": action["follow_up"],
+                    "delayed_effects": dict(action["delayed_effects"]),
                 },
             )
         except Exception as error:

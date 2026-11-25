@@ -7,6 +7,7 @@
       <p class="step">{{ record.years }} 年校務總結 · {{ record.history|length }} 個學期已完成</p>
       <h1>{{ record.scenario_title }}</h1>
       <p>起始議題：{{ record.proposal }}</p>
+      <p>本局開局：{{ record.campus_profile.name }} · {{ record.campus_profile.description }}</p>
     </div>
     <div class="campaign-score campaign-final-score"><strong>{{ record.total_score }}</strong><span>綜合評分</span></div>
   </div>
@@ -81,6 +82,10 @@
       <li>
         <strong>第 {{ item.year }} 年{% if item.semester is defined %}第 {{ item.semester }} 學期{% else %}舊制第 {{ item.quarter }} 季{% endif %} · {{ item.event }}</strong>
         <span>{{ item.resident }}（{{ item.role }}）選擇：{{ item.response }}</span>
+        <span>後續回響：{{ item.follow_up }}（改善 {{ "%+d"|format(item.delayed_effects.problem_improvement) }} · 公平 {{ "%+d"|format(item.delayed_effects.fairness) }} · 基金 {{ "%+d"|format(item.delayed_effects.treasury) }}）</span>
+        {% for consequence in item.settled_consequences %}
+        <span>已結算後果：{{ consequence.origin_event }} · {{ consequence.resident }} · {{ consequence.description }}</span>
+        {% endfor %}
         {% if item.resident_trust is defined %}<span>決策後信任 {{ item.resident_trust }} · 壓力 {{ item.resident_stress }}</span>{% endif %}
         <span>校務措施：{{ item.development }}（{{ item.category }}）</span>
         <p>{{ item.butterfly }}</p>

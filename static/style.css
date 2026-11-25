@@ -538,6 +538,18 @@ button:hover, .button:hover {
 .campaign-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .campaign-section-heading h2 { margin: 10px 0 0; }
 .campaign-section-heading > strong, .campaign-period { color: var(--color-primary-dark); font-size: 13px; }
+.event-format-badge { display: inline-flex; padding: 3px 8px; border-radius: 999px; background: var(--color-mint); color: var(--color-primary-dark); font-size: 11px; font-weight: 750; }
+.event-format-crisis { background: #f7e5df; color: #8a4c40; }
+.event-format-opportunity { background: #f7efd7; color: #7d6325; }
+.event-format-negotiation { background: #e7edf5; color: #4a6680; }
+.event-format-campus_vote { background: #e7eaf6; color: #565f93; }
+.event-format-character_story { background: #eee7f2; color: #71567d; }
+.event-format-hint { margin: 10px 0; color: var(--color-muted); font-size: 13px; }
+.consequence-queue { margin: 12px 0; padding: 12px 14px; border: 1px solid var(--color-gold); border-radius: 12px; background: #fbf7e9; }
+.consequence-queue strong { color: var(--color-primary-dark); font-size: 13px; }
+.consequence-queue p { margin: 5px 0 0; color: var(--color-muted); font-size: 12px; }
+.option-fallout { display: block; margin-top: 4px; color: var(--color-primary-dark) !important; }
+.campus-profile-note { margin: 14px 0; }
 .campaign-indicators .metrics { margin: 18px 0; }
 .campaign-facts { display: grid; gap: 10px; }
 .campaign-facts > div { display: grid; grid-template-columns: 105px minmax(0, 1fr); gap: 8px; padding-top: 10px; border-top: 1px solid var(--color-border); font-size: 13px; }
