@@ -6465,5 +6465,837 @@
       "next_year_satisfaction": 89,
       "risk": "目前趨勢穩定，可逐步擴大長期建設"
     }
+  },
+  {
+    "record_id": "b7ca637f6870f45df9947fb09600e5eb",
+    "created_at": "2026-11-25T11:06:23.264691+00:00",
+    "scenario_id": "campus_decade",
+    "scenario_title": "校內腳踏車室內停放處不足",
+    "proposal": "校內腳踏車是內停放處太少",
+    "plan_title": "老舊宿舍空間活化",
+    "plan_strategy": "改裝一樓為室內車位",
+    "plan_description": "將各宿舍棟的一樓公共空間或閒置倉庫改裝為室內腳踏車停放區。",
+    "plan_reason": "成本較低且分布均勻，方便學生就近停放，但會犧牲部分活動空間。",
+    "plan_effects": {
+      "budget_remaining": -8,
+      "problem_improvement": 12,
+      "satisfaction": 6,
+      "fairness": 8
+    },
+    "initial_metrics": {
+      "budget_remaining": 73,
+      "problem_improvement": 57,
+      "satisfaction": 79,
+      "fairness": 78
+    },
+    "final_metrics": {
+      "budget_remaining": 72,
+      "problem_improvement": 100,
+      "satisfaction": 88,
+      "fairness": 100
+    },
+    "metric_labels": {
+      "budget_remaining": "財政健康",
+      "problem_improvement": "問題改善",
+      "satisfaction": "教職員生滿意度",
+      "fairness": "公平性"
+    },
+    "total_score": 70,
+    "comment": "五年校務兼顧了教職員生需求、財政韌性與長期發展。",
+    "years": 5,
+    "campus_profile": {
+      "id": "regional_community",
+      "name": "地方共融校園",
+      "description": "校園與在地連結緊密；資源有限但社群互助基礎良好。",
+      "treasury_delta": 120,
+      "population_delta": {
+        "students": -900,
+        "faculty": 20,
+        "staff": 40
+      },
+      "resource_delta": {
+        "energy": 0,
+        "water": 5,
+        "staffing": -3
+      },
+      "metric_delta": {
+        "satisfaction": 3,
+        "fairness": 7
+      },
+      "resident_delta": {
+        "students": {
+          "trust": 4
+        }
+      }
+    },
+    "story_arc": {
+      "id": "story_huang_kexin",
+      "title": "黃可欣的三學期支線",
+      "resident_id": "huang_kexin",
+      "resident_name": "黃可欣",
+      "resident_role": "國際學生",
+      "group": "students",
+      "concern": "友善環境與資訊取得",
+      "goal": "籌辦讓不同文化交流的校園活動",
+      "stage": 3,
+      "next_stage": 0,
+      "support_score": 24,
+      "ending": "co_created",
+      "ending_text": "黃可欣與校方一起推進了「籌辦讓不同文化交流的校園活動」。這條支線沒有停在群組的「收到」。",
+      "last_beat": "第 3 幕完成：黃可欣與校方一起推進了「籌辦讓不同文化交流的校園活動」。這條支線沒有停在群組的「收到」。"
+    },
+    "history": [
+      {
+        "year": 1,
+        "semester": 1,
+        "event": "校園內自行車室內停放處嚴重不足，導致大量單車日曬雨淋並佔用行人通道。李承恩反映通勤學生因找不到車位常被迫違停，甚至面臨愛車損壞與遭拖吊的風險。",
+        "resident": "李承恩",
+        "role": "通勤學生",
+        "resident_trust": 66,
+        "resident_stress": 53,
+        "response": "全面增建多處戶外遮雨棚與部分室內車架，徹底解決車位不足危機",
+        "follow_up": "大幅增加遮雨與停放設施後，通勤學生的停車焦慮明顯緩解。",
+        "delayed_effects": {
+          "problem_improvement": 6,
+          "fairness": 3,
+          "treasury": -30
+        },
+        "story_beat": null,
+        "event_rule_result": "危機止損成功：本次改善達標，沒有追加損失。",
+        "campus_reaction": "校園匿名板熱帖：緊急會議終於不只是在聊天室打「收到」。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +3",
+        "next_event": "國際學生黃可欣指出，許多境外生因不熟悉校內有限的室內腳踏車停放規定與位置，常因語言隔閡而錯失申請良機。她希望藉由籌辦多元文化交流與交通說明會來協助改善。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +8、滿意度 +4、公平性 +3，接續浮現「國際學生黃可欣指出，許多境外生因不熟悉校內有限的室內腳踏車停放規定與位置，常因語言隔閡而錯失申請良機。她希望藉由籌辦多元文化交流與交通說明會來協助改善。」；選擇後續回響：大幅增加遮雨與停放設施後，通勤學生的停車焦慮明顯緩解。",
+        "metrics": {
+          "budget_remaining": 72,
+          "problem_improvement": 64,
+          "satisfaction": 80,
+          "fairness": 80
+        }
+      },
+      {
+        "year": 1,
+        "semester": 2,
+        "event": "國際學生黃可欣指出，許多境外生因不熟悉校內有限的室內腳踏車停放規定與位置，常因語言隔閡而錯失申請良機。她希望藉由籌辦多元文化交流與交通說明會來協助改善。",
+        "resident": "黃可欣",
+        "role": "國際學生",
+        "resident_trust": 74,
+        "resident_stress": 63,
+        "response": "支持黃可欣籌辦多語系校園交通導覽與交流工作坊",
+        "follow_up": "多語系導覽成功凝聚跨國學生共識，提升校園友善氛圍。",
+        "delayed_effects": {
+          "problem_improvement": 5,
+          "fairness": 4,
+          "treasury": -15
+        },
+        "story_beat": {
+          "stage": 1,
+          "support_change": 11,
+          "message": "第 1 幕完成：黃可欣願意把目標說出口。校園支線正式開啟，這次不是只在群組回「收到」。",
+          "ending": null
+        },
+        "event_rule_result": "人物主線會記下這次選擇，信任、公平與壓力將影響後續結局。",
+        "campus_reaction": "校園匿名板熱帖：角色成長中，這次不是只解鎖「已讀」成就。 財政有節，校務不劫。",
+        "settled_consequences": [
+          {
+            "origin_event": "校園內自行車室內停放處嚴重不足，導致大量單車日曬雨淋並佔用行人通道。李承恩反映通勤學生因找不到車位常被迫違停，甚至面臨愛車損壞與遭拖吊的風險。",
+            "resident": "李承恩",
+            "description": "大幅增加遮雨與停放設施後，通勤學生的停車焦慮明顯緩解。",
+            "effects": {
+              "problem_improvement": 6,
+              "fairness": 3,
+              "treasury": -30
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +5、滿意度 +4、公平性 +5",
+        "next_event": "國際學生黃可欣指出，許多境外生因不熟悉校內室內腳踏車停放規定與位置，常因語言隔閡而錯失申請良機。她希望舉辦多語系交通說明會來解決資訊不對等。",
+        "annual_challenge": "幸福校園",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +5、滿意度 +4、公平性 +5，接續浮現「國際學生黃可欣指出，許多境外生因不熟悉校內室內腳踏車停放規定與位置，常因語言隔閡而錯失申請良機。她希望舉辦多語系交通說明會來解決資訊不對等。」；選擇後續回響：多語系導覽成功凝聚跨國學生共識，提升校園友善氛圍。；第 1 幕完成：黃可欣願意把目標說出口。校園支線正式開啟，這次不是只在群組回「收到」。；年度挑戰「幸福校園」完成，獲得 30 點基金獎勵；「校園內自行車室內停放處嚴重不足，導致大量單車日曬雨淋並佔用行人通道。李承恩反映通勤學生因找不到車位常被迫違停，甚至面臨愛車損壞與遭拖吊的風險。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 74,
+          "problem_improvement": 74,
+          "satisfaction": 81,
+          "fairness": 87
+        }
+      },
+      {
+        "year": 2,
+        "semester": 1,
+        "event": "國際學生黃可欣指出，許多境外生因不熟悉校內室內腳踏車停放規定與位置，常因語言隔閡而錯失申請良機。她希望舉辦多語系交通說明會來解決資訊不對等。",
+        "resident": "黃可欣",
+        "role": "國際學生",
+        "resident_trust": 75,
+        "resident_stress": 65,
+        "response": "僅由行政單位發送制式英文翻譯公文",
+        "follow_up": "公文雖然發出，但缺乏互動與實際導覽，境外生仍常搞錯停放位置。",
+        "delayed_effects": {
+          "problem_improvement": 2,
+          "fairness": 1,
+          "treasury": -5
+        },
+        "story_beat": {
+          "stage": 2,
+          "support_change": 0,
+          "message": "第 2 幕完成：試辦結果讓黃可欣的目標有了新方向。進度條終於動了，先別急著截圖慶祝。",
+          "ending": null
+        },
+        "event_rule_result": "人物主線會記下這次選擇，信任、公平與壓力將影響後續結局。",
+        "campus_reaction": "校園匿名板熱帖：主線進度條動了，角色目標沒有繼續在待辦清單裡吃灰。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "國際學生黃可欣指出，許多境外生因不熟悉校內有限的室內腳踏車停放規定與位置，常因語言隔閡而錯失申請良機。她希望藉由籌辦多元文化交流與交通說明會來協助改善。",
+            "resident": "黃可欣",
+            "description": "多語系導覽成功凝聚跨國學生共識，提升校園友善氛圍。",
+            "effects": {
+              "problem_improvement": 5,
+              "fairness": 4,
+              "treasury": -15
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +2、滿意度 +1、公平性 +1",
+        "next_event": "隨著多語系導覽推動，黃可欣進一步發起建立跨國腳踏車共享與互助社群，解決校內室內車位不足引發的分配不均。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +2、滿意度 +1、公平性 +1，接續浮現「隨著多語系導覽推動，黃可欣進一步發起建立跨國腳踏車共享與互助社群，解決校內室內車位不足引發的分配不均。」；選擇後續回響：公文雖然發出，但缺乏互動與實際導覽，境外生仍常搞錯停放位置。；第 2 幕完成：試辦結果讓黃可欣的目標有了新方向。進度條終於動了，先別急著截圖慶祝。；「國際學生黃可欣指出，許多境外生因不熟悉校內有限的室內腳踏車停放規定與位置，常因語言隔閡而錯失申請良機。她希望藉由籌辦多元文化交流與交通說明會來協助改善。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 76,
+          "problem_improvement": 80,
+          "satisfaction": 81,
+          "fairness": 91
+        }
+      },
+      {
+        "year": 2,
+        "semester": 2,
+        "event": "隨著多語系導覽推動，黃可欣進一步發起建立跨國腳踏車共享與互助社群，解決校內室內車位不足引發的分配不均。",
+        "resident": "黃可欣",
+        "role": "國際學生",
+        "resident_trust": 80,
+        "resident_stress": 59,
+        "response": "正式將國際學生互助社群納入校方交通志工計畫並編列預算",
+        "follow_up": "跨國互助社群順利建立長期機制，徹底改善室內車位分配的公平性與使用效率。",
+        "delayed_effects": {
+          "problem_improvement": 7,
+          "fairness": 6,
+          "treasury": -25
+        },
+        "story_beat": {
+          "stage": 3,
+          "support_change": 13,
+          "message": "第 3 幕完成：黃可欣與校方一起推進了「籌辦讓不同文化交流的校園活動」。這條支線沒有停在群組的「收到」。",
+          "ending": "co_created"
+        },
+        "event_rule_result": "人物主線會記下這次選擇，信任、公平與壓力將影響後續結局。",
+        "campus_reaction": "校園匿名板熱帖：角色成長中，這次不是只解鎖「已讀」成就。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "國際學生黃可欣指出，許多境外生因不熟悉校內室內腳踏車停放規定與位置，常因語言隔閡而錯失申請良機。她希望舉辦多語系交通說明會來解決資訊不對等。",
+            "resident": "黃可欣",
+            "description": "公文雖然發出，但缺乏互動與實際導覽，境外生仍常搞錯停放位置。",
+            "effects": {
+              "problem_improvement": 2,
+              "fairness": 1,
+              "treasury": -5
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +8、滿意度 +5、公平性 +5",
+        "next_event": "隨著國際學生互助社群的建立，黃可欣指出校內室內腳踏車停放處的資訊仍未普及，部分境外生因語言障礙無法順利使用車位，導致車位分配不均，她希望校方能全面數位化車位申請系統。",
+        "annual_challenge": "永續校園",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +8、滿意度 +5、公平性 +5，接續浮現「隨著國際學生互助社群的建立，黃可欣指出校內室內腳踏車停放處的資訊仍未普及，部分境外生因語言障礙無法順利使用車位，導致車位分配不均，她希望校方能全面數位化車位申請系統。」；選擇後續回響：跨國互助社群順利建立長期機制，徹底改善室內車位分配的公平性與使用效率。；第 3 幕完成：黃可欣與校方一起推進了「籌辦讓不同文化交流的校園活動」。這條支線沒有停在群組的「收到」。；年度挑戰「永續校園」完成，獲得 30 點基金獎勵；「國際學生黃可欣指出，許多境外生因不熟悉校內室內腳踏車停放規定與位置，常因語言隔閡而錯失申請良機。她希望舉辦多語系交通說明會來解決資訊不對等。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 79,
+          "problem_improvement": 91,
+          "satisfaction": 83,
+          "fairness": 98
+        }
+      },
+      {
+        "year": 3,
+        "semester": 1,
+        "event": "隨著國際學生互助社群的建立，黃可欣指出校內室內腳踏車停放處的資訊仍未普及，部分境外生因語言障礙無法順利使用車位，導致車位分配不均，她希望校方能全面數位化車位申請系統。",
+        "resident": "黃可欣",
+        "role": "國際學生",
+        "resident_trust": 87,
+        "resident_stress": 56,
+        "response": "投入經費全面開發多語系線上車位預約與導覽系統",
+        "follow_up": "線上預約系統上線後大幅提升室內車位使用透明度，境外生申請效率顯著改善。",
+        "delayed_effects": {
+          "problem_improvement": 7,
+          "fairness": 5,
+          "treasury": -25
+        },
+        "story_beat": null,
+        "event_rule_result": "協商取得公平共識：焦點角色信任額外 +2。",
+        "campus_reaction": "校園匿名板熱帖：「先這樣」今天多附了一份具體後續事項。 財政有節，校務不劫。",
+        "settled_consequences": [
+          {
+            "origin_event": "隨著多語系導覽推動，黃可欣進一步發起建立跨國腳踏車共享與互助社群，解決校內室內車位不足引發的分配不均。",
+            "resident": "黃可欣",
+            "description": "跨國互助社群順利建立長期機制，徹底改善室內車位分配的公平性與使用效率。",
+            "effects": {
+              "problem_improvement": 7,
+              "fairness": 6,
+              "treasury": -25
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +5",
+        "next_event": "行政人員王思涵反映，隨著線上車位預約與跨國互助社群推動，現有人力難以負荷頻繁的單車停放證審查與違規移置作業，室內車位管理流程陷入瓶頸。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +8、滿意度 +4、公平性 +5，接續浮現「行政人員王思涵反映，隨著線上車位預約與跨國互助社群推動，現有人力難以負荷頻繁的單車停放證審查與違規移置作業，室內車位管理流程陷入瓶頸。」；選擇後續回響：線上預約系統上線後大幅提升室內車位使用透明度，境外生申請效率顯著改善。；「隨著多語系導覽推動，黃可欣進一步發起建立跨國腳踏車共享與互助社群，解決校內室內車位不足引發的分配不均。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 78,
+          "problem_improvement": 100,
+          "satisfaction": 84,
+          "fairness": 100
+        }
+      },
+      {
+        "year": 3,
+        "semester": 2,
+        "event": "行政人員王思涵反映，隨著線上車位預約與跨國互助社群推動，現有人力難以負荷頻繁的單車停放證審查與違規移置作業，室內車位管理流程陷入瓶頸。",
+        "resident": "王思涵",
+        "role": "行政人員",
+        "resident_trust": 46,
+        "resident_stress": 34,
+        "response": "增聘專職行政助理並導入自動化車牌辨識與審查機制",
+        "follow_up": "自動化設備與新進人力有效分擔行政負擔，室內車位管理流程恢復順暢。",
+        "delayed_effects": {
+          "problem_improvement": 8,
+          "fairness": 4,
+          "treasury": -40
+        },
+        "story_beat": null,
+        "event_rule_result": "危機止損成功：本次改善達標，沒有追加損失。",
+        "campus_reaction": "校園匿名板熱帖：校務群組的驚嘆號依然很忙，但至少有了處理方向。 財政有節，校務不劫。",
+        "settled_consequences": [
+          {
+            "origin_event": "隨著國際學生互助社群的建立，黃可欣指出校內室內腳踏車停放處的資訊仍未普及，部分境外生因語言障礙無法順利使用車位，導致車位分配不均，她希望校方能全面數位化車位申請系統。",
+            "resident": "黃可欣",
+            "description": "線上預約系統上線後大幅提升室內車位使用透明度，境外生申請效率顯著改善。",
+            "effects": {
+              "problem_improvement": 7,
+              "fairness": 5,
+              "treasury": -25
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +9、滿意度 +5、公平性 +4",
+        "next_event": "行政人員王思涵反映，隨著線上車位預約與跨國互助社群推動，現有人力難以負荷頻繁的單車停放證審查與違規移置作業，室內車位管理流程陷入瓶頸。",
+        "annual_challenge": "問題突破",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +9、滿意度 +5、公平性 +4，接續浮現「行政人員王思涵反映，隨著線上車位預約與跨國互助社群推動，現有人力難以負荷頻繁的單車停放證審查與違規移置作業，室內車位管理流程陷入瓶頸。」；選擇後續回響：自動化設備與新進人力有效分擔行政負擔，室內車位管理流程恢復順暢。；年度挑戰「問題突破」完成，獲得 30 點基金獎勵；「隨著國際學生互助社群的建立，黃可欣指出校內室內腳踏車停放處的資訊仍未普及，部分境外生因語言障礙無法順利使用車位，導致車位分配不均，她希望校方能全面數位化車位申請系統。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 78,
+          "problem_improvement": 100,
+          "satisfaction": 84,
+          "fairness": 100
+        }
+      },
+      {
+        "year": 4,
+        "semester": 1,
+        "event": "行政人員王思涵反映，隨著線上車位預約與跨國互助社群推動，現有人力難以負荷頻繁的單車停放證審查與違規移置作業，室內車位管理流程陷入瓶頸。",
+        "resident": "王思涵",
+        "role": "行政人員",
+        "resident_trust": 52,
+        "resident_stress": 30,
+        "response": "全面增聘專職行政助理並導入自動化車牌辨識與審查機制",
+        "follow_up": "自動化車牌辨識與新助理投入後，車位審查效率大幅提升，行政負擔顯著減輕。",
+        "delayed_effects": {
+          "problem_improvement": 7,
+          "fairness": 4,
+          "treasury": -35
+        },
+        "story_beat": null,
+        "event_rule_result": "協商取得公平共識：焦點角色信任額外 +2。",
+        "campus_reaction": "校園匿名板熱帖：協商桌上沒有秒讀不回，已經是一種進展。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "行政人員王思涵反映，隨著線上車位預約與跨國互助社群推動，現有人力難以負荷頻繁的單車停放證審查與違規移置作業，室內車位管理流程陷入瓶頸。",
+            "resident": "王思涵",
+            "description": "自動化設備與新進人力有效分擔行政負擔，室內車位管理流程恢復順暢。",
+            "effects": {
+              "problem_improvement": 8,
+              "fairness": 4,
+              "treasury": -40
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +9、滿意度 +4、公平性 +3",
+        "next_event": "校園服務人員張家豪指出，隨著室內腳踏車停放處與自動化預約普及，部分廢棄單車長期佔用珍貴室內車位，清理時常引發車主爭議與空間分配衝突。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +9、滿意度 +4、公平性 +3，接續浮現「校園服務人員張家豪指出，隨著室內腳踏車停放處與自動化預約普及，部分廢棄單車長期佔用珍貴室內車位，清理時常引發車主爭議與空間分配衝突。」；選擇後續回響：自動化車牌辨識與新助理投入後，車位審查效率大幅提升，行政負擔顯著減輕。；「行政人員王思涵反映，隨著線上車位預約與跨國互助社群推動，現有人力難以負荷頻繁的單車停放證審查與違規移置作業，室內車位管理流程陷入瓶頸。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 75,
+          "problem_improvement": 100,
+          "satisfaction": 85,
+          "fairness": 100
+        }
+      },
+      {
+        "year": 4,
+        "semester": 2,
+        "event": "校園服務人員張家豪指出，隨著室內腳踏車停放處與自動化預約普及，部分廢棄單車長期佔用珍貴室內車位，清理時常引發車主爭議與空間分配衝突。",
+        "resident": "張家豪",
+        "role": "校園服務人員",
+        "resident_trust": 54,
+        "resident_stress": 44,
+        "response": "編列經費全面清查並建置集中暫置場，徹底解決殭屍車佔位問題",
+        "follow_up": "徹底清理廢棄單車後，室內車位有效釋放，通勤停放秩序煥然一新。",
+        "delayed_effects": {
+          "problem_improvement": 6,
+          "fairness": 3,
+          "treasury": -25
+        },
+        "story_beat": null,
+        "event_rule_result": "危機止損成功：本次改善達標，沒有追加損失。",
+        "campus_reaction": "校園匿名板熱帖：緊急會議終於不只是在聊天室打「收到」。 財政有節，校務不劫。",
+        "settled_consequences": [
+          {
+            "origin_event": "行政人員王思涵反映，隨著線上車位預約與跨國互助社群推動，現有人力難以負荷頻繁的單車停放證審查與違規移置作業，室內車位管理流程陷入瓶頸。",
+            "resident": "王思涵",
+            "description": "自動化車牌辨識與新助理投入後，車位審查效率大幅提升，行政負擔顯著減輕。",
+            "effects": {
+              "problem_improvement": 7,
+              "fairness": 4,
+              "treasury": -35
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +3",
+        "next_event": "校園服務人員張家豪指出，隨著室內腳踏車停放處與自動化預約普及，部分廢棄單車長期佔用珍貴室內車位，清理時常引發車主爭議與空間分配衝突。",
+        "annual_challenge": "信任社群",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +8、滿意度 +4、公平性 +3，接續浮現「校園服務人員張家豪指出，隨著室內腳踏車停放處與自動化預約普及，部分廢棄單車長期佔用珍貴室內車位，清理時常引發車主爭議與空間分配衝突。」；選擇後續回響：徹底清理廢棄單車後，室內車位有效釋放，通勤停放秩序煥然一新。；年度挑戰「信任社群」完成，獲得 30 點基金獎勵；「行政人員王思涵反映，隨著線上車位預約與跨國互助社群推動，現有人力難以負荷頻繁的單車停放證審查與違規移置作業，室內車位管理流程陷入瓶頸。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 75,
+          "problem_improvement": 100,
+          "satisfaction": 86,
+          "fairness": 100
+        }
+      },
+      {
+        "year": 5,
+        "semester": 1,
+        "event": "校園服務人員張家豪指出，隨著室內腳踏車停放處與自動化預約普及，部分廢棄單車長期佔用珍貴室內車位，清理時常引發車主爭議與空間分配衝突。",
+        "resident": "張家豪",
+        "role": "校園服務人員",
+        "resident_trust": 58,
+        "resident_stress": 41,
+        "response": "編列高額預算委外全面清查並建置數位化智慧暫置場，徹底解決殭屍車佔位問題",
+        "follow_up": "智慧暫置與數位公告讓廢棄車輛清理透明化，大幅減少車主抗議與空間佔用。",
+        "delayed_effects": {
+          "problem_improvement": 7,
+          "fairness": 4,
+          "treasury": -35
+        },
+        "story_beat": null,
+        "event_rule_result": "危機止損成功：本次改善達標，沒有追加損失。",
+        "campus_reaction": "校園匿名板熱帖：校務群組的驚嘆號依然很忙，但至少有了處理方向。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "校園服務人員張家豪指出，隨著室內腳踏車停放處與自動化預約普及，部分廢棄單車長期佔用珍貴室內車位，清理時常引發車主爭議與空間分配衝突。",
+            "resident": "張家豪",
+            "description": "徹底清理廢棄單車後，室內車位有效釋放，通勤停放秩序煥然一新。",
+            "effects": {
+              "problem_improvement": 6,
+              "fairness": 3,
+              "treasury": -25
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +9、滿意度 +4、公平性 +4",
+        "next_event": "隨著廢棄單車清理作業推動，通勤學生李承恩反映部分被移置的車輛因公告期過短引發學生反彈，要求校方檢討室內車位回收與申訴流程的公平性。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價；這項決策使問題改善 +9、滿意度 +4、公平性 +4，接續浮現「隨著廢棄單車清理作業推動，通勤學生李承恩反映部分被移置的車輛因公告期過短引發學生反彈，要求校方檢討室內車位回收與申訴流程的公平性。」；選擇後續回響：智慧暫置與數位公告讓廢棄車輛清理透明化，大幅減少車主抗議與空間佔用。；「校園服務人員張家豪指出，隨著室內腳踏車停放處與自動化預約普及，部分廢棄單車長期佔用珍貴室內車位，清理時常引發車主爭議與空間分配衝突。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 73,
+          "problem_improvement": 100,
+          "satisfaction": 86,
+          "fairness": 100
+        }
+      },
+      {
+        "year": 5,
+        "semester": 2,
+        "event": "隨著廢棄單車清理作業推動，通勤學生李承恩反映部分被移置的車輛因公告期過短引發學生反彈，要求校方檢討室內車位回收與申訴流程的公平性。",
+        "resident": "李承恩",
+        "role": "通勤學生",
+        "resident_trust": 72,
+        "resident_stress": 51,
+        "response": "建立雙向申訴與線上審議委員會，提供車主充分的緩衝期與補救補貼",
+        "follow_up": "完善的申訴與緩衝期機制建立後，學生對車位管理的信任度顯著提升。",
+        "delayed_effects": {
+          "problem_improvement": 5,
+          "fairness": 4,
+          "treasury": -20
+        },
+        "story_beat": null,
+        "event_rule_result": "協商取得公平共識：焦點角色信任額外 +2。",
+        "campus_reaction": "校園匿名板熱帖：協商桌上沒有秒讀不回，已經是一種進展。 財政有節，校務不劫。",
+        "settled_consequences": [
+          {
+            "origin_event": "校園服務人員張家豪指出，隨著室內腳踏車停放處與自動化預約普及，部分廢棄單車長期佔用珍貴室內車位，清理時常引發車主爭議與空間分配衝突。",
+            "resident": "張家豪",
+            "description": "智慧暫置與數位公告讓廢棄車輛清理透明化，大幅減少車主抗議與空間佔用。",
+            "effects": {
+              "problem_improvement": 7,
+              "fairness": 4,
+              "treasury": -35
+            }
+          },
+          {
+            "origin_event": "隨著廢棄單車清理作業推動，通勤學生李承恩反映部分被移置的車輛因公告期過短引發學生反彈，要求校方檢討室內車位回收與申訴流程的公平性。",
+            "resident": "李承恩",
+            "description": "完善的申訴與緩衝期機制建立後，學生對車位管理的信任度顯著提升。",
+            "effects": {
+              "problem_improvement": 5,
+              "fairness": 4,
+              "treasury": -20
+            }
+          }
+        ],
+        "development": "暫緩非必要支出，優先守住基本服務",
+        "category": "財政",
+        "benefit": "短期財務壓力下降，但教職員生服務承受代價",
+        "cause": "這項決策使問題改善 +6、滿意度 +5、公平性 +5",
+        "next_event": "5年校務成果已完成",
+        "annual_challenge": "財政韌性",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "暫緩非必要支出，優先守住基本服務使短期財務壓力下降，但教職員生服務承受代價，五年改革進入成果盤點；選擇後續回響：完善的申訴與緩衝期機制建立後，學生對車位管理的信任度顯著提升。；年度挑戰「財政韌性」完成，獲得 30 點基金獎勵；「校園服務人員張家豪指出，隨著室內腳踏車停放處與自動化預約普及，部分廢棄單車長期佔用珍貴室內車位，清理時常引發車主爭議與空間分配衝突。」的後續影響已結算；「隨著廢棄單車清理作業推動，通勤學生李承恩反映部分被移置的車輛因公告期過短引發學生反彈，要求校方檢討室內車位回收與申訴流程的公平性。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 72,
+          "problem_improvement": 100,
+          "satisfaction": 88,
+          "fairness": 100
+        }
+      }
+    ],
+    "yearly": [
+      {
+        "year": 1,
+        "satisfaction": 81,
+        "population": 9358,
+        "treasury": 891,
+        "score": 64,
+        "challenge": "幸福校園",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 2,
+        "satisfaction": 83,
+        "population": 9456,
+        "treasury": 953,
+        "score": 70,
+        "challenge": "永續校園",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 3,
+        "satisfaction": 84,
+        "population": 9554,
+        "treasury": 940,
+        "score": 71,
+        "challenge": "問題突破",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 4,
+        "satisfaction": 86,
+        "population": 9652,
+        "treasury": 902,
+        "score": 71,
+        "challenge": "信任社群",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 5,
+        "satisfaction": 88,
+        "population": 9750,
+        "treasury": 864,
+        "score": 70,
+        "challenge": "財政韌性",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      }
+    ],
+    "challenges": [
+      {
+        "id": "popular_campus",
+        "title": "幸福校園",
+        "description": "本年度結束時教職員生滿意度達到 70。",
+        "rule": "satisfaction",
+        "year": 1,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "green_campus",
+        "title": "永續校園",
+        "description": "本年度結束時平均資源存量達到 60。",
+        "rule": "resources",
+        "year": 2,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "solve_root_cause",
+        "title": "問題突破",
+        "description": "本年度結束時問題改善度達到 60。",
+        "rule": "problem",
+        "year": 3,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "trusted_community",
+        "title": "信任社群",
+        "description": "本年度結束時教職員生平均信任達到 58。",
+        "rule": "trust",
+        "year": 4,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "fiscal_resilience",
+        "title": "財政韌性",
+        "description": "本年度結束時校務基金至少保有 500 點。",
+        "rule": "treasury",
+        "year": 5,
+        "completed": true,
+        "reward": 30
+      }
+    ],
+    "titles": [
+      {
+        "id": "equity_champion",
+        "name": "公平推手",
+        "description": "公平性達到 75。",
+        "earned_turn": 0
+      },
+      {
+        "id": "campus_favorite",
+        "name": "人氣校長",
+        "description": "教職員生滿意度達到 78。",
+        "earned_turn": 0
+      },
+      {
+        "id": "fiscal_guardian",
+        "name": "財政守門員",
+        "description": "校務基金維持在 700 點以上。",
+        "earned_turn": 0
+      },
+      {
+        "id": "problem_solver",
+        "name": "問題終結者",
+        "description": "問題改善度達到 75。",
+        "earned_turn": 3
+      },
+      {
+        "id": "trusted_leader",
+        "name": "傾聽者",
+        "description": "教職員生平均信任達到 58。",
+        "earned_turn": 5
+      },
+      {
+        "id": "challenge_collector",
+        "name": "挑戰收藏家",
+        "description": "完成至少三項年度挑戰。",
+        "earned_turn": 6
+      }
+    ],
+    "population": {
+      "students": 8500,
+      "faculty": 800,
+      "staff": 450
+    },
+    "resources": {
+      "energy": 68,
+      "water": 77,
+      "staffing": 41
+    },
+    "buildings": {
+      "library": 0,
+      "housing": 0,
+      "wellbeing": 0
+    },
+    "building_labels": {
+      "library": "學習空間",
+      "housing": "宿舍",
+      "wellbeing": "健康支持中心"
+    },
+    "policies": {},
+    "policy_labels": {
+      "scholarships": "助學支持",
+      "workload": "簡政減負",
+      "accessibility": "無障礙與多語服務",
+      "conservation": "節能節水",
+      "training": "服務人力培訓"
+    },
+    "treasury": 864,
+    "residents": [
+      {
+        "id": "lin_muqing",
+        "name": "林沐晴",
+        "role": "大學生",
+        "group": "students",
+        "concern": "課業與生活平衡",
+        "personality": "熱心、容易替別人操心",
+        "goal": "成立讓新生安心求助的同儕社群",
+        "portrait": "portrait-lin-muqing.svg",
+        "satisfaction": 81,
+        "trust": 46,
+        "stress": 38
+      },
+      {
+        "id": "chen_yian",
+        "name": "陳以安",
+        "role": "研究生",
+        "group": "students",
+        "concern": "研究資源與空間",
+        "personality": "安靜、做事有條理",
+        "goal": "完成研究並爭取海外交流機會",
+        "portrait": "portrait-chen-yian.svg",
+        "satisfaction": 84,
+        "trust": 54,
+        "stress": 47
+      },
+      {
+        "id": "zhou_mingzhe",
+        "name": "周明哲",
+        "role": "教授",
+        "group": "faculty",
+        "concern": "教學與研究負荷",
+        "personality": "嚴謹、願意提攜後輩",
+        "goal": "建立跨院合作的永續研究團隊",
+        "portrait": "portrait-zhou-mingzhe.svg",
+        "satisfaction": 80,
+        "trust": 58,
+        "stress": 56
+      },
+      {
+        "id": "xu_yawen",
+        "name": "許雅雯",
+        "role": "教授",
+        "group": "faculty",
+        "concern": "研究支持與合作",
+        "personality": "好奇、擅長傾聽",
+        "goal": "設計更多學生參與的實作課程",
+        "portrait": "portrait-xu-yawen.svg",
+        "satisfaction": 83,
+        "trust": 66,
+        "stress": 65
+      },
+      {
+        "id": "wang_sihan",
+        "name": "王思涵",
+        "role": "行政人員",
+        "group": "staff",
+        "concern": "行政流程與人力",
+        "personality": "細心、喜歡把事情安排妥當",
+        "goal": "讓校園行政服務更簡單又友善",
+        "portrait": "portrait-wang-sihan.svg",
+        "satisfaction": 97,
+        "trust": 52,
+        "stress": 30
+      },
+      {
+        "id": "zhang_jiahao",
+        "name": "張家豪",
+        "role": "校園服務人員",
+        "group": "staff",
+        "concern": "服務品質與工作條件",
+        "personality": "爽朗、遇到問題就想動手處理",
+        "goal": "改善校園維護工具與安全設備",
+        "portrait": "portrait-zhang-jiahao.svg",
+        "satisfaction": 85,
+        "trust": 58,
+        "stress": 41
+      },
+      {
+        "id": "li_chengen",
+        "name": "李承恩",
+        "role": "通勤學生",
+        "group": "students",
+        "concern": "交通與校園安全",
+        "personality": "務實、重視時間安排",
+        "goal": "組成安全通勤倡議小組",
+        "portrait": "portrait-li-chengen.svg",
+        "satisfaction": 90,
+        "trust": 72,
+        "stress": 51
+      },
+      {
+        "id": "huang_kexin",
+        "name": "黃可欣",
+        "role": "國際學生",
+        "group": "students",
+        "concern": "友善環境與資訊取得",
+        "personality": "勇於嘗試、喜歡認識新朋友",
+        "goal": "籌辦讓不同文化交流的校園活動",
+        "portrait": "portrait-huang-kexin.svg",
+        "satisfaction": 100,
+        "trust": 87,
+        "stress": 56
+      }
+    ],
+    "forecast": {
+      "next_year_population": 9848,
+      "next_year_satisfaction": 91,
+      "risk": "目前趨勢穩定，可逐步擴大長期建設"
+    }
   }
 ]
