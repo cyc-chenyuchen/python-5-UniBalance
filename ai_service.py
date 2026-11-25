@@ -164,7 +164,8 @@ REVIEW_RESPONSE_SCHEMA = {
 
 
 def send_request(url, headers, request_data):
-    retry_delays = (2, 4)
+    retry_delays = (5, 12)
+    retryable_status_codes = {429, 500, 502, 503, 504}
     for attempt in range(len(retry_delays) + 1):
         try:
             response = requests.post(
@@ -173,19 +174,36 @@ def send_request(url, headers, request_data):
                 json=request_data,
                 timeout=(5, 30),
             )
-        except requests.exceptions.Timeout as error:
-            raise TimeoutError(
-                "Gemini 請求逾時（連線上限 5 秒、回應上限 30 秒），請重試。"
+        except (
+            requests.exceptions.Timeout,
+            requests.exceptions.ConnectionError,
+        ) as error:
+            if attempt < len(retry_delays):
+                time.sleep(retry_delays[attempt])
+                continue
+            if isinstance(error, requests.exceptions.Timeout):
+                raise TimeoutError(
+                    "Gemini 請求逾時（連線上限 5 秒、回應上限 30 秒），"
+                    "已自動重試兩次仍失敗，請稍後再試。"
+                ) from error
+            raise RuntimeError(
+                "Gemini 連線失敗，已自動重試兩次仍失敗，請稍後再試。"
             ) from error
         except requests.exceptions.RequestException as error:
             raise RuntimeError("Gemini 連線失敗，請重試。") from error
 
-        if response.status_code == 503:
+        if response.status_code in retryable_status_codes:
             if attempt < len(retry_delays):
-                time.sleep(retry_delays[attempt])
+                retry_after = getattr(response, "headers", {}).get("Retry-After")
+                try:
+                    delay = min(max(float(retry_after), 0), 60)
+                except (TypeError, ValueError):
+                    delay = retry_delays[attempt]
+                time.sleep(delay)
                 continue
             raise RuntimeError(
-                "Gemini 服務暫時無法使用（HTTP 503），已自動重試兩次仍失敗，請稍後再試。"
+                f"Gemini 服務暫時無法使用（HTTP {response.status_code}），"
+                "已自動重試兩次仍失敗，請稍後再試。"
             )
 
         try:

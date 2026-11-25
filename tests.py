@@ -267,15 +267,20 @@ class GeminiStructuredOutputTests(unittest.TestCase):
 
 
 class GeminiRequestTests(unittest.TestCase):
-    def test_timeout_is_bounded_and_not_retried_automatically(self):
+    def test_timeout_is_bounded_and_retried_twice_before_failure(self):
         with patch(
             "ai_service.requests.post",
             side_effect=requests.exceptions.ReadTimeout,
-        ) as post:
-            with self.assertRaisesRegex(TimeoutError, "回應上限 30 秒"):
+        ) as post, patch("ai_service.time.sleep") as sleep:
+            with self.assertRaisesRegex(TimeoutError, "已自動重試兩次仍失敗"):
                 send_request("https://example.test/generate", {}, {})
 
-        post.assert_called_once_with(
+        self.assertEqual(post.call_count, 3)
+        self.assertEqual(
+            [call.args[0] for call in sleep.call_args_list],
+            [5, 12],
+        )
+        post.assert_called_with(
             "https://example.test/generate",
             headers={},
             json={},
@@ -299,7 +304,7 @@ class GeminiRequestTests(unittest.TestCase):
         self.assertEqual(post.call_count, 3)
         self.assertEqual(
             [call.args[0] for call in sleep.call_args_list],
-            [2, 4],
+            [5, 12],
         )
 
     def test_repeated_service_unavailable_reports_retry_failure(self):
@@ -317,8 +322,23 @@ class GeminiRequestTests(unittest.TestCase):
         self.assertEqual(post.call_count, 3)
         self.assertEqual(
             [call.args[0] for call in sleep.call_args_list],
-            [2, 4],
+            [5, 12],
         )
+
+    def test_rate_limit_respects_retry_after_header(self):
+        limited = Mock(status_code=429, headers={"Retry-After": "9"})
+        success = Mock(status_code=200)
+        with (
+            patch(
+                "ai_service.requests.post",
+                side_effect=[limited, success],
+            ),
+            patch("ai_service.time.sleep") as sleep,
+        ):
+            response = send_request("https://example.test/generate", {}, {})
+
+        self.assertIs(response, success)
+        sleep.assert_called_once_with(9)
 
 
 class OfflineDemoTests(unittest.TestCase):
