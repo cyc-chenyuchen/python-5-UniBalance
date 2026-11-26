@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 import threading
@@ -60,3 +61,38 @@ def save_record(record):
             records = records[-MAX_RECORDS:]
             with RECORDS_FILE.open("w", encoding="utf-8") as file:
                 json.dump(records, file, ensure_ascii=False, indent=2)
+
+
+def record_archive_key(record):
+    record_id = record.get("record_id") if isinstance(record, dict) else None
+    if isinstance(record_id, str) and record_id:
+        return f"id:{record_id}"
+    serialized = json.dumps(record, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    fingerprint = hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+    return f"legacy:{fingerprint}"
+
+
+def delete_record(archive_key):
+    with _record_lock:
+        records = load_records()
+        record_index = next(
+            (
+                index for index, record in enumerate(records)
+                if record_archive_key(record) == archive_key
+            ),
+            None,
+        )
+        if record_index is None:
+            return False
+        records.pop(record_index)
+        with RECORDS_FILE.open("w", encoding="utf-8") as file:
+            json.dump(records, file, ensure_ascii=False, indent=2)
+        return True
+
+
+def clear_records():
+    with _record_lock:
+        records = load_records()
+        with RECORDS_FILE.open("w", encoding="utf-8") as file:
+            json.dump([], file, ensure_ascii=False, indent=2)
+        return len(records)

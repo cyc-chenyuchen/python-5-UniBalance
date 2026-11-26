@@ -11,7 +11,13 @@
     <img class="page-illustration" src="{{ url_for('static', filename='records-illustration.svg') }}" alt="" aria-hidden="true">
   </div>
   {% if records %}
-    <div class="archive-summary"><span>任務紀錄</span><strong>{{ records|length }} 筆</strong></div>
+    <div class="archive-toolbar">
+      <div class="archive-summary"><span>任務紀錄</span><strong>{{ records|length }} 筆</strong></div>
+      <form action="{{ url_for('clear_record_archive') }}" method="post" onsubmit="return confirm('確定清空全部歷史紀錄？此操作無法復原，且稱號圖鑑與排行榜會一併更新。')">
+        <input type="hidden" name="csrf_token" value="{{ archive_csrf_token }}">
+        <button class="button button-danger" type="submit">清空全部紀錄</button>
+      </form>
+    </div>
     <div class="grid">
       {% for record in records|reverse %}
         <article class="card record-card">
@@ -41,6 +47,10 @@
           {% if record.record_id %}
             <a class="button" href="/records/{{ record.record_id }}">開啟成果報告 <span aria-hidden="true">→</span></a>
           {% endif %}
+          <form class="record-delete-form" action="{{ url_for('delete_archived_record', archive_key=record.archive_key) }}" method="post" onsubmit="return confirm('確定刪除這筆歷史紀錄？此操作無法復原。')">
+            <input type="hidden" name="csrf_token" value="{{ archive_csrf_token }}">
+            <button class="button button-danger button-small" type="submit">刪除此紀錄</button>
+          </form>
         </article>
       {% endfor %}
     </div>

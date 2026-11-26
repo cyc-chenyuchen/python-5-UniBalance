@@ -1157,6 +1157,20 @@ button:hover, .button:hover {
   font-size: 17px;
 }
 .archive-summary strong { color: var(--color-primary-dark); }
+.archive-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.archive-toolbar .archive-summary { flex: 1; margin: 0; }
+.button-danger { border: 1px solid #d6aaa2; background: #fff7f5; color: #854d44; }
+.button-danger:hover { background: #f7e5df; }
+.record-delete-form { align-self: flex-start; margin-top: 10px; }
+.record-card .record-delete-form .button { margin-top: 0; }
+.button-small { padding: 8px 12px; font-size: 14px; }
+.flash-messages { margin-bottom: 16px; }
+.flash-message { margin: 0; padding: 12px 15px; border: 1px solid var(--color-olive-line); border-radius: 12px; background: var(--color-mint); color: var(--color-primary-dark); }
+.flash-warning { border-color: #e4c8a4; background: #fff8e9; color: #745a2e; }
+@media (max-width: 600px) {
+  .archive-toolbar { align-items: stretch; flex-direction: column; }
+  .archive-toolbar form, .archive-toolbar .button { width: 100%; }
+}
 .record-card { display: flex; flex-direction: column; min-width: 0; }
 .record-card-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 15px; }
 .record-type { color: var(--color-muted); font-size: 15px; font-weight: 700; }

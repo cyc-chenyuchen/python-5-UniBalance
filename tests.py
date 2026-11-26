@@ -42,7 +42,13 @@ from campus_simulation import (
     story_arc_for_seed,
 )
 from simulation import apply_effects, calculate_total_score, make_comment, run_round_choice
-from storage import load_records, save_record
+from storage import (
+    clear_records,
+    delete_record,
+    load_records,
+    record_archive_key,
+    save_record,
+)
 
 
 class SimulationScoreTests(unittest.TestCase):
@@ -807,6 +813,33 @@ class StorageRetentionTests(unittest.TestCase):
         self.assertEqual(records[-1]["record_id"], "record-25")
         self.assertEqual(len(saved_records), 20)
 
+    def test_deleting_record_supports_current_and_legacy_records(self):
+        current = {"record_id": "current", "scenario_title": "新紀錄"}
+        legacy = {"scenario_title": "舊紀錄", "total_score": 65}
+        with tempfile.TemporaryDirectory() as directory:
+            records_file = Path(directory) / "records.json"
+            records_file.write_text(
+                json.dumps([current, legacy], ensure_ascii=False),
+                encoding="utf-8",
+            )
+            with patch("storage.RECORDS_FILE", records_file):
+                self.assertTrue(delete_record("id:current"))
+                self.assertTrue(delete_record(record_archive_key(legacy)))
+                self.assertFalse(delete_record("id:missing"))
+                self.assertEqual(load_records(), [])
+
+    def test_clearing_records_removes_every_saved_entry(self):
+        with tempfile.TemporaryDirectory() as directory:
+            records_file = Path(directory) / "records.json"
+            records_file.write_text(
+                json.dumps([{"record_id": str(index)} for index in range(3)]),
+                encoding="utf-8",
+            )
+            with patch("storage.RECORDS_FILE", records_file):
+                self.assertEqual(clear_records(), 3)
+                self.assertEqual(load_records(), [])
+                self.assertEqual(clear_records(), 0)
+
 
 class CampaignAiGenerationTests(unittest.TestCase):
     def _event_payload(self, count=CAMPAIGN_EVENT_BATCH_SIZE):
@@ -1360,6 +1393,81 @@ class CampusCampaignTests(unittest.TestCase):
         self.assertIn("教職員生滿意度".encode("utf-8"), response.data)
         self.assertIn("共融校園".encode("utf-8"), response.data)
         self.assertIn("⚖️".encode("utf-8"), response.data)
+
+    def test_records_page_can_delete_current_and_legacy_entries(self):
+        current = {
+            "record_id": "record-to-delete",
+            "scenario_id": "campus_decade",
+            "scenario_title": "要刪除的紀錄",
+            "titles": [],
+        }
+        legacy = {"scenario_title": "保留的舊紀錄", "total_score": 61}
+        legacy_key = record_archive_key(legacy)
+
+        with tempfile.TemporaryDirectory() as directory:
+            records_file = Path(directory) / "records.json"
+            records_file.write_text(
+                json.dumps([current, legacy], ensure_ascii=False),
+                encoding="utf-8",
+            )
+            with patch("storage.RECORDS_FILE", records_file):
+                response = self.client.get("/records")
+                self.assertIn("刪除此紀錄".encode("utf-8"), response.data)
+                self.assertIn("清空全部紀錄".encode("utf-8"), response.data)
+                self.assertIn(legacy_key.encode("utf-8"), response.data)
+
+                with self.client.session_transaction() as session:
+                    csrf_token = session["archive_csrf_token"]
+                    session["recent_record_id"] = "record-to-delete"
+                response = self.client.post(
+                    "/records/id:record-to-delete/delete",
+                    follow_redirects=True,
+                )
+                self.assertEqual(response.status_code, 400)
+                self.assertEqual(len(load_records()), 2)
+
+                response = self.client.post(
+                    "/records/id:record-to-delete/delete",
+                    data={"csrf_token": csrf_token},
+                    follow_redirects=True,
+                )
+                self.assertEqual(response.status_code, 200)
+                self.assertIn("歷史紀錄已刪除".encode("utf-8"), response.data)
+                with self.client.session_transaction() as session:
+                    self.assertNotIn("recent_record_id", session)
+                self.assertEqual(load_records(), [legacy])
+
+                response = self.client.post(
+                    f"/records/{legacy_key}/delete",
+                    data={"csrf_token": csrf_token},
+                    follow_redirects=True,
+                )
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(load_records(), [])
+
+    def test_records_archive_can_be_cleared_with_post(self):
+        with tempfile.TemporaryDirectory() as directory:
+            records_file = Path(directory) / "records.json"
+            records_file.write_text(
+                json.dumps([{"record_id": "one"}, {"record_id": "two"}]),
+                encoding="utf-8",
+            )
+            with patch("storage.RECORDS_FILE", records_file):
+                self.client.get("/records")
+                with self.client.session_transaction() as session:
+                    csrf_token = session["archive_csrf_token"]
+                    session["recent_record_id"] = "one"
+                response = self.client.post(
+                    "/records/clear",
+                    data={"csrf_token": csrf_token},
+                    follow_redirects=True,
+                )
+
+                self.assertEqual(response.status_code, 200)
+                self.assertIn("已清空 2 筆歷史紀錄".encode("utf-8"), response.data)
+                with self.client.session_transaction() as session:
+                    self.assertNotIn("recent_record_id", session)
+                self.assertEqual(load_records(), [])
 
     def test_title_catalog_has_twenty_titles_with_reachable_conditions(self):
         self.assertEqual(len(TITLE_CATALOG), 20)

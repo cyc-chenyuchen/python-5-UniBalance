@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, redirect, render_template, request, session
+from flask import Flask, flash, jsonify, redirect, render_template, request, session
 import os
 import secrets
 
@@ -30,7 +30,14 @@ from campus_simulation import (
     validate_campaign_choice,
 )
 from simulation import apply_effects, calculate_total_score, make_comment
-from storage import load_menu, load_records, save_record
+from storage import (
+    clear_records,
+    delete_record,
+    load_menu,
+    load_records,
+    record_archive_key,
+    save_record,
+)
 
 
 app = Flask(__name__)
@@ -413,7 +420,77 @@ def result():
 
 @app.route("/records")
 def records():
-    return render_template("records.html", records=load_records())
+    archive_records = load_records()
+    for record in archive_records:
+        if isinstance(record, dict):
+            record["archive_key"] = record_archive_key(record)
+    return render_template(
+        "records.html",
+        records=archive_records,
+        archive_csrf_token=_archive_csrf_token(),
+    )
+
+
+def _archive_csrf_token():
+    token = session.get("archive_csrf_token")
+    if not isinstance(token, str) or not token:
+        token = secrets.token_urlsafe(32)
+        session["archive_csrf_token"] = token
+    return token
+
+
+def _valid_archive_csrf_token():
+    expected = session.get("archive_csrf_token")
+    submitted = request.form.get("csrf_token")
+    return (
+        isinstance(expected, str)
+        and isinstance(submitted, str)
+        and secrets.compare_digest(expected, submitted)
+    )
+
+
+@app.route("/records/<archive_key>/delete", methods=["POST"])
+def delete_archived_record(archive_key):
+    if not _valid_archive_csrf_token():
+        return render_template(
+            "error.html",
+            title="操作驗證失敗",
+            message="請回到歷史紀錄頁重新操作。",
+        ), 400
+    if not delete_record(archive_key):
+        flash("找不到這筆紀錄；它可能已經刪除。", "warning")
+        return redirect("/records")
+
+    if archive_key.startswith("id:"):
+        record_id = archive_key[3:]
+        if session.get("recent_record_id") == record_id:
+            session.pop("recent_record_id", None)
+        game = _get_game()
+        result = game.get("result") if game else None
+        if isinstance(result, dict) and result.get("record_id") == record_id:
+            game.pop("result", None)
+    flash("歷史紀錄已刪除；稱號圖鑑與排行榜會依剩餘紀錄更新。", "success")
+    return redirect("/records")
+
+
+@app.route("/records/clear", methods=["POST"])
+def clear_record_archive():
+    if not _valid_archive_csrf_token():
+        return render_template(
+            "error.html",
+            title="操作驗證失敗",
+            message="請回到歷史紀錄頁重新操作。",
+        ), 400
+    deleted_count = clear_records()
+    session.pop("recent_record_id", None)
+    game = _get_game()
+    if game:
+        game.pop("result", None)
+    if deleted_count:
+        flash(f"已清空 {deleted_count} 筆歷史紀錄，稱號圖鑑與排行榜也會更新。", "success")
+    else:
+        flash("目前沒有可清除的歷史紀錄。", "warning")
+    return redirect("/records")
 
 
 @app.route("/titles")
