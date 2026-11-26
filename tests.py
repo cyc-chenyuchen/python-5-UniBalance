@@ -1301,6 +1301,26 @@ class CampusCampaignTests(unittest.TestCase):
             self.assertIn(label, page)
         self.assertIn('class="interactive-campus-map"', page)
 
+    def test_real_world_brief_keeps_weakest_simulated_metric_as_a_discussion_signal(self):
+        campaign = self._new_test_campaign()
+        campaign["metrics"].update({
+            "budget_remaining": 62,
+            "problem_improvement": 58,
+            "satisfaction": 41,
+            "fairness": 66,
+        })
+
+        record = make_campaign_record(campaign)
+        brief = record["practice_brief"]
+
+        self.assertEqual(brief["focus_metric"], "satisfaction")
+        self.assertEqual(len(brief["indicators"]), 3)
+        self.assertIn("公平護欄", brief["indicators"][1])
+        self.assertIn("年度經常成本", brief["indicators"][2])
+        self.assertEqual(len(brief["steps"]), 3)
+        self.assertTrue(any("不能直接當作現實校園的優先順序" in item for item in brief["guardrails"]))
+        self.assertTrue(any("個資規範" in item for item in brief["guardrails"]))
+
     def test_map_context_keeps_legacy_records_explicit_about_missing_options(self):
         context = campus_map_context({
             "buildings": {},
@@ -1499,6 +1519,9 @@ class CampusCampaignTests(unittest.TestCase):
                     self.assertIn('data-campaign-turn="3"'.encode("utf-8"), response.data)
 
         self.assertIn("五年後的校園".encode("utf-8"), response.data)
+        self.assertIn("現實校園行動草案".encode("utf-8"), response.data)
+        self.assertIn("不是統計模型".encode("utf-8"), response.data)
+        self.assertIn("請與校內相關人員共同選定實際衡量方式".encode("utf-8"), response.data)
         self.assertIn("十學期決策年表".encode("utf-8"), response.data)
         self.assertIn("第 5 年".encode("utf-8"), response.data)
         self.assertEqual(save_record.call_count, 1)

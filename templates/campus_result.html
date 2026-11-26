@@ -164,9 +164,33 @@
   </section>
 
   <section class="future-outlook game-panel">
-    <div><p class="game-kicker">SIMULATED OUTLOOK</p><h2>下一年度展望</h2><p>未來人口估計 {{ record.forecast.next_year_population }} 人 · 預估教職員生滿意度 {{ record.forecast.next_year_satisfaction }} / 100</p><p>{{ record.forecast.risk }}</p></div>
+    <div><p class="game-kicker">RULE-BASED GAME OUTLOOK</p><h2>遊戲規則推演</h2><p>依本局規則推演的人口 {{ record.forecast.next_year_population }} 人 · 滿意度 {{ record.forecast.next_year_satisfaction }} / 100</p><p>{{ record.forecast.risk }}</p><small>此為簡化規則的結果，不是統計模型，也未使用真實校務資料校準，不能視為招生或政策成效預測。</small></div>
     <span class="outlook-seal" aria-hidden="true">NEXT<br>YEAR</span>
   </section>
+
+  {% if record.practice_brief is defined %}
+  <section class="game-panel practice-brief" aria-labelledby="practice-brief-heading">
+    <div class="game-panel-heading">
+      <div><p class="game-kicker">FROM GAME TO CAMPUS</p><h2 id="practice-brief-heading">現實校園行動草案</h2></div>
+      <span class="panel-note">供校內討論與驗證，不是政策結論</span>
+    </div>
+    <p>針對議題「{{ record.practice_brief.concern }}」，本局較弱的模擬指標是<strong>{{ record.practice_brief.focus_label }} {{ record.practice_brief.simulated_value }} / 100</strong>。這只用來提示討論方向，不能推論現實校園也有相同問題。</p>
+    <div class="practice-brief-focus">
+      <strong>請與校內相關人員共同選定實際衡量方式</strong>
+      <ul>{% for indicator in record.practice_brief.indicators %}<li>{{ indicator }}</li>{% endfor %}</ul>
+      <small>開始前先蒐集：{{ record.practice_brief.data_to_collect }}</small>
+    </div>
+    <ol class="practice-brief-steps">
+      {% for step in record.practice_brief.steps %}
+      <li><strong>{{ step.title }}</strong><p>{{ step.description }}</p></li>
+      {% endfor %}
+    </ol>
+    <div class="practice-brief-guardrails">
+      <strong>落地前檢查</strong>
+      <ul>{% for item in record.practice_brief.guardrails %}<li>{{ item }}</li>{% endfor %}</ul>
+    </div>
+  </section>
+  {% endif %}
 
   <nav class="result-actions game-result-actions" aria-label="結算後操作">
     <a class="button button-secondary" href="/records">任務紀錄</a>
@@ -174,6 +198,6 @@
     <a class="button button-secondary" href="/leaderboard">排行榜</a>
     <a class="button lobby-start-button" href="/">開始新的五年任期 <span aria-hidden="true">→</span></a>
   </nav>
-  <p class="result-disclaimer">本頁分數、事件、人口與校園狀態是遊戲模擬結果，不代表真實政策評估或校園成效。</p>
+  <p class="result-disclaimer">本頁分數、事件、人口與校園狀態是遊戲模擬結果；角色是虛構示例，指標與效果未經真實校務資料校準，不代表真實政策評估或校園成效。行動草案僅供討論，實施前須由校內相關人員以在地資料、預算、法規與程序驗證。</p>
 </div>
 {% endblock %}

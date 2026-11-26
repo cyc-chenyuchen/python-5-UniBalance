@@ -1296,6 +1296,61 @@ def forecast(state):
     }
 
 
+def _real_world_action_brief(concern, metrics):
+    metric_labels = {
+        "problem_improvement": "問題改善",
+        "satisfaction": "教職員生滿意度",
+        "fairness": "公平性",
+        "budget_remaining": "財政健康",
+    }
+    focus_metric = min(metric_labels, key=lambda metric: metrics.get(metric, 0))
+    return {
+        "concern": concern,
+        "focus_metric": focus_metric,
+        "focus_label": metric_labels[focus_metric],
+        "simulated_value": metrics.get(focus_metric, 0),
+        "indicators": [
+            "直接成效：由受影響者與執行單位共同選定一項能反映此問題的指標，例如處理時間、完成率、服務可及率或重複通報量。",
+            "公平護欄：比較相關群體取得服務的比例、等候時間或結果差距，並保護少數群體隱私。",
+            "可持續性：記錄一次性與年度經常成本、維運需求、人力負荷及資金用途限制。",
+        ],
+        "data_to_collect": (
+            "試辦前的問題基準、受影響群體的需求、現行流程與服務量，"
+            "以及完整成本和可用資金限制。"
+        ),
+        "steps": [
+            {
+                "title": "先確認問題與基準",
+                "description": (
+                    f"把「{concern}」拆成可觀察的服務流程與受影響群體；"
+                    "在改變方案前，先和使用者及第一線執行者確認問題定義、"
+                    "現況數據與最需要改善的結果。"
+                ),
+            },
+            {
+                "title": "共同設計小規模試辦",
+                "description": (
+                    "邀請受影響的學生、教職員及執行單位共同定義方案，"
+                    "指定校內負責單位、所需人力、經費與試辦範圍。"
+                ),
+            },
+            {
+                "title": "檢視結果再決定是否擴大",
+                "description": (
+                    "用相同口徑比較試辦前後與不同群體的結果；"
+                    "預先設定改善目標及不利影響的停止條件，再決定擴大、修正或停止。"
+                ),
+            },
+        ],
+        "guardrails": [
+            "遊戲中最低的模擬指標只用來提出討論問題，不能直接當作現實校園的優先順序。",
+            "模擬分數是遊戲假設，不是本校的實際基準或效果預測。",
+            "以彙整資料評估差異，遵循校內研究倫理與個資規範，避免蒐集不必要的敏感資料。",
+            "試辦需同時檢查服務品質、群體差距、工作負荷及完整生命週期成本。",
+        ],
+    }
+
+
 def calculate_campaign_score(state):
     resources = sum(state["resources"].values()) / len(state["resources"])
     campus = sum(state["buildings"].values()) / max(1, len(state["buildings"]) * 3) * 100
@@ -1355,4 +1410,7 @@ def make_campaign_record(state):
         "treasury": state["treasury"],
         "residents": state["residents"],
         "forecast": forecast(state),
+        "practice_brief": _real_world_action_brief(
+            state["concern"], state["metrics"]
+        ),
     }

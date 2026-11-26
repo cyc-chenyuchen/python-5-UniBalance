@@ -231,10 +231,11 @@
 
     <aside class="game-panel campus-forecast-panel">
       <p class="game-kicker">NEXT YEAR OUTLOOK</p>
-      <h2>校園展望</h2>
-      <div class="forecast-value"><span>預估校園人口</span><strong>{{ forecast.next_year_population }}</strong></div>
-      <div class="forecast-value"><span>預估滿意度</span><strong>{{ forecast.next_year_satisfaction }} <small>/ 100</small></strong></div>
+      <h2>遊戲規則推演</h2>
+      <div class="forecast-value"><span>模型人口</span><strong>{{ forecast.next_year_population }}</strong></div>
+      <div class="forecast-value"><span>模型滿意度</span><strong>{{ forecast.next_year_satisfaction }} <small>/ 100</small></strong></div>
       <p class="forecast-risk">{{ forecast.risk }}</p>
+      <small>簡化規則推演，未用真實校務資料校準，不是實際預測。</small>
       <div class="global-policy-list">
         <strong>全校政策</strong>
         {% set active_policies = policies|dictsort %}
