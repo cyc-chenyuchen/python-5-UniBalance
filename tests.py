@@ -934,6 +934,8 @@ class CampaignAiGenerationTests(unittest.TestCase):
         )
         self.assertIn("proposal 是整局經營的核心問題", request.call_args.args[0])
         self.assertIn("至少安排一個真正未預期的突發事件", request.call_args.args[0])
+        for slang in ("觸爛", "破防", "要確", "不嘻嘻", "暈碳", "全對", "全錯"):
+            self.assertIn(slang, request.call_args.args[0])
         self.assertEqual(request.call_args.kwargs["temperature"], 0.9)
 
     def test_demo_event_batch_uses_distinct_play_formats(self):
@@ -964,6 +966,48 @@ class CampaignAiGenerationTests(unittest.TestCase):
                     and action["delayed_effects"]["fairness"] >= 0
                     for action in event["actions"]
                 ))
+
+    def test_demo_resident_dialogue_uses_contextual_slang_reproducibly(self):
+        batches = [
+            generate_campaign_events(
+                f"改善校園午餐動線 {index}",
+                [],
+                {"characters": resident_profiles()},
+            )
+            for index in range(20)
+        ]
+        quotes = [
+            event["resident_quote"]
+            for events in batches
+            for event in events
+        ]
+        dining_quotes = [quote for quote in quotes if "暈碳" in quote]
+
+        self.assertTrue(dining_quotes)
+        self.assertTrue(all("午餐" in quote for quote in dining_quotes))
+        self.assertTrue(all(len(quote) <= 120 for quote in quotes))
+        slang_terms = ("觸爛", "破防", "要確", "不嘻嘻", "暈碳", "全對", "全錯")
+        for batch in batches:
+            batch_quotes = [event["resident_quote"] for event in batch]
+            self.assertLessEqual(
+                sum(any(term in quote for term in slang_terms) for quote in batch_quotes),
+                1,
+            )
+
+        first = generate_campaign_events(
+            "改善校園午餐動線",
+            [],
+            {"characters": resident_profiles()},
+        )
+        repeated = generate_campaign_events(
+            "改善校園午餐動線",
+            [],
+            {"characters": resident_profiles()},
+        )
+        self.assertEqual(
+            [event["resident_quote"] for event in first],
+            [event["resident_quote"] for event in repeated],
+        )
 
     def test_demo_event_batch_advances_the_resident_story_arc(self):
         story_arc = story_arc_for_seed(18)

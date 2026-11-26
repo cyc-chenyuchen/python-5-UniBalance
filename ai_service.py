@@ -703,8 +703,10 @@ def generate_campaign_events(
         "主線事件的 resident_id 必須是 story_arc.resident_id，event_type 必須是 character_story。"
         "若 story_arc.next_stage 為 0，或 opening 沒有安排第一幕，所有事件 story_stage 都填 0。"
         "主線要承接角色 concern 與 goal，三幕逐步發展，讓玩家決策改變合作結果。"
-        "可偶爾在角色台詞或選項自然放一句輕鬆、原創的台灣網路梗，例如「進度條終於動了」；"
-        "不要每段都塞梗、不要嘲諷角色，也不要引用長篇流行文案。"
+        "可偶爾在角色台詞或選項自然放一句台灣社群簡語，例如「觸爛」用來吐槽流程、"
+        "「破防」表達受挫、「要確」提醒確認細節、「不嘻嘻」自嘲無奈；"
+        "「暈碳」只用在供餐或午餐情境，「全對／全錯」用於檢討需求理解或測試結果。"
+        "每批最多一處簡語，也不必每批都出現；不要扭曲教職員生訴求、嘲諷角色或引用長篇流行文案。"
         "若目前有年度挑戰或已解鎖稱號，後續事件應自然反映玩家追求的目標和已取得的成果。"
         "event 最多 160 字、resident_quote 最多 120 字、resident_concern 最多 80 字、"
         "每個 action text 最多 80 字。"
@@ -1074,6 +1076,7 @@ def _demo_campaign_events(proposal, recent_history, campus_state, batch_size, op
         for item in recent_history
         if isinstance(item, dict)
     }
+    slang_used = False
     for index in range(batch_size):
         story_stage = story_stages[index]
         event_type = (
@@ -1146,6 +1149,20 @@ def _demo_campaign_events(proposal, recent_history, campus_state, batch_size, op
                 "follow_up": follow_up,
                 "delayed_effects": dict(delayed_effects),
             })
+        quote_ending = (
+            "目前進度有點像卡在載入畫面，但我還沒按離開。」"
+            if story_stage == 1
+            else "本來以為是小任務，結果校務副本整個展開了。」"
+            if story_stage == 2
+            else "這次想把進度推下去，不想只在群組收到一個貼圖。」"
+            if story_stage == 3
+            else "也希望能慢慢完成個人目標。」"
+        )
+        if story_stage == 0 and not slang_used:
+            slang_line = _demo_resident_slang(rng, proposal, character)
+            if slang_line:
+                quote_ending = f"{slang_line}」"
+                slang_used = True
         events.append({
             "event": title,
             "category": rng.choice(categories),
@@ -1155,21 +1172,30 @@ def _demo_campaign_events(proposal, recent_history, campus_state, batch_size, op
             "resident_id": character["id"],
             "resident_quote": (
                 f"「{character['concern']}還是很重要，我希望{character['goal']}。"
-                + (
-                    "目前進度有點像卡在載入畫面，但我還沒按離開。」"
-                    if story_stage == 1
-                    else "本來以為是小任務，結果校務副本整個展開了。」"
-                    if story_stage == 2
-                    else "這次想把進度推下去，不想只在群組收到一個貼圖。」"
-                    if story_stage == 3
-                    else "也希望能慢慢完成個人目標。」"
-                )
+                f"{quote_ending}"
             ),
             "resident_concern": character["concern"],
             "actions": actions,
             "source": "demo",
         })
     return events
+
+
+def _demo_resident_slang(rng, proposal, character):
+    if rng.random() >= 0.3:
+        return ""
+
+    context = f"{proposal} {character.get('concern', '')}"
+    if any(keyword in context for keyword in ("餐", "飲食", "食堂")):
+        return "午餐後有點暈碳，尖峰排隊才是真的暈；能不能先改動線？"
+
+    return rng.choice((
+        "公告又改，真的有點破防；能否標清楚版本和時間？",
+        "再加一張表就不嘻嘻了，能否合併重複填寫？",
+        "這個時程要確一下，免得大家一直猜。",
+        "我以為需求全對上了，結果可能全錯；能先問當事人嗎？",
+        "這流程有點觸爛，能不能少跑一個窗口？",
+    ))
 
 
 def _validate_recommendation(data):

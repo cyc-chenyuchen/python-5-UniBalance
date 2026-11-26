@@ -404,6 +404,26 @@ CAMPUS_REACTIONS = {
     ),
 }
 
+CAMPUS_SLANG_REACTIONS = {
+    "crisis": (
+        "公告反覆改到有點破防，請標示版本與更新時間。",
+        "再多一張表就不嘻嘻了，能否合併重複填寫？",
+        "流程繞到有點觸爛，但先把求助窗口和處理時間講清楚。",
+    ),
+    "opportunity": (
+        "合作條件看起來很香，經費來源還是要確一下。",
+    ),
+    "negotiation": (
+        "我以為兩邊需求全對上了，結果差點全錯；先把期待寫清楚。",
+    ),
+    "campus_vote": (
+        "票數不代表誰全對或全錯，少數需求也要補問。",
+    ),
+    "character_story": (
+        "人物支線卡關有點破防，還是先把下一步和期限說清楚。",
+    ),
+}
+
 DEVELOPMENT_PUNS = {
     "建設": ("有建設，才有建樹。", "校園地圖升級，終於不是只多一個群組。"),
     "政策": ("表單少一張，心情多一章。", "流程開始瘦身，同仁不用再替文件跑馬拉松。"),
@@ -1006,7 +1026,16 @@ def _resolve_event_rule(state, event, action):
 
 def _campus_reaction(state, event, development):
     rng = random.Random(f"{state['seed']}:campus-reaction:{state['turn']}")
-    event_reaction = rng.choice(CAMPUS_REACTIONS[event["event_type"]])
+    reaction_options = CAMPUS_REACTIONS[event["event_type"]]
+    if rng.random() < 0.25:
+        slang_options = CAMPUS_SLANG_REACTIONS[event["event_type"]]
+        context = " ".join(str(event.get(key, "")) for key in ("event", "resident_quote", "resident_concern"))
+        if any(keyword in context for keyword in ("餐", "飲食", "食堂")):
+            slang_options += (
+                "午餐後有點暈碳，尖峰排隊才是真的暈；能不能先改動線？",
+            )
+        reaction_options = slang_options
+    event_reaction = rng.choice(reaction_options)
     development_pun = rng.choice(DEVELOPMENT_PUNS[development["category"]])
     return f"校園匿名板熱帖：{event_reaction} {development_pun}"
 
