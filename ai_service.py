@@ -28,6 +28,8 @@ INTERVIEW_QUESTION_COUNT = 3
 SIMULATION_ROUND_COUNT = 3
 CAMPAIGN_EVENT_BATCH_SIZE = 2
 CAMPAIGN_HISTORY_CONTEXT_TURNS = 4
+GEMINI_FALLBACK_MAX_RETRIES = 1
+GEMINI_FALLBACK_READ_TIMEOUT = 60
 DEFAULT_GEMINI_FALLBACK_MODELS = (
     "gemini-3.5-flash-lite",
     "gemini-3.6-flash",
@@ -233,13 +235,19 @@ def _gemini_fallback_models(primary_model):
     return fallback_models
 
 
-def send_request(url, headers, request_data, max_retries=3):
+def send_request(url, headers, request_data, max_retries=3, read_timeout=30):
     if (
         isinstance(max_retries, bool)
         or not isinstance(max_retries, int)
         or not 0 <= max_retries <= 5
     ):
         raise ValueError("Gemini 重試次數必須介於 0 到 5 次。")
+    if (
+        isinstance(read_timeout, bool)
+        or not isinstance(read_timeout, (int, float))
+        or read_timeout <= 0
+    ):
+        raise ValueError("Gemini 回應逾時必須大於 0 秒。")
     status_retry_limit = max_retries
     connection_retry_limit = min(2, max_retries)
     retryable_status_codes = {429, 500, 502, 503, 504}
@@ -249,7 +257,7 @@ def send_request(url, headers, request_data, max_retries=3):
                 url,
                 headers=headers,
                 json=request_data,
-                timeout=(5, 30),
+                timeout=(5, read_timeout),
             )
         except (
             requests.exceptions.Timeout,
@@ -260,7 +268,7 @@ def send_request(url, headers, request_data, max_retries=3):
                 continue
             if isinstance(error, requests.exceptions.Timeout):
                 raise TimeoutError(
-                    "Gemini 請求逾時（連線上限 5 秒、回應上限 30 秒），"
+                    f"Gemini 請求逾時（連線上限 5 秒、回應上限 {read_timeout:g} 秒），"
                     f"已自動重試 {connection_retry_limit} 次仍失敗，請稍後再試。"
                 ) from error
             raise GeminiConnectionError(
@@ -342,7 +350,8 @@ def _request_gemini(system_prompt, user_prompt, response_schema, temperature=0.7
                     fallback_url,
                     headers,
                     request_data,
-                    max_retries=0,
+                    max_retries=GEMINI_FALLBACK_MAX_RETRIES,
+                    read_timeout=GEMINI_FALLBACK_READ_TIMEOUT,
                 )
                 break
             except (
@@ -351,7 +360,7 @@ def _request_gemini(system_prompt, user_prompt, response_schema, temperature=0.7
                 TimeoutError,
             ) as fallback_error:
                 fallback_failures.append(
-                    f"{fallback_model} 失敗（單次嘗試）：{fallback_error}"
+                    f"{fallback_model} 失敗（含一次自動重試）：{fallback_error}"
                 )
             except RuntimeError as fallback_error:
                 raise RuntimeError(

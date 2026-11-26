@@ -156,10 +156,10 @@ UniBalance 是以使用者提出的校園問題為起點的校務經營模擬網
 
 ### 5.2 請求重試與失敗
 
-- 每次 HTTP 請求使用 connect timeout 5 秒、read timeout 30 秒。
+- 主要模型 HTTP 請求使用 connect timeout 5 秒、read timeout 30 秒；備援模型 read timeout 為 60 秒。
 - 連線錯誤及逾時最多自動重試兩次；HTTP 429／500／502／503／504 最多自動重試三次。預設等待使用 1、2、4 秒指數退避並加 0～1 秒隨機抖動，單次退避上限 32 秒。
 - 若服務提供有效的 `Retry-After` 秒數或 HTTP 日期，遵循 0～60 秒範圍並加入隨機抖動；格式無效時使用指數退避。HTTP 400／401／403 等非暫時性用戶端錯誤不重試。
-- 主要模型的 HTTP 503、逾時或連線錯誤重試仍失敗時，依序單次嘗試最多兩個不同的備援模型，以避免對壅塞模型反覆發送請求；預設為 `gemini-3.5-flash-lite`、`gemini-3.6-flash`。可用逗號分隔的 `GEMINI_FALLBACK_MODELS` 覆寫，舊的 `GEMINI_FALLBACK_MODEL` 仍可設定單一備援，設空值停用。備援輸出仍經相同 JSON 解析與驗證。
+- 主要模型的 HTTP 503、逾時或連線錯誤重試仍失敗時，依序嘗試最多兩個不同的備援模型；每個備援最多自動重試一次，以因應短暫波動，同時限制總等待時間。預設模型為 `gemini-3.5-flash-lite`、`gemini-3.6-flash`。可用逗號分隔的 `GEMINI_FALLBACK_MODELS` 覆寫，舊的 `GEMINI_FALLBACK_MODEL` 仍可設定單一備援，設空值停用。備援輸出仍經相同 JSON 解析與驗證。
 - 逾時或服務持續錯誤時顯示錯誤頁。保留可重試的訪談、方案生成或校園決策狀態，讓玩家明確觸發重試。
 - 多次請求可能累積較長等待時間；timeout 是單次 connect/read 設定，不是整個頁面操作的總時間上限。
 

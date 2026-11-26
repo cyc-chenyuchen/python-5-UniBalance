@@ -297,6 +297,32 @@ class GeminiRequestTests(unittest.TestCase):
             timeout=(5, 30),
         )
 
+    def test_fallback_timeout_uses_sixty_seconds_and_retries_once(self):
+        success = Mock(status_code=200)
+        with (
+            patch(
+                "ai_service.requests.post",
+                side_effect=[requests.exceptions.ReadTimeout, success],
+            ) as post,
+            patch("ai_service.time.sleep") as sleep,
+            patch("ai_service.random.uniform", return_value=0),
+        ):
+            response = send_request(
+                "https://example.test/generate",
+                {},
+                {},
+                max_retries=1,
+                read_timeout=60,
+            )
+
+        self.assertIs(response, success)
+        self.assertEqual(post.call_count, 2)
+        self.assertEqual(
+            [call.kwargs["timeout"] for call in post.call_args_list],
+            [(5, 60), (5, 60)],
+        )
+        sleep.assert_called_once_with(1)
+
     def test_service_unavailable_retries_three_times_then_succeeds(self):
         unavailable = Mock(status_code=503)
         still_unavailable = Mock(status_code=503)
@@ -416,7 +442,8 @@ class GeminiFallbackTests(unittest.TestCase):
             "/backup-model:generateContent?",
             request.call_args_list[1].args[0],
         )
-        self.assertEqual(request.call_args_list[1].kwargs["max_retries"], 0)
+        self.assertEqual(request.call_args_list[1].kwargs["max_retries"], 1)
+        self.assertEqual(request.call_args_list[1].kwargs["read_timeout"], 60)
 
     def test_default_fallbacks_skip_primary_and_use_distinct_models(self):
         response = Mock()
@@ -446,8 +473,9 @@ class GeminiFallbackTests(unittest.TestCase):
         self.assertIn("gemini-3.6-flash:generateContent", request.call_args_list[1].args[0])
         self.assertEqual(
             request.call_args_list[1].kwargs["max_retries"],
-            0,
+            1,
         )
+        self.assertEqual(request.call_args_list[1].kwargs["read_timeout"], 60)
 
     def test_primary_timeout_uses_fallback_model(self):
         response = Mock()
@@ -477,8 +505,10 @@ class GeminiFallbackTests(unittest.TestCase):
         self.assertEqual(result, {"ok": True})
         self.assertIn("backup-one:generateContent", request.call_args_list[1].args[0])
         self.assertIn("backup-two:generateContent", request.call_args_list[2].args[0])
-        self.assertEqual(request.call_args_list[1].kwargs["max_retries"], 0)
-        self.assertEqual(request.call_args_list[2].kwargs["max_retries"], 0)
+        self.assertEqual(request.call_args_list[1].kwargs["max_retries"], 1)
+        self.assertEqual(request.call_args_list[2].kwargs["max_retries"], 1)
+        self.assertEqual(request.call_args_list[1].kwargs["read_timeout"], 60)
+        self.assertEqual(request.call_args_list[2].kwargs["read_timeout"], 60)
 
     def test_multiple_configured_fallbacks_are_tried_in_order(self):
         response = Mock()
@@ -509,7 +539,8 @@ class GeminiFallbackTests(unittest.TestCase):
         self.assertEqual(result, {"ok": True})
         self.assertIn("backup-one:generateContent", request.call_args_list[1].args[0])
         self.assertIn("backup-two:generateContent", request.call_args_list[2].args[0])
-        self.assertTrue(all(call.kwargs["max_retries"] == 0 for call in request.call_args_list[1:]))
+        self.assertTrue(all(call.kwargs["max_retries"] == 1 for call in request.call_args_list[1:]))
+        self.assertTrue(all(call.kwargs["read_timeout"] == 60 for call in request.call_args_list[1:]))
 
     def test_zero_retries_makes_one_attempt(self):
         unavailable = Mock(status_code=503)
