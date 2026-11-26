@@ -10,7 +10,7 @@
 <section class="title-collection-grid">
   {% for title in titles %}
   <article class="card title-collection-card{% if title.unlocked %} is-unlocked{% else %} is-locked{% endif %}">
-    <span class="title-emblem" aria-hidden="true">{{ title.icon }}</span>
+    <span class="title-emblem" aria-hidden="true">{% if title.unlocked %}{{ title.icon }}{% else %}？{% endif %}</span>
     <div>
       <p class="step">{% if title.unlocked %}已解鎖 · 收集 {{ title.earned_runs }} 次{% else %}尚未解鎖{% endif %}</p>
       <h2>{% if title.unlocked %}{{ title.name }}{% else %}神秘稱號{% endif %}</h2>
