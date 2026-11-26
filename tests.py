@@ -1341,6 +1341,7 @@ class CampusCampaignTests(unittest.TestCase):
         current_record = make_campaign_record(campaign)
         current_record["titles"] = [{
             "name": "共融校園",
+            "icon": "⚖️",
             "description": "公平性達到目標。",
             "earned_turn": 4,
         }]
@@ -1358,9 +1359,13 @@ class CampusCampaignTests(unittest.TestCase):
         self.assertIn("五年校務任期".encode("utf-8"), response.data)
         self.assertIn("教職員生滿意度".encode("utf-8"), response.data)
         self.assertIn("共融校園".encode("utf-8"), response.data)
+        self.assertIn("⚖️".encode("utf-8"), response.data)
 
     def test_title_catalog_has_twenty_titles_with_reachable_conditions(self):
         self.assertEqual(len(TITLE_CATALOG), 20)
+        title_icons = [title["icon"] for title in TITLE_CATALOG]
+        self.assertEqual(len(set(title_icons)), 20)
+        self.assertTrue(all(title_icons))
         campaign = self._new_test_campaign()
         added_titles = TITLE_CATALOG[10:]
         self.assertTrue(
@@ -1745,6 +1750,8 @@ class CampusCampaignTests(unittest.TestCase):
 
         self.assertEqual(collection.status_code, 200)
         self.assertIn("公平推手".encode("utf-8"), collection.data)
+        self.assertIn("⚖️".encode("utf-8"), collection.data)
+        self.assertIn("🪙".encode("utf-8"), collection.data)
         self.assertIn("神秘稱號".encode("utf-8"), collection.data)
         self.assertEqual(leaderboard.status_code, 200)
         self.assertIn("永續校園方案".encode("utf-8"), leaderboard.data)

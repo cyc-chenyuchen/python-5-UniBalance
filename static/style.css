@@ -749,7 +749,7 @@ button:hover, .button:hover {
 .title-collection-card h2 { margin: 0 0 6px; font-size: 22px; }
 .title-collection-card p:last-child { margin-bottom: 0; color: var(--color-muted); font-size: 17px; }
 .title-collection-card.is-locked { opacity: .68; }
-.title-emblem { display: grid; width: 52px; height: 52px; place-items: center; border: 2px solid var(--color-olive-line); border-radius: 50%; background: var(--color-mint); color: var(--color-primary-dark); font-size: 17px; font-weight: 800; }
+.title-emblem { display: grid; width: 52px; height: 52px; place-items: center; border: 2px solid var(--color-olive-line); border-radius: 50%; background: var(--color-mint); color: var(--color-primary-dark); font-size: 25px; font-weight: 800; }
 .is-locked .title-emblem { background: var(--color-surface-soft); color: var(--color-muted); }
 .collection-progress { color: var(--color-primary-dark); font-size: 16px; font-weight: 750; }
 .leaderboard-first { background: #faf6e9; }

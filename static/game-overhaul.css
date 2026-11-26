@@ -448,7 +448,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 .event-rule-result { color: #766649 !important; }
 .award-case-panel .title-badge-list { grid-template-columns: repeat(2,minmax(0,1fr)); margin-top: 11px; }
 .title-badge-list li { grid-template-columns: 24px minmax(0,1fr); align-items: center; gap: 6px; padding: 8px; }
-.badge-emblem { display: grid; width: 23px; height: 23px; place-items: center; border: 1px solid #c7b184; border-radius: 50%; background: #f4eddd; color: #9b7d4c; font-size: 15px; }
+.badge-emblem { display: grid; width: 27px; height: 27px; place-items: center; border: 1px solid #c7b184; border-radius: 50%; background: #f4eddd; color: #9b7d4c; font-size: 18px; }
 .title-badge-list li > span:last-child { display: grid; gap: 2px; }
 .title-badge-list strong { font-size: 15px; }
 .title-badge-list small { font-size: 15px; line-height: 1.4; }

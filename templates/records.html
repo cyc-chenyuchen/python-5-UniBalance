@@ -36,7 +36,7 @@
           </dl>
           {% endif %}
           {% if record.get("titles") %}
-          <div class="record-earned-titles"><span>本局稱號</span><strong>{% for title in record.titles %}{{ title.name }}{% if not loop.last %}、{% endif %}{% endfor %}</strong></div>
+          <div class="record-earned-titles"><span>本局稱號</span><strong>{% for title in record.titles %}{{ title.icon|default("✦") }} {{ title.name }}{% if not loop.last %}、{% endif %}{% endfor %}</strong></div>
           {% endif %}
           {% if record.record_id %}
             <a class="button" href="/records/{{ record.record_id }}">開啟成果報告 <span aria-hidden="true">→</span></a>

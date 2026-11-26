@@ -434,6 +434,7 @@ def titles():
         collection.append({
             "id": title["id"],
             "name": title["name"],
+            "icon": title["icon"],
             "description": title["description"],
             "unlocked": title["id"] in earned_by_id,
             "earned_runs": len(earned_by_id.get(title["id"], [])),

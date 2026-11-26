@@ -271,7 +271,7 @@
       {% if titles %}
       <ul class="title-badge-list">
         {% for title in titles %}
-        <li><span class="badge-emblem" aria-hidden="true">✦</span><span><strong>{{ title.name }}</strong><small>{{ title.description }}</small></span></li>
+        <li><span class="badge-emblem" aria-hidden="true">{{ title.icon|default("✦") }}</span><span><strong>{{ title.name }}</strong><small>{{ title.description }}</small></span></li>
         {% endfor %}
       </ul>
       {% else %}

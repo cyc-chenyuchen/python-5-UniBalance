@@ -107,7 +107,7 @@
     {% if record.titles %}
     <ul class="result-award-grid">
       {% for title in record.titles %}
-      <li><span class="badge-emblem" aria-hidden="true">✦</span><span><strong>{{ title.name }}</strong><small>{{ title.description }}</small></span><small>第 {{ title.earned_turn }} 學期解鎖</small></li>
+      <li><span class="badge-emblem" aria-hidden="true">{{ title.icon|default("✦") }}</span><span><strong>{{ title.name }}</strong><small>{{ title.description }}</small></span><small>第 {{ title.earned_turn }} 學期解鎖</small></li>
       {% endfor %}
     </ul>
     {% else %}
