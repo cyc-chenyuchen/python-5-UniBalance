@@ -175,13 +175,16 @@
             <label class="campaign-option development-choice-card">
               <input type="radio" name="development_id" value="{{ item.id }}" required>
               <span class="development-choice-copy">
-                <span class="development-card-top"><em>{{ item.category }}</em><strong>基金 −{{ item.cost }}{% if item.get("treasury_gain") %} · 回收 +{{ item.treasury_gain }}{% endif %}</strong></span>
+                <span class="development-card-top"><em>{{ item.category }}</em><strong>基金 −{{ item.cost }}{% if item.get("treasury_gain") %} · 回收 +{{ item.treasury_gain }} · 措施淨 {{ "%+d"|format(item.treasury_gain - item.cost) }}{% endif %}</strong></span>
                 <strong>{{ item.title }}</strong>
                 <small>{{ item.benefit }}</small>
                 {% if item.get("building") %}
                 <small class="development-level">目前 Lv.{{ buildings[item.building] }} → Lv.{{ buildings[item.building] + 1 }}</small>
                 {% elif item.get("policy") %}
                 <small class="development-level">目前政策 Lv.{{ policies.get(item.policy, 0) }} → Lv.{{ policies.get(item.policy, 0) + 1 }}</small>
+                {% endif %}
+                {% if item.get("semester_income") %}
+                <small class="development-level">每升一級，每學期預估回流 +{{ item.semester_income }} 點</small>
                 {% endif %}
                 <span class="development-effects">
                   {% for name, value in item.effects.items() %}

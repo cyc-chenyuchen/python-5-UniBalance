@@ -177,10 +177,50 @@ DEVELOPMENTS = (
         "resources": {"staffing": -2},
         "benefit": "短期財務壓力下降，但教職員生服務承受代價",
     },
+    {
+        "id": "matching_fund",
+        "category": "財政",
+        "title": "執行已核定的校友與企業配捐",
+        "cost": 15,
+        "treasury_gain": 65,
+        "effects": {"problem_improvement": 0, "satisfaction": 0, "fairness": 1},
+        "resources": {"staffing": -1},
+        "policy": "matching_fund",
+        "max_level": 2,
+        "benefit": "已核定配捐挹注可用基金；需要人力維繫捐助關係，且本局最多辦理兩次",
+    },
+    {
+        "id": "research_partnership",
+        "category": "財政",
+        "title": "建立研究合作與技轉服務",
+        "cost": 45,
+        "treasury_gain": 30,
+        "effects": {"problem_improvement": 1, "satisfaction": 0, "fairness": 1},
+        "resources": {"staffing": -1},
+        "policy": "research_partnership",
+        "semester_income": 5,
+        "benefit": "投入研究支援與技轉量能，逐學期增加少量間接成本回收",
+    },
+    {
+        "id": "extension_program",
+        "category": "財政",
+        "title": "拓展推廣教育與場地合作",
+        "cost": 40,
+        "treasury_gain": 20,
+        "effects": {"problem_improvement": 1, "satisfaction": 1, "fairness": -1},
+        "resources": {"staffing": -1},
+        "policy": "extension_program",
+        "semester_income": 6,
+        "benefit": "增加推廣課程與場地合作收入，但會占用校園人力並需留意使用公平",
+    },
 )
 
 GROUP_NAMES = {"students": "學生", "faculty": "教職員", "staff": "行政與服務人員"}
 RESOURCE_LABELS = {"energy": "能源", "water": "用水", "staffing": "人力"}
+FINANCIAL_POLICY_INCOME = {
+    "research_partnership": 5,
+    "extension_program": 6,
+}
 BUILDING_LABELS = {"library": "學習空間", "housing": "宿舍", "wellbeing": "健康支持中心"}
 POLICY_LABELS = {
     "scholarships": "助學支持",
@@ -188,6 +228,9 @@ POLICY_LABELS = {
     "accessibility": "無障礙與多語服務",
     "conservation": "節能節水",
     "training": "服務人力培訓",
+    "matching_fund": "校友與企業配捐",
+    "research_partnership": "研究合作與技轉",
+    "extension_program": "推廣教育與場地合作",
 }
 ANNUAL_CHALLENGES = (
     {
@@ -803,7 +846,7 @@ def available_developments(state):
     for item in DEVELOPMENTS:
         if item.get("building") and state["buildings"][item["building"]] >= 3:
             continue
-        if item.get("policy") and state["policies"].get(item["policy"], 0) >= 3:
+        if item.get("policy") and state["policies"].get(item["policy"], 0) >= item.get("max_level", 3):
             continue
         if item["cost"] > state["treasury"]:
             continue
@@ -1112,7 +1155,17 @@ def advance_campaign(state, action_id, development_id, next_events=None):
 
     maintenance = sum(state["buildings"].values()) * 4
     revenue = 59 + min(12, state["population"]["students"] // 1000)
-    state["treasury"] = max(0, min(2000, state["treasury"] + revenue - 58 - maintenance))
+    investment_income = sum(
+        state["policies"].get(policy, 0) * income
+        for policy, income in FINANCIAL_POLICY_INCOME.items()
+    )
+    state["treasury"] = max(
+        0,
+        min(
+            2000,
+            state["treasury"] + revenue + investment_income - 58 - maintenance,
+        ),
+    )
     _refresh_metrics(state)
     state["turn"] += 1
     settled_consequences = _settle_delayed_consequences(

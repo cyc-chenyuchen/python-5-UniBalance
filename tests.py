@@ -32,6 +32,7 @@ from campus_simulation import (
     _resolve_event_rule,
     _title_is_earned,
     advance_campaign,
+    available_developments,
     campus_map_context,
     campus_profile_for_seed,
     make_campaign_record,
@@ -1475,6 +1476,8 @@ class CampusCampaignTests(unittest.TestCase):
             self.assertIn('class="event-portrait"'.encode("utf-8"), response.data)
             self.assertIn("目標：".encode("utf-8"), response.data)
             self.assertIn("本類特殊規則".encode("utf-8"), response.data)
+            self.assertIn("執行已核定的校友與企業配捐".encode("utf-8"), response.data)
+            self.assertIn("每升一級，每學期預估回流".encode("utf-8"), response.data)
             with self.client.session_transaction() as session:
                 flow_id = session["flow_id"]
 
@@ -1816,6 +1819,72 @@ class CampusCampaignTests(unittest.TestCase):
         action["effects"]["fairness"] = 1
         _resolve_event_rule(vote, event, action)
         self.assertEqual(event["resident"]["satisfaction"], satisfaction_before)
+
+    def test_financial_developments_add_limited_and_recurring_revenue(self):
+        campaign = self._new_test_campaign(seed=42)
+        options = {
+            item["id"]: item for item in available_developments(campaign)
+        }
+        self.assertIn("matching_fund", options)
+        self.assertEqual(options["matching_fund"]["max_level"], 2)
+        self.assertEqual(options["research_partnership"]["semester_income"], 5)
+        self.assertEqual(options["extension_program"]["semester_income"], 6)
+
+        campaign["policies"]["matching_fund"] = 2
+        campaign["policies"]["research_partnership"] = 1
+        campaign["policies"]["extension_program"] = 2
+        self.assertNotIn(
+            "matching_fund",
+            {item["id"] for item in available_developments(campaign)},
+        )
+
+        campaign["treasury"] = 690
+        student_population = campaign["population"]["students"]
+        event = campaign["current_event"]
+        action = event["actions"][0]
+        action["cost"] = 0
+        action["effects"] = {
+            "problem_improvement": 0,
+            "satisfaction": 0,
+            "fairness": 0,
+        }
+        action["group_effect"] = 0
+        action["resident_effects"] = {"trust": 0, "stress": 0}
+        action["delayed_effects"] = {
+            "problem_improvement": 0,
+            "fairness": 0,
+            "treasury": 0,
+        }
+        advance_campaign(campaign, action["action_id"], "audit")
+
+        base_margin = 59 + min(12, student_population // 1000) - 58
+        self.assertEqual(campaign["treasury"], 690 + 33 + base_margin + 17)
+        self.assertIn("fiscal_guardian", {
+            title["id"] for title in campaign["titles"]
+        })
+
+        investment = self._new_test_campaign(seed=43)
+        starting_fund = investment["treasury"]
+        student_population = investment["population"]["students"]
+        action = investment["current_event"]["actions"][0]
+        action["cost"] = 0
+        action["effects"] = {
+            "problem_improvement": 0,
+            "satisfaction": 0,
+            "fairness": 0,
+        }
+        action["group_effect"] = 0
+        action["resident_effects"] = {"trust": 0, "stress": 0}
+        action["delayed_effects"] = {
+            "problem_improvement": 0,
+            "fairness": 0,
+            "treasury": 0,
+        }
+        advance_campaign(investment, action["action_id"], "extension_program")
+
+        base_margin = 59 + min(12, student_population // 1000) - 58
+        self.assertEqual(investment["policies"]["extension_program"], 1)
+        self.assertEqual(investment["treasury"], starting_fund - 20 + base_margin + 6)
 
     def test_campus_reaction_is_reproducible_for_the_same_seed_and_turn(self):
         campaign = self._new_test_campaign(seed=42)
