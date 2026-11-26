@@ -1,73 +1,5 @@
 [
   {
-    "record_id": "2e95e354c2b22c8f1646342fe1f99fea",
-    "created_at": "2026-11-24T08:02:41.763689+00:00",
-    "scenario_id": "campus_custom",
-    "scenario_title": "宿舍前道路磁磚改善模擬",
-    "proposal": "宿舍前道路磁磚不平整，常常積水且腳踏車行駛顛簸。",
-    "plan_id": "plan_2",
-    "plan_title": "局部補平與溝槽清理",
-    "plan_strategy": "低成本快速修補",
-    "plan_description": "針對嚴重凹陷處進行局部水泥灌漿修補，並人工疏通現有排水孔。",
-    "plan_reason": "花費較少且施工期短，能以較低預算迅速緩解部分積水與顛簸。",
-    "plan_effects": {
-      "budget_remaining": -5,
-      "problem_improvement": 10,
-      "satisfaction": 4,
-      "fairness": 2
-    },
-    "initial_metrics": {
-      "budget_remaining": 75,
-      "problem_improvement": 75,
-      "satisfaction": 75,
-      "fairness": 75
-    },
-    "final_metrics": {
-      "budget_remaining": 65,
-      "problem_improvement": 94,
-      "satisfaction": 85,
-      "fairness": 81
-    },
-    "metric_labels": {
-      "budget_remaining": "剩餘預算",
-      "problem_improvement": "問題改善",
-      "satisfaction": "學生滿意度",
-      "fairness": "公平性"
-    },
-    "actions": [
-      {
-        "round": 1,
-        "event": "第一階段：工程期交通管制與噪音引發學生不滿",
-        "action_index": 0,
-        "action_id": "r1_a1",
-        "action_text": "調整施工時段避開上課尖峰並張貼告示",
-        "action_effects": {
-          "budget_remaining": -2,
-          "problem_improvement": 3,
-          "satisfaction": 2,
-          "fairness": 1
-        }
-      },
-      {
-        "round": 2,
-        "event": "第二階段：驗收前突發暴雨檢驗排水成效",
-        "action_index": 0,
-        "action_id": "r2_a1",
-        "action_text": "進行現場人工疏導並增設臨時抽水機",
-        "action_effects": {
-          "budget_remaining": -3,
-          "problem_improvement": 6,
-          "satisfaction": 4,
-          "fairness": 3
-        }
-      }
-    ],
-    "total_score": 81,
-    "comment": "整體模擬表現佳，方案兼顧了多項校園需求，但仍需注意資源與公平性的取捨。",
-    "review": "本次採用「局部補平與溝槽清理」。在「第二階段：驗收前突發暴雨檢驗排水成效」中，玩家選擇了「進行現場人工疏導並增設臨時抽水機」；完成模擬後，問題改善為 94，總分為 81 分。",
-    "review_note": "回顧焦點由 AI 選擇，回顧文字由本機已存紀錄整理。"
-  },
-  {
     "record_id": "0c9eb9670c96baf88901995fc286a111",
     "created_at": "2026-11-24T08:08:29.778579+00:00",
     "scenario_id": "campus_custom",
@@ -8628,6 +8560,856 @@
       "next_year_population": 10508,
       "next_year_satisfaction": 92,
       "risk": "目前趨勢穩定，可逐步擴大長期建設"
+    }
+  },
+  {
+    "record_id": "f3c0a82116bb1a24110c11200bf08ed9",
+    "created_at": "2026-11-26T04:56:56.071616+00:00",
+    "scenario_id": "campus_decade",
+    "scenario_title": "宿舍前道路整修與排水改善計畫",
+    "proposal": "宿舍前道路磁磚不平整，常常積水且腳踏車行駛顛簸。",
+    "plan_title": "全面鋪設平整柏油路面",
+    "plan_strategy": "全面翻新與排水重整",
+    "plan_description": "移除所有老舊磁磚，改為耐磨且排水良好的柏油路面，並增設地下排水暗管以徹底解決積水問題。",
+    "plan_reason": "柏油路面施工快速且維護成本低，能一勞永逸解決腳踏車顛簸與積水，大幅提升行車安全。",
+    "plan_effects": {
+      "budget_remaining": -15,
+      "problem_improvement": 18,
+      "satisfaction": 8,
+      "fairness": 5
+    },
+    "initial_metrics": {
+      "budget_remaining": 48,
+      "problem_improvement": 67,
+      "satisfaction": 81,
+      "fairness": 66
+    },
+    "final_metrics": {
+      "budget_remaining": 20,
+      "problem_improvement": 100,
+      "satisfaction": 88,
+      "fairness": 100
+    },
+    "metric_labels": {
+      "budget_remaining": "財政健康",
+      "problem_improvement": "問題改善",
+      "satisfaction": "教職員生滿意度",
+      "fairness": "公平性"
+    },
+    "total_score": 67,
+    "comment": "五年校務仍有改善空間，可優先補足低分指標並維持教職員生參與。",
+    "years": 5,
+    "campus_profile": {
+      "id": "innovation_campus",
+      "name": "新興創意校園",
+      "description": "新學院與社團快速成長；機會多，但服務量能仍在追趕。",
+      "treasury_delta": -100,
+      "population_delta": {
+        "students": 600,
+        "faculty": 40,
+        "staff": 0
+      },
+      "resource_delta": {
+        "energy": 5,
+        "water": 5,
+        "staffing": -4
+      },
+      "metric_delta": {
+        "problem_improvement": 4,
+        "satisfaction": 4,
+        "fairness": -2
+      },
+      "resident_delta": {
+        "students": {
+          "stress": 4
+        },
+        "staff": {
+          "stress": 3
+        }
+      }
+    },
+    "story_arc": {
+      "id": "story_zhang_jiahao",
+      "title": "糾結倫的三學期支線",
+      "resident_id": "zhang_jiahao",
+      "resident_name": "糾結倫",
+      "resident_role": "校園服務人員",
+      "group": "staff",
+      "concern": "服務品質與工作條件",
+      "goal": "改善校園維護工具與安全設備",
+      "stage": 3,
+      "next_stage": 0,
+      "support_score": -6,
+      "ending": "stalled",
+      "ending_text": "糾結倫的「改善校園維護工具與安全設備」暫時卡關；進度進入「待跨單位會議確認」狀態。",
+      "last_beat": "第 3 幕完成：糾結倫的「改善校園維護工具與安全設備」暫時卡關；進度進入「待跨單位會議確認」狀態。"
+    },
+    "history": [
+      {
+        "year": 1,
+        "semester": 1,
+        "event": "針對宿舍前道路磁磚不平整與積水問題，學務處與總務處正評估如何徹底翻修，以保障學生往返與腳踏車行駛的安全。",
+        "resident": "豬哥暗",
+        "role": "通勤學生",
+        "resident_trust": 62,
+        "resident_stress": 57,
+        "response": "編列預算全面鋪設透水防滑柏油，徹底改善積水與顛簸",
+        "follow_up": "道路平整後通勤意外大減，學生對校園基礎設施的滿意度顯著提升。",
+        "delayed_effects": {
+          "problem_improvement": 7,
+          "fairness": 4,
+          "treasury": -25
+        },
+        "story_beat": null,
+        "event_rule_result": "把握限時機會：校務基金獲得 20 點紅利。",
+        "campus_reaction": "校園匿名板熱帖：下學期的自己表示：這次先把條件看清楚。 有建設，才有建樹。",
+        "settled_consequences": [],
+        "development": "設置健康支持與諮詢中心",
+        "category": "建設",
+        "benefit": "身心支持服務與校園韌性提升",
+        "cause": "這項決策使問題改善 +8、滿意度 +4、公平性 +3",
+        "next_event": "配合宿舍前道路改善計畫，校園服務人員糾結倫率領團隊檢視維護工具，但突發的大雨造成舊有排水系統瞬間滿載，泥水直接漫入宿舍周邊。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "設置健康支持與諮詢中心使身心支持服務與校園韌性提升；這項決策使問題改善 +8、滿意度 +4、公平性 +3，接續浮現「配合宿舍前道路改善計畫，校園服務人員糾結倫率領團隊檢視維護工具，但突發的大雨造成舊有排水系統瞬間滿載，泥水直接漫入宿舍周邊。」；選擇後續回響：道路平整後通勤意外大減，學生對校園基礎設施的滿意度顯著提升。",
+        "metrics": {
+          "budget_remaining": 36,
+          "problem_improvement": 77,
+          "satisfaction": 82,
+          "fairness": 71
+        }
+      },
+      {
+        "year": 1,
+        "semester": 2,
+        "event": "配合宿舍前道路改善計畫，校園服務人員糾結倫率領團隊檢視維護工具，但突發的大雨造成舊有排水系統瞬間滿載，泥水直接漫入宿舍周邊。",
+        "resident": "糾結倫",
+        "role": "校園服務人員",
+        "resident_trust": 54,
+        "resident_stress": 48,
+        "response": "緊急採購專業抽水機具與防汛設備，全力解決宿舍前水患",
+        "follow_up": "新設備到位後有效降低極端氣候帶來的積水危機，服務人員工作負擔減輕。",
+        "delayed_effects": {
+          "problem_improvement": 5,
+          "fairness": 2,
+          "treasury": -20
+        },
+        "story_beat": {
+          "stage": 1,
+          "support_change": 8,
+          "message": "第 1 幕完成：糾結倫願意把目標說出口。校園支線正式開啟，這次不是只在群組回「收到」。",
+          "ending": null
+        },
+        "event_rule_result": "人物主線會記下這次選擇，信任、公平與壓力將影響後續結局。",
+        "campus_reaction": "校園匿名板熱帖：角色成長中，這次不是只解鎖「已讀」成就。 財政有節，校務不劫。",
+        "settled_consequences": [
+          {
+            "origin_event": "針對宿舍前道路磁磚不平整與積水問題，學務處與總務處正評估如何徹底翻修，以保障學生往返與腳踏車行駛的安全。",
+            "resident": "豬哥暗",
+            "description": "道路平整後通勤意外大減，學生對校園基礎設施的滿意度顯著提升。",
+            "effects": {
+              "problem_improvement": 7,
+              "fairness": 4,
+              "treasury": -25
+            }
+          }
+        ],
+        "development": "盤點採購與合約，回收閒置預算",
+        "category": "財政",
+        "benefit": "財務透明度提升並釋出可運用預算",
+        "cause": "這項決策使問題改善 +6、滿意度 +3、公平性 +2",
+        "next_event": "配合宿舍前道路改善計畫，校園服務人員糾結倫率領團隊檢視維護工具，但突發的大雨導致舊有排水系統瞬間滿載，泥水直接漫入宿舍周邊。進度條終於動了，面對排水不及，糾結倫急需學校支援防汛工作。",
+        "annual_challenge": "校園升級",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "盤點採購與合約，回收閒置預算使財務透明度提升並釋出可運用預算；這項決策使問題改善 +6、滿意度 +3、公平性 +2，接續浮現「配合宿舍前道路改善計畫，校園服務人員糾結倫率領團隊檢視維護工具，但突發的大雨導致舊有排水系統瞬間滿載，泥水直接漫入宿舍周邊。進度條終於動了，面對排水不及，糾結倫急需學校支援防汛工作。」；選擇後續回響：新設備到位後有效降低極端氣候帶來的積水危機，服務人員工作負擔減輕。；第 1 幕完成：糾結倫願意把目標說出口。校園支線正式開啟，這次不是只在群組回「收到」。；年度挑戰「校園升級」完成，獲得 30 點基金獎勵；「針對宿舍前道路磁磚不平整與積水問題，學務處與總務處正評估如何徹底翻修，以保障學生往返與腳踏車行駛的安全。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 37,
+          "problem_improvement": 91,
+          "satisfaction": 82,
+          "fairness": 78
+        }
+      },
+      {
+        "year": 2,
+        "semester": 1,
+        "event": "配合宿舍前道路改善計畫，校園服務人員糾結倫率領團隊檢視維護工具，但突發的大雨導致舊有排水系統瞬間滿載，泥水直接漫入宿舍周邊。進度條終於動了，面對排水不及，糾結倫急需學校支援防汛工作。",
+        "resident": "糾結倫",
+        "role": "校園服務人員",
+        "resident_trust": 51,
+        "resident_stress": 50,
+        "response": "暫時封閉宿舍前道路並導引學生改道，不額外投入資源",
+        "follow_up": "學生通行受阻引發不滿，且根本問題未獲解決，下次大雨恐再度癱瘓。",
+        "delayed_effects": {
+          "problem_improvement": -2,
+          "fairness": -4,
+          "treasury": 0
+        },
+        "story_beat": {
+          "stage": 2,
+          "support_change": -8,
+          "message": "第 2 幕完成：試辦結果讓糾結倫的目標有了新方向。進度條終於動了，先別急著截圖慶祝。",
+          "ending": null
+        },
+        "event_rule_result": "人物主線會記下這次選擇，信任、公平與壓力將影響後續結局。",
+        "campus_reaction": "校園匿名板熱帖：角色成長中，這次不是只解鎖「已讀」成就。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "配合宿舍前道路改善計畫，校園服務人員糾結倫率領團隊檢視維護工具，但突發的大雨造成舊有排水系統瞬間滿載，泥水直接漫入宿舍周邊。",
+            "resident": "糾結倫",
+            "description": "新設備到位後有效降低極端氣候帶來的積水危機，服務人員工作負擔減輕。",
+            "effects": {
+              "problem_improvement": 5,
+              "fairness": 2,
+              "treasury": -20
+            }
+          }
+        ],
+        "development": "盤點採購與合約，回收閒置預算",
+        "category": "財政",
+        "benefit": "財務透明度提升並釋出可運用預算",
+        "cause": "這項決策使問題改善 +1、滿意度 -4、公平性 -3",
+        "next_event": "在完成宿舍前道路積水應急處理後，糾結倫檢視了長效排水改善工程的進度，並提出全面更新地下排水管網的完整規劃，以彻底根絕道路積水與腳踏車行駛隱患。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "盤點採購與合約，回收閒置預算使財務透明度提升並釋出可運用預算；這項決策使問題改善 +1、滿意度 -4、公平性 -3，接續浮現「在完成宿舍前道路積水應急處理後，糾結倫檢視了長效排水改善工程的進度，並提出全面更新地下排水管網的完整規劃，以彻底根絕道路積水與腳踏車行駛隱患。」；選擇後續回響：學生通行受阻引發不滿，且根本問題未獲解決，下次大雨恐再度癱瘓。；第 2 幕完成：試辦結果讓糾結倫的目標有了新方向。進度條終於動了，先別急著截圖慶祝。；「配合宿舍前道路改善計畫，校園服務人員糾結倫率領團隊檢視維護工具，但突發的大雨造成舊有排水系統瞬間滿載，泥水直接漫入宿舍周邊。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 38,
+          "problem_improvement": 98,
+          "satisfaction": 82,
+          "fairness": 78
+        }
+      },
+      {
+        "year": 2,
+        "semester": 2,
+        "event": "在完成宿舍前道路積水應急處理後，糾結倫檢視了長效排水改善工程的進度，並提出全面更新地下排水管網的完整規劃，以彻底根絕道路積水與腳踏車行駛隱患。",
+        "resident": "糾結倫",
+        "role": "校園服務人員",
+        "resident_trust": 47,
+        "resident_stress": 55,
+        "response": "僅清理表面淤泥而不進行結構改造，保留經費用於其他項目",
+        "follow_up": "治標不治本的做法導致沒多久又發生積水，師生對基礎建設的信任感下滑。",
+        "delayed_effects": {
+          "problem_improvement": -1,
+          "fairness": -2,
+          "treasury": -5
+        },
+        "story_beat": {
+          "stage": 3,
+          "support_change": -6,
+          "message": "第 3 幕完成：糾結倫的「改善校園維護工具與安全設備」暫時卡關；進度進入「待跨單位會議確認」狀態。",
+          "ending": "stalled"
+        },
+        "event_rule_result": "人物主線會記下這次選擇，信任、公平與壓力將影響後續結局。",
+        "campus_reaction": "校園匿名板熱帖：角色成長中，這次不是只解鎖「已讀」成就。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "配合宿舍前道路改善計畫，校園服務人員糾結倫率領團隊檢視維護工具，但突發的大雨導致舊有排水系統瞬間滿載，泥水直接漫入宿舍周邊。進度條終於動了，面對排水不及，糾結倫急需學校支援防汛工作。",
+            "resident": "糾結倫",
+            "description": "學生通行受阻引發不滿，且根本問題未獲解決，下次大雨恐再度癱瘓。",
+            "effects": {
+              "problem_improvement": -2,
+              "fairness": -4,
+              "treasury": 0
+            }
+          }
+        ],
+        "development": "盤點採購與合約，回收閒置預算",
+        "category": "財政",
+        "benefit": "財務透明度提升並釋出可運用預算",
+        "cause": "這項決策使問題改善 +2、滿意度 -1、公平性 -2",
+        "next_event": "在完成宿舍前道路積水應急處理後，糾結倫檢視了長效排水改善工程的進度，並提出全面更新地下排水管網的完整規劃，以彻底根絕道路積水與腳踏車行駛隱患。面對上次僅清理表面淤泥的治標決定，糾結倫擔心地下管網老舊將使宿舍周邊再次面臨水患。",
+        "annual_challenge": "財政韌性",
+        "challenge_completed": false,
+        "challenge_reward": 0,
+        "butterfly": "盤點採購與合約，回收閒置預算使財務透明度提升並釋出可運用預算；這項決策使問題改善 +2、滿意度 -1、公平性 -2，接續浮現「在完成宿舍前道路積水應急處理後，糾結倫檢視了長效排水改善工程的進度，並提出全面更新地下排水管網的完整規劃，以彻底根絕道路積水與腳踏車行駛隱患。面對上次僅清理表面淤泥的治標決定，糾結倫擔心地下管網老舊將使宿舍周邊再次面臨水患。」；選擇後續回響：治標不治本的做法導致沒多久又發生積水，師生對基礎建設的信任感下滑。；第 3 幕完成：糾結倫的「改善校園維護工具與安全設備」暫時卡關；進度進入「待跨單位會議確認」狀態。；年度挑戰「財政韌性」未完成；「配合宿舍前道路改善計畫，校園服務人員糾結倫率領團隊檢視維護工具，但突發的大雨導致舊有排水系統瞬間滿載，泥水直接漫入宿舍周邊。進度條終於動了，面對排水不及，糾結倫急需學校支援防汛工作。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 41,
+          "problem_improvement": 98,
+          "satisfaction": 82,
+          "fairness": 73
+        }
+      },
+      {
+        "year": 3,
+        "semester": 1,
+        "event": "在完成宿舍前道路積水應急處理後，糾結倫檢視了長效排水改善工程的進度，並提出全面更新地下排水管網的完整規劃，以彻底根絕道路積水與腳踏車行駛隱患。面對上次僅清理表面淤泥的治標決定，糾結倫擔心地下管網老舊將使宿舍周邊再次面臨水患。",
+        "resident": "糾結倫",
+        "role": "校園服務人員",
+        "resident_trust": 53,
+        "resident_stress": 52,
+        "response": "編列完整預算全面翻修地下排水管網，徹底根絕宿舍前道路積水",
+        "follow_up": "地下排水管網全面更新後，宿舍前道路在大雨過後再無積水，師生騎乘腳踏車往返更加安全。",
+        "delayed_effects": {
+          "problem_improvement": 8,
+          "fairness": 4,
+          "treasury": -40
+        },
+        "story_beat": null,
+        "event_rule_result": "協商取得公平共識：焦點角色信任額外 +2。",
+        "campus_reaction": "校園匿名板熱帖：會議紀錄不是連載，至少這一章有個句點。 節能節水，水到渠成。",
+        "settled_consequences": [
+          {
+            "origin_event": "在完成宿舍前道路積水應急處理後，糾結倫檢視了長效排水改善工程的進度，並提出全面更新地下排水管網的完整規劃，以彻底根絕道路積水與腳踏車行駛隱患。",
+            "resident": "糾結倫",
+            "description": "治標不治本的做法導致沒多久又發生積水，師生對基礎建設的信任感下滑。",
+            "effects": {
+              "problem_improvement": -1,
+              "fairness": -2,
+              "treasury": -5
+            }
+          }
+        ],
+        "development": "汰換高耗能設備並節水",
+        "category": "資源",
+        "benefit": "能源與用水韌性提升，長期營運成本下降",
+        "cause": "這項決策使問題改善 +9、滿意度 +4、公平性 +3",
+        "next_event": "配合宿舍前道路改善與排水維護，學生蕭述一發起連署，希望校方在整修地下排水同時，一併規劃學生腳踏車專用道與友善步行區，避免人車爭道並徹底解決長久以來的通行顛簸。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "汰換高耗能設備並節水使能源與用水韌性提升，長期營運成本下降；這項決策使問題改善 +9、滿意度 +4、公平性 +3，接續浮現「配合宿舍前道路改善與排水維護，學生蕭述一發起連署，希望校方在整修地下排水同時，一併規劃學生腳踏車專用道與友善步行區，避免人車爭道並徹底解決長久以來的通行顛簸。」；選擇後續回響：地下排水管網全面更新後，宿舍前道路在大雨過後再無積水，師生騎乘腳踏車往返更加安全。；「在完成宿舍前道路積水應急處理後，糾結倫檢視了長效排水改善工程的進度，並提出全面更新地下排水管網的完整規劃，以彻底根絕道路積水與腳踏車行駛隱患。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 33,
+          "problem_improvement": 99,
+          "satisfaction": 82,
+          "fairness": 75
+        }
+      },
+      {
+        "year": 3,
+        "semester": 2,
+        "event": "配合宿舍前道路改善與排水維護，學生蕭述一發起連署，希望校方在整修地下排水同時，一併規劃學生腳踏車專用道與友善步行區，避免人車爭道並徹底解決長久以來的通行顛簸。",
+        "resident": "蕭述一",
+        "role": "大學生",
+        "resident_trust": 46,
+        "resident_stress": 40,
+        "response": "增設獨立腳踏車道與人行步道，全面提升宿舍區交通安全與公平性",
+        "follow_up": "人車分道落實後，通勤學生與行人的衝突大減，校園流動滿意度顯著提升。",
+        "delayed_effects": {
+          "problem_improvement": 6,
+          "fairness": 5,
+          "treasury": -25
+        },
+        "story_beat": null,
+        "event_rule_result": "投票通過：事件群體滿意度額外 +2。",
+        "campus_reaction": "校園匿名板熱帖：票數之外，也記得看一下沒來得及舉手的人。 節能節水，水到渠成。",
+        "settled_consequences": [
+          {
+            "origin_event": "在完成宿舍前道路積水應急處理後，糾結倫檢視了長效排水改善工程的進度，並提出全面更新地下排水管網的完整規劃，以彻底根絕道路積水與腳踏車行駛隱患。面對上次僅清理表面淤泥的治標決定，糾結倫擔心地下管網老舊將使宿舍周邊再次面臨水患。",
+            "resident": "糾結倫",
+            "description": "地下排水管網全面更新後，宿舍前道路在大雨過後再無積水，師生騎乘腳踏車往返更加安全。",
+            "effects": {
+              "problem_improvement": 8,
+              "fairness": 4,
+              "treasury": -40
+            }
+          }
+        ],
+        "development": "汰換高耗能設備並節水",
+        "category": "資源",
+        "benefit": "能源與用水韌性提升，長期營運成本下降",
+        "cause": "這項決策使問題改善 +7、滿意度 +5、公平性 +4",
+        "next_event": "配合宿舍前道路改善與排水維護，學生蕭述一發起連署，希望校方在整修地下排水同時，一併規劃學生腳踏車專用道與友善步行區，避免人車爭道並徹底解決長久以來的通行顛簸。",
+        "annual_challenge": "永續校園",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "汰換高耗能設備並節水使能源與用水韌性提升，長期營運成本下降；這項決策使問題改善 +7、滿意度 +5、公平性 +4，接續浮現「配合宿舍前道路改善與排水維護，學生蕭述一發起連署，希望校方在整修地下排水同時，一併規劃學生腳踏車專用道與友善步行區，避免人車爭道並徹底解決長久以來的通行顛簸。」；選擇後續回響：人車分道落實後，通勤學生與行人的衝突大減，校園流動滿意度顯著提升。；年度挑戰「永續校園」完成，獲得 30 點基金獎勵；「在完成宿舍前道路積水應急處理後，糾結倫檢視了長效排水改善工程的進度，並提出全面更新地下排水管網的完整規劃，以彻底根絕道路積水與腳踏車行駛隱患。面對上次僅清理表面淤泥的治標決定，糾結倫擔心地下管網老舊將使宿舍周邊再次面臨水患。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 27,
+          "problem_improvement": 100,
+          "satisfaction": 84,
+          "fairness": 84
+        }
+      },
+      {
+        "year": 4,
+        "semester": 1,
+        "event": "配合宿舍前道路改善與排水維護，學生蕭述一發起連署，希望校方在整修地下排水同時，一併規劃學生腳踏車專用道與友善步行區，避免人車爭道並徹底解決長久以來的通行顛簸。",
+        "resident": "蕭述一",
+        "role": "大學生",
+        "resident_trust": 50,
+        "resident_stress": 37,
+        "response": "全面規劃獨立腳踏車道與無障礙人行道",
+        "follow_up": "人車分道落實後，通勤學生與行人的衝突大減，校園流動滿意度顯著提升。",
+        "delayed_effects": {
+          "problem_improvement": 6,
+          "fairness": 5,
+          "treasury": -25
+        },
+        "story_beat": null,
+        "event_rule_result": "投票通過：事件群體滿意度額外 +2。",
+        "campus_reaction": "校園匿名板熱帖：投票結果出爐，表單今天終於不是唯一主角。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "配合宿舍前道路改善與排水維護，學生蕭述一發起連署，希望校方在整修地下排水同時，一併規劃學生腳踏車專用道與友善步行區，避免人車爭道並徹底解決長久以來的通行顛簸。",
+            "resident": "蕭述一",
+            "description": "人車分道落實後，通勤學生與行人的衝突大減，校園流動滿意度顯著提升。",
+            "effects": {
+              "problem_improvement": 6,
+              "fairness": 5,
+              "treasury": -25
+            }
+          }
+        ],
+        "development": "盤點採購與合約，回收閒置預算",
+        "category": "財政",
+        "benefit": "財務透明度提升並釋出可運用預算",
+        "cause": "這項決策使問題改善 +8、滿意度 +5、公平性 +4",
+        "next_event": "在推動宿舍前道路人車分道與排水改善工程期間，突發的管線老舊爆裂意外導致宿舍周邊臨時斷水並小規模滲水，行政人員紅仁勳急需校方調度資源應對。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "盤點採購與合約，回收閒置預算使財務透明度提升並釋出可運用預算；這項決策使問題改善 +8、滿意度 +5、公平性 +4，接續浮現「在推動宿舍前道路人車分道與排水改善工程期間，突發的管線老舊爆裂意外導致宿舍周邊臨時斷水並小規模滲水，行政人員紅仁勳急需校方調度資源應對。」；選擇後續回響：人車分道落實後，通勤學生與行人的衝突大減，校園流動滿意度顯著提升。；「配合宿舍前道路改善與排水維護，學生蕭述一發起連署，希望校方在整修地下排水同時，一併規劃學生腳踏車專用道與友善步行區，避免人車爭道並徹底解決長久以來的通行顛簸。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 25,
+          "problem_improvement": 100,
+          "satisfaction": 86,
+          "fairness": 94
+        }
+      },
+      {
+        "year": 4,
+        "semester": 2,
+        "event": "在推動宿舍前道路人車分道與排水改善工程期間，突發的管線老舊爆裂意外導致宿舍周邊臨時斷水並小規模滲水，行政人員紅仁勳急需校方調度資源應對。",
+        "resident": "紅仁勳",
+        "role": "行政人員",
+        "resident_trust": 47,
+        "resident_stress": 37,
+        "response": "動支緊急預備金全面更換老舊管線並設置臨時供水站",
+        "follow_up": "高成本的止損與更新迅速化解危機，行政團隊壓力減輕，並徹底預防類似滲水。",
+        "delayed_effects": {
+          "problem_improvement": 7,
+          "fairness": 3,
+          "treasury": -35
+        },
+        "story_beat": null,
+        "event_rule_result": "危機止損成功：本次改善達標，沒有追加損失。",
+        "campus_reaction": "校園匿名板熱帖：校務群組的驚嘆號依然很忙，但至少有了處理方向。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "配合宿舍前道路改善與排水維護，學生蕭述一發起連署，希望校方在整修地下排水同時，一併規劃學生腳踏車專用道與友善步行區，避免人車爭道並徹底解決長久以來的通行顛簸。",
+            "resident": "蕭述一",
+            "description": "人車分道落實後，通勤學生與行人的衝突大減，校園流動滿意度顯著提升。",
+            "effects": {
+              "problem_improvement": 6,
+              "fairness": 5,
+              "treasury": -25
+            }
+          }
+        ],
+        "development": "盤點採購與合約，回收閒置預算",
+        "category": "財政",
+        "benefit": "財務透明度提升並釋出可運用預算",
+        "cause": "這項決策使問題改善 +9、滿意度 +4、公平性 +3",
+        "next_event": "在推動宿舍前道路人車分道與排水改善工程期間，突發的管線老舊爆裂意外導致宿舍周邊臨時斷水並小規模滲水，行政人員紅仁勳急需校方調度資源應對。",
+        "annual_challenge": "問題突破",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "盤點採購與合約，回收閒置預算使財務透明度提升並釋出可運用預算；這項決策使問題改善 +9、滿意度 +4、公平性 +3，接續浮現「在推動宿舍前道路人車分道與排水改善工程期間，突發的管線老舊爆裂意外導致宿舍周邊臨時斷水並小規模滲水，行政人員紅仁勳急需校方調度資源應對。」；選擇後續回響：高成本的止損與更新迅速化解危機，行政團隊壓力減輕，並徹底預防類似滲水。；年度挑戰「問題突破」完成，獲得 30 點基金獎勵；「配合宿舍前道路改善與排水維護，學生蕭述一發起連署，希望校方在整修地下排水同時，一併規劃學生腳踏車專用道與友善步行區，避免人車爭道並徹底解決長久以來的通行顛簸。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 25,
+          "problem_improvement": 100,
+          "satisfaction": 87,
+          "fairness": 100
+        }
+      },
+      {
+        "year": 5,
+        "semester": 1,
+        "event": "在推動宿舍前道路人車分道與排水改善工程期間，突發的管線老舊爆裂意外導致宿舍周邊臨時斷水並小規模滲水，行政人員紅仁勳急需校方調度資源應對。",
+        "resident": "紅仁勳",
+        "role": "行政人員",
+        "resident_trust": 51,
+        "resident_stress": 34,
+        "response": "動支緊急預備金全面更換老舊管線並設置臨時供水站",
+        "follow_up": "高成本的止損與迅速更新化解了危機，行政團隊壓力減輕，並徹底預防未來滲水。",
+        "delayed_effects": {
+          "problem_improvement": 7,
+          "fairness": 3,
+          "treasury": -35
+        },
+        "story_beat": null,
+        "event_rule_result": "危機止損成功：本次改善達標，沒有追加損失。",
+        "campus_reaction": "校園匿名板熱帖：校務群組的驚嘆號依然很忙，但至少有了處理方向。 財政有節，校務不劫。",
+        "settled_consequences": [
+          {
+            "origin_event": "在推動宿舍前道路人車分道與排水改善工程期間，突發的管線老舊爆裂意外導致宿舍周邊臨時斷水並小規模滲水，行政人員紅仁勳急需校方調度資源應對。",
+            "resident": "紅仁勳",
+            "description": "高成本的止損與更新迅速化解危機，行政團隊壓力減輕，並徹底預防類似滲水。",
+            "effects": {
+              "problem_improvement": 7,
+              "fairness": 3,
+              "treasury": -35
+            }
+          }
+        ],
+        "development": "盤點採購與合約，回收閒置預算",
+        "category": "財政",
+        "benefit": "財務透明度提升並釋出可運用預算",
+        "cause": "這項決策使問題改善 +9、滿意度 +4、公平性 +3",
+        "next_event": "隨著宿舍前道路管線危機解除，教授周邊研究與教學負擔增加，陳土扁對於校方能否在基礎建設更新後，進一步維護校園永續與公平資源分配提出質詢。",
+        "annual_challenge": null,
+        "challenge_completed": null,
+        "challenge_reward": 0,
+        "butterfly": "盤點採購與合約，回收閒置預算使財務透明度提升並釋出可運用預算；這項決策使問題改善 +9、滿意度 +4、公平性 +3，接續浮現「隨著宿舍前道路管線危機解除，教授周邊研究與教學負擔增加，陳土扁對於校方能否在基礎建設更新後，進一步維護校園永續與公平資源分配提出質詢。」；選擇後續回響：高成本的止損與迅速更新化解了危機，行政團隊壓力減輕，並徹底預防未來滲水。；「在推動宿舍前道路人車分道與排水改善工程期間，突發的管線老舊爆裂意外導致宿舍周邊臨時斷水並小規模滲水，行政人員紅仁勳急需校方調度資源應對。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 21,
+          "problem_improvement": 100,
+          "satisfaction": 87,
+          "fairness": 100
+        }
+      },
+      {
+        "year": 5,
+        "semester": 2,
+        "event": "隨著宿舍前道路管線危機解除，教授周邊研究與教學負擔增加，陳土扁對於校方能否在基礎建設更新後，進一步維護校園永續與公平資源分配提出質詢。",
+        "resident": "陳土扁",
+        "role": "教授",
+        "resident_trust": 64,
+        "resident_stress": 54,
+        "response": "撥款成立跨院永續研究與設施維護補助基金",
+        "follow_up": "跨院協作與設施獲得實質支持，教研人員對學校永續發展更有信心。",
+        "delayed_effects": {
+          "problem_improvement": 5,
+          "fairness": 4,
+          "treasury": -25
+        },
+        "story_beat": null,
+        "event_rule_result": "協商取得公平共識：焦點角色信任額外 +2。",
+        "campus_reaction": "校園匿名板熱帖：協商桌上沒有秒讀不回，已經是一種進展。 帳本先喘口氣，會計室眉頭少打一個結。",
+        "settled_consequences": [
+          {
+            "origin_event": "在推動宿舍前道路人車分道與排水改善工程期間，突發的管線老舊爆裂意外導致宿舍周邊臨時斷水並小規模滲水，行政人員紅仁勳急需校方調度資源應對。",
+            "resident": "紅仁勳",
+            "description": "高成本的止損與迅速更新化解了危機，行政團隊壓力減輕，並徹底預防未來滲水。",
+            "effects": {
+              "problem_improvement": 7,
+              "fairness": 3,
+              "treasury": -35
+            }
+          },
+          {
+            "origin_event": "隨著宿舍前道路管線危機解除，教授周邊研究與教學負擔增加，陳土扁對於校方能否在基礎建設更新後，進一步維護校園永續與公平資源分配提出質詢。",
+            "resident": "陳土扁",
+            "description": "跨院協作與設施獲得實質支持，教研人員對學校永續發展更有信心。",
+            "effects": {
+              "problem_improvement": 5,
+              "fairness": 4,
+              "treasury": -25
+            }
+          }
+        ],
+        "development": "盤點採購與合約，回收閒置預算",
+        "category": "財政",
+        "benefit": "財務透明度提升並釋出可運用預算",
+        "cause": "這項決策使問題改善 +6、滿意度 +4、公平性 +5",
+        "next_event": "5年校務成果已完成",
+        "annual_challenge": "公平校園",
+        "challenge_completed": true,
+        "challenge_reward": 30,
+        "butterfly": "盤點採購與合約，回收閒置預算使財務透明度提升並釋出可運用預算，五年改革進入成果盤點；選擇後續回響：跨院協作與設施獲得實質支持，教研人員對學校永續發展更有信心。；年度挑戰「公平校園」完成，獲得 30 點基金獎勵；「在推動宿舍前道路人車分道與排水改善工程期間，突發的管線老舊爆裂意外導致宿舍周邊臨時斷水並小規模滲水，行政人員紅仁勳急需校方調度資源應對。」的後續影響已結算；「隨著宿舍前道路管線危機解除，教授周邊研究與教學負擔增加，陳土扁對於校方能否在基礎建設更新後，進一步維護校園永續與公平資源分配提出質詢。」的後續影響已結算",
+        "metrics": {
+          "budget_remaining": 20,
+          "problem_improvement": 100,
+          "satisfaction": 88,
+          "fairness": 100
+        }
+      }
+    ],
+    "yearly": [
+      {
+        "year": 1,
+        "satisfaction": 82,
+        "population": 10838,
+        "treasury": 440,
+        "score": 61,
+        "challenge": "校園升級",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 2,
+        "satisfaction": 82,
+        "population": 10936,
+        "treasury": 488,
+        "score": 62,
+        "challenge": "財政韌性",
+        "challenge_completed": false,
+        "challenge_reward": 0
+      },
+      {
+        "year": 3,
+        "satisfaction": 84,
+        "population": 11034,
+        "treasury": 320,
+        "score": 65,
+        "challenge": "永續校園",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 4,
+        "satisfaction": 87,
+        "population": 11132,
+        "treasury": 298,
+        "score": 67,
+        "challenge": "問題突破",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      },
+      {
+        "year": 5,
+        "satisfaction": 88,
+        "population": 11230,
+        "treasury": 236,
+        "score": 67,
+        "challenge": "公平校園",
+        "challenge_completed": true,
+        "challenge_reward": 30
+      }
+    ],
+    "challenges": [
+      {
+        "id": "campus_builder",
+        "title": "校園升級",
+        "description": "至少完成一項校園建設。",
+        "rule": "buildings",
+        "year": 1,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "fiscal_resilience",
+        "title": "財政韌性",
+        "description": "本年度結束時校務基金至少保有 500 點。",
+        "rule": "treasury",
+        "year": 2,
+        "completed": false,
+        "reward": 30
+      },
+      {
+        "id": "green_campus",
+        "title": "永續校園",
+        "description": "本年度結束時平均資源存量達到 60。",
+        "rule": "resources",
+        "year": 3,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "solve_root_cause",
+        "title": "問題突破",
+        "description": "本年度結束時問題改善度達到 60。",
+        "rule": "problem",
+        "year": 4,
+        "completed": true,
+        "reward": 30
+      },
+      {
+        "id": "fair_access",
+        "title": "公平校園",
+        "description": "本年度結束時公平性達到 68。",
+        "rule": "fairness",
+        "year": 5,
+        "completed": true,
+        "reward": 30
+      }
+    ],
+    "titles": [
+      {
+        "id": "campus_favorite",
+        "name": "人氣校長",
+        "description": "教職員生滿意度達到 78。",
+        "earned_turn": 0
+      },
+      {
+        "id": "green_guardian",
+        "name": "永續守護者",
+        "description": "平均資源存量達到 70。",
+        "earned_turn": 0
+      },
+      {
+        "id": "problem_solver",
+        "name": "問題終結者",
+        "description": "問題改善度達到 75。",
+        "earned_turn": 1
+      },
+      {
+        "id": "equity_champion",
+        "name": "公平推手",
+        "description": "公平性達到 75。",
+        "earned_turn": 2
+      },
+      {
+        "id": "energy_keeper",
+        "name": "能源管家",
+        "description": "能源存量達到 80。",
+        "earned_turn": 5
+      },
+      {
+        "id": "water_saver",
+        "name": "節水高手",
+        "description": "用水存量達到 80。",
+        "earned_turn": 5
+      },
+      {
+        "id": "challenge_collector",
+        "name": "挑戰收藏家",
+        "description": "完成至少三項年度挑戰。",
+        "earned_turn": 8
+      }
+    ],
+    "averages": {
+      "resource_stock": 81.7,
+      "satisfaction": 88.0,
+      "trust": 57.8,
+      "stress": 52.4
+    },
+    "population": {
+      "students": 10000,
+      "faculty": 820,
+      "staff": 410
+    },
+    "resources": {
+      "energy": 91,
+      "water": 95,
+      "staffing": 59
+    },
+    "buildings": {
+      "library": 0,
+      "housing": 0,
+      "wellbeing": 1
+    },
+    "building_labels": {
+      "library": "學習空間",
+      "housing": "宿舍",
+      "wellbeing": "健康支持中心"
+    },
+    "policies": {
+      "conservation": 2
+    },
+    "policy_labels": {
+      "scholarships": "助學支持",
+      "workload": "簡政減負",
+      "accessibility": "無障礙與多語服務",
+      "conservation": "節能節水",
+      "training": "服務人力培訓"
+    },
+    "treasury": 236,
+    "residents": [
+      {
+        "id": "lin_muqing",
+        "name": "蕭述一",
+        "role": "大學生",
+        "group": "students",
+        "concern": "課業與生活平衡",
+        "personality": "熱心、容易替別人操心",
+        "goal": "成立讓新生安心求助的同儕社群",
+        "portrait": "portrait-lin-muqing.svg",
+        "satisfaction": 91,
+        "trust": 50,
+        "stress": 37
+      },
+      {
+        "id": "chen_yian",
+        "name": "蕭述二",
+        "role": "研究生",
+        "group": "students",
+        "concern": "研究資源與空間",
+        "personality": "安靜、做事有條理",
+        "goal": "完成研究並爭取海外交流機會",
+        "portrait": "portrait-chen-yian.svg",
+        "satisfaction": 86,
+        "trust": 50,
+        "stress": 51
+      },
+      {
+        "id": "zhou_mingzhe",
+        "name": "陳土扁",
+        "role": "教授",
+        "group": "faculty",
+        "concern": "教學與研究負荷",
+        "personality": "嚴謹、願意提攜後輩",
+        "goal": "建立跨院合作的永續研究團隊",
+        "portrait": "portrait-zhou-mingzhe.svg",
+        "satisfaction": 86,
+        "trust": 64,
+        "stress": 54
+      },
+      {
+        "id": "xu_yawen",
+        "name": "習迈乎",
+        "role": "教授",
+        "group": "faculty",
+        "concern": "研究支持與合作",
+        "personality": "好奇、擅長傾聽",
+        "goal": "設計更多學生參與的實作課程",
+        "portrait": "portrait-xu-yawen.svg",
+        "satisfaction": 86,
+        "trust": 66,
+        "stress": 65
+      },
+      {
+        "id": "wang_sihan",
+        "name": "紅仁勳",
+        "role": "行政人員",
+        "group": "staff",
+        "concern": "行政流程與人力",
+        "personality": "細心、喜歡把事情安排妥當",
+        "goal": "讓校園行政服務更簡單又友善",
+        "portrait": "portrait-wang-sihan.svg",
+        "satisfaction": 97,
+        "trust": 51,
+        "stress": 34
+      },
+      {
+        "id": "zhang_jiahao",
+        "name": "糾結倫",
+        "role": "校園服務人員",
+        "group": "staff",
+        "concern": "服務品質與工作條件",
+        "personality": "爽朗、遇到問題就想動手處理",
+        "goal": "改善校園維護工具與安全設備",
+        "portrait": "portrait-zhang-jiahao.svg",
+        "satisfaction": 80,
+        "trust": 53,
+        "stress": 52
+      },
+      {
+        "id": "li_chengen",
+        "name": "豬哥暗",
+        "role": "通勤學生",
+        "group": "students",
+        "concern": "交通與校園安全",
+        "personality": "務實、重視時間安排",
+        "goal": "組成安全通勤倡議小組",
+        "portrait": "portrait-li-chengen.svg",
+        "satisfaction": 89,
+        "trust": 62,
+        "stress": 57
+      },
+      {
+        "id": "huang_kexin",
+        "name": "李奧納多皮卡丘",
+        "role": "國際學生",
+        "group": "students",
+        "concern": "友善環境與資訊取得",
+        "personality": "勇於嘗試、喜歡認識新朋友",
+        "goal": "籌辦讓不同文化交流的校園活動",
+        "portrait": "portrait-huang-kexin.svg",
+        "satisfaction": 89,
+        "trust": 66,
+        "stress": 69
+      }
+    ],
+    "forecast": {
+      "next_year_population": 11328,
+      "next_year_satisfaction": 91,
+      "risk": "財政與資源緩衝偏低，建議先投資韌性"
     }
   }
 ]
